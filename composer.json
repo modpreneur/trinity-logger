@@ -1,0 +1,49 @@
+{
+  "name": "trinity/logger",
+  "description": "Trinity Logger bundle",
+  "type": "symfony-bundle",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Trinity Team",
+      "email": "info@modpreneur.com"
+    }
+  ],
+
+  "require": {
+    "php": ">=7",
+    "symfony/symfony": "~2.8 | ~3.0",
+    "aws/aws-sdk-php": "~3.11",
+    "doctrine/orm": "~2.5",
+    "doctrine/doctrine-bundle": "~1.6",
+    "sensio/framework-extra-bundle": "^3.0"
+  },
+
+  "require-dev": {
+    "phpunit/phpunit": "~5.1",
+    "mockery/mockery": "~0.9",
+    "fzaninotto/faker": "~1.5",
+    "symfony/var-dumper": "~3.0",
+    "symfony/browser-kit": "~2.8|~3.0",
+    "symfony/form": "~3",
+    "symfony/validator": "~3"
+  },
+
+  "autoload": {
+    "psr-4": { "Trinity\\Bundle\\LoggerBundle\\": "" },
+    "exclude-from-classmap": [
+      "/Tests/"
+    ]
+  },
+
+  "minimum-stability": "stable",
+  "extra": {
+    "branch-alias": {
+      "dev-master": "1.0-dev"
+    }
+  },
+
+  "archive": {
+    "exclude": ["/bin", "/docker", "/Tests", "docker-compose.yml", "Dockerfile", "entrypoint.php", "entrypoint.sh", "phpunit.xml"]
+  }
+}
