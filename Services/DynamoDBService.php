@@ -51,6 +51,8 @@ class DynamoDBService
 
     public function __construct($dynamoHost=null, $dynamoPort=null, $awsRegion=null, $awsKey=null, $awsSecret=null)
     {
+        dump('Erroir');
+
         $sdk = new Sdk([
             'region' => $awsRegion,
             'version' => 'latest',

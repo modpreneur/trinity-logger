@@ -12,7 +12,7 @@ use Trinity\Bundle\LoggerBundle\DependencyInjection\TrinityLoggerExtension;
 
 
 /**
- * Class SettingsBundle
+ * Class LoggerBundle
  * @package Trinity\Bundle\LoggerBundle
  */
 class LoggerBundle extends Bundle

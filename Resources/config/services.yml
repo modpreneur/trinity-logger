@@ -1,7 +1,7 @@
 services:
 
     trinity.dynamo.log.service:
-      class: Trinity\LoggerBundle\Services\DynamoDBService
+      class: \Trinity\LoggerBundle\Services\DynamoDBService
       arguments:
         - "%trinity.logger.dynamo_host%"
         - "%trinity.logger.dynamo_port%"
@@ -9,3 +9,5 @@ services:
         - "%trinity.logger.aws_secret%"
         - "%trinity.logger.aws_region%"
 
+  trinity.elastic.log.service:
+    class: \Trinity\LoggerBundle\Servicies\ElasticLogService
