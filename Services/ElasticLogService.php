@@ -27,12 +27,11 @@ class ElasticLogService
     public function __construct($clientHost)
     {
         $params = explode(':',$clientHost);
-        $port = $params[1] ? $params[1] : 9200;
-
+        $port = isset($params[1]) ? $params[1] : 9200;
 
         $this->ESClient = ClientBuilder::create()           // Instantiate a new ClientBuilder
-        ->setHosts("${params[0]}:${port}")          // Set the hosts
-        ->build();
+            ->setHosts(["${params[0]}:${port}"])          // Set the hosts
+            ->build();
     }
 
 
