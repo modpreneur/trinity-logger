@@ -8,7 +8,7 @@ namespace Trinity\Bundle\LoggerBundle;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
-use Trinity\Bundle\SettingsBundle\DependencyInjection\TrinityLoggerExtension;
+use Trinity\Bundle\LoggerBundle\DependencyInjection\TrinityLoggerExtension;
 
 
 /**

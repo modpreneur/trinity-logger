@@ -47,7 +47,7 @@ class TrinityLoggerExtension extends Extension
             $container->setParameter('trinity.logger.aws_region', null);
         }
 
-        $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+        $loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.yml');
     }
 }
