@@ -14,3 +14,4 @@ services:
         - "%trinity.logger.aws_key%"
         - "%trinity.logger.aws_secret%"
         - "%trinity.logger.aws_region%"
+

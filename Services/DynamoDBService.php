@@ -349,7 +349,6 @@ class DynamoDBService
         //$results=$this->connection->scan(['TableName' => $tableName, ]);
         $results=$this->connection->scan(['TableName' => $tableName, 'IndexName' => 'indexByCreated' ]);
 
-        dump('sakra');
         $b = microtime(true);
         $results['Items'] = array_reverse($results['Items']);
         dump(microtime(true) - $b);
