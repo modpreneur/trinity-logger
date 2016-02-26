@@ -3,7 +3,7 @@
  * This file is part of Trinity package.
  */
 
-namespace Trinity\Bundle\SettingsBundle\DependencyInjection;
+namespace Trinity\Bundle\LoggerBundle\DependencyInjection;
 
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -15,7 +15,7 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
  * Class TrinityLoggerExtension
  * @package Trinity\Bundle\LoggerBundle\DependencyInjection
  */
-class TrinitySettingsExtension extends Extension
+class TrinityLoggerExtension extends Extension
 {
 
     /**

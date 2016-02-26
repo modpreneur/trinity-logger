@@ -5,11 +5,11 @@
  * Date: 12.2.16
  * Time: 10:59
  */
-namespace Trinity\FrameworkBundle\Services;
+namespace Trinity\LoggerBundle\Services;
 
 use Aws\Sdk;
 use Aws\DynamoDb\DynamoDbClient;
-use Trinity\FrameworkBundle\Entity\BaseDynamoLog;
+use Trinity\LoggerBundle\Entity\BaseDynamoLog;
 
 /**
  * //Move this somewhere to necktie when done??

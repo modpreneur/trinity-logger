@@ -1,13 +1,7 @@
 services:
 
-    trinity.logger_database:
-        class: Trinity\FrameworkBundle\DatabaseLogger\DatabaseHandler
-        calls:
-            - [ setContainer, [ "@service_container" ] ]
-
-
     trinity.dynamo.log.service:
-      class: Trinity\FrameworkBundle\Services\DynamoDBService
+      class: Trinity\LoggerBundle\Services\DynamoDBService
       arguments:
         - "%trinity.logger.dynamo_host%"
         - "%trinity.logger.dynamo_port%"
