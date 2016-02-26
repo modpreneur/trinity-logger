@@ -37,7 +37,13 @@ class Configuration implements ConfigurationInterface
                         ->scalarNode('aws_key')->isRequired()->cannotBeEmpty()->end()
                         ->scalarNode('aws_secret')->isRequired()->cannotBeEmpty()->end()
                         ->scalarNode('aws_region')->isRequired()->cannotBeEmpty()->end()
-            ->end();
+                    ->end()
+                ->end()
+            ->end()
+            ->children()
+                ->arrayNode('elastic_logs')
+                    ->children()
+                        ->scalarNode('elastic_host')->isRequired()->cannotBeEmpty()->end() ;
         ;
 
         return $treeBuilder;
