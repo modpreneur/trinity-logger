@@ -2,20 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="4003e8a2-980c-471c-bb1f-e465a15ccdea" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/DependencyInjection/Configuration.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/DependencyInjection/TrinityLoggerExtension.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Entity/BaseDynamoLog.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/LoggerBundle.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Resources/config/services.yml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Services/DynamoDBService.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Services/ElasticLogService.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/LoggerBundle/DependencyInjection/Configuration.php" afterPath="$PROJECT_DIR$/DependencyInjection/Configuration.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/LoggerBundle/DependencyInjection/TrinityLoggerExtension.php" afterPath="$PROJECT_DIR$/DependencyInjection/TrinityLoggerExtension.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/LoggerBundle/Entity/BaseDynamoLog.php" afterPath="$PROJECT_DIR$/Entity/BaseDynamoLog.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/LoggerBundle/LoggerBundle.php" afterPath="$PROJECT_DIR$/LoggerBundle.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/LoggerBundle/Resources/config/services.yml" afterPath="$PROJECT_DIR$/Resources/config/services.yml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/LoggerBundle/Services/DynamoDBService.php" afterPath="$PROJECT_DIR$/Services/DynamoDBService.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Resources/Resources/config/services.yml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/LoggerBundle.php" afterPath="$PROJECT_DIR$/LoggerBundle.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Services/DynamoDBService.php" afterPath="$PROJECT_DIR$/Services/DynamoDBService.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Services/ElasticLogService.php" afterPath="$PROJECT_DIR$/Services/ElasticLogService.php" />
     </list>
     <ignored path="trinity-logger.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -57,28 +48,28 @@
           </provider>
         </entry>
       </file>
+      <file leaf-file-name="LoggerBundle.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/LoggerBundle.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-0.0">
+              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="DynamoDBService.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Services/DynamoDBService.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
+            <state vertical-scroll-proportion="-0.0">
               <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ElasticLogService.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Services/ElasticLogService.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="LoggerBundle.php" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/LoggerBundle.php">
+      <file leaf-file-name="services.yml" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/Resources/Resources/config/services.yml">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
               <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
@@ -125,6 +116,7 @@
         <option value="$PROJECT_DIR$/Services/DynamoDBService.php" />
         <option value="$PROJECT_DIR$/Resources/config/services.yml" />
         <option value="$PROJECT_DIR$/LoggerBundle/LoggerBundle.php" />
+        <option value="$PROJECT_DIR$/LoggerBundle.php" />
       </list>
     </option>
   </component>
@@ -186,6 +178,60 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="trinity-logger" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="trinity-logger" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Services" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="trinity-logger" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="trinity-logger" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Resources" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Resources" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="config" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="trinity-logger" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="trinity-logger" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Resources" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="config" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
         </subPane>
       </pane>
       <pane id="Scope" />
@@ -199,6 +245,7 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/Resources" />
       <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/Services" />
       <recent name="$PROJECT_DIR$/DependencyInjection" />
@@ -280,7 +327,13 @@
       <option name="project" value="LOCAL" />
       <updated>1456505027463</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Restructalization &#10;">
+      <created>1456508000135</created>
+      <option name="number" value="00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1456508000135</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TodoView">
@@ -294,9 +347,9 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="-4" width="1366" height="772" extended-state="6" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25757575" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25757575" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32921174" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
@@ -353,7 +406,8 @@
     <MESSAGE value="composer files?" />
     <MESSAGE value="before Elastic" />
     <MESSAGE value="Restructalization Little fix" />
-    <option name="LAST_COMMIT_MESSAGE" value="Restructalization Little fix" />
+    <MESSAGE value="Restructalization &#10;" />
+    <option name="LAST_COMMIT_MESSAGE" value="Restructalization &#10;" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -434,6 +488,14 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/LoggerBundle.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/Services/DynamoDBService.php">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -442,15 +504,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Services/ElasticLogService.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/LoggerBundle.php">
+    <entry file="file://$PROJECT_DIR$/Resources/Resources/config/services.yml">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />

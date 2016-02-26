@@ -5,7 +5,7 @@
  * Date: 12.2.16
  * Time: 10:59
  */
-namespace Trinity\LoggerBundle\Services;
+namespace Trinity\Bundle\LoggerBundle\Services;
 
 use Aws\Sdk;
 use Aws\DynamoDb\DynamoDbClient;
@@ -51,7 +51,8 @@ class DynamoDBService
 
     public function __construct($dynamoHost=null, $dynamoPort=null, $awsRegion=null, $awsKey=null, $awsSecret=null)
     {
-        dump('Erroir');
+        if(!$dynamoHost)
+            return null;
 
         $sdk = new Sdk([
             'region' => $awsRegion,

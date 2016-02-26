@@ -20,6 +20,15 @@ class LoggerBundle extends Bundle
 
     public function build(ContainerBuilder $container){
         parent::build($container);
-        $container->registerExtension(new TrinityLoggerExtension() );
     }
+
+
+    /**
+     * @return TrinityLoggerExtension
+     */
+    public function getContainerExtension()
+    {
+        return new TrinityLoggerExtension();
+    }
+
 }

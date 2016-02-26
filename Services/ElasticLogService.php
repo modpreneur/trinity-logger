@@ -6,7 +6,7 @@
  * Time: 18:04
  */
 
-namespace Trinity\LoggerBundle\Services;
+namespace Trinity\Bundle\LoggerBundle\Services;
 
 
 class ElasticLogService
