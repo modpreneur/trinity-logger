@@ -3,9 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="4003e8a2-980c-471c-bb1f-e465a15ccdea" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DependencyInjection/TrinityLoggerExtension.php" afterPath="$PROJECT_DIR$/DependencyInjection/TrinityLoggerExtension.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Resources/config/services.yml" afterPath="$PROJECT_DIR$/Resources/config/services.yml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Services/DynamoDBService.php" afterPath="$PROJECT_DIR$/Services/DynamoDBService.php" />
     </list>
     <ignored path="trinity-logger.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -129,6 +126,7 @@
   </component>
   <component name="PhpWorkspaceProjectConfiguration" backward_compatibility_performed="true" />
   <component name="ProjectFrameBounds">
+    <option name="x" value="1366" />
     <option name="y" value="24" />
     <option name="width" value="1366" />
     <option name="height" value="744" />
@@ -313,7 +311,13 @@
       <option name="project" value="LOCAL" />
       <updated>1456478616940</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="before Elastic">
+      <created>1456480827669</created>
+      <option name="number" value="00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1456480827669</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TodoView">
@@ -326,7 +330,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="24" width="1366" height="744" extended-state="6" />
+    <frame x="1366" y="24" width="1366" height="744" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25378788" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
