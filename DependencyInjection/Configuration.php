@@ -44,7 +44,6 @@ class Configuration implements ConfigurationInterface
                 ->arrayNode('elastic_logs')
                     ->children()
                         ->scalarNode('elastic_host')->isRequired()->cannotBeEmpty()->end()
-                        ->scalarNode('entity_manager')->isRequired()->cannotBeEmpty()->end() ;
 
         ;
 
