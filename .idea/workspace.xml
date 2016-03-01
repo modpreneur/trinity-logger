@@ -3,9 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="4003e8a2-980c-471c-bb1f-e465a15ccdea" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DependencyInjection/Configuration.php" afterPath="$PROJECT_DIR$/DependencyInjection/Configuration.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DependencyInjection/TrinityLoggerExtension.php" afterPath="$PROJECT_DIR$/DependencyInjection/TrinityLoggerExtension.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Resources/config/services.yml" afterPath="$PROJECT_DIR$/Resources/config/services.yml" />
     </list>
     <ignored path="trinity-logger.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -62,7 +59,11 @@
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
               <caret line="15" column="48" selection-start-line="15" selection-start-column="48" selection-end-line="15" selection-end-column="48" />
-              <folding />
+              <folding>
+                <marker date="1456825131623" expanded="true" signature="0:534" placeholder="services:" />
+                <marker date="1456825131623" expanded="true" signature="330:534" placeholder="trinity.elastic.log.service:" />
+                <marker date="1456825131623" expanded="true" signature="433:534" placeholder="arguments:" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -121,6 +122,7 @@
   </component>
   <component name="PhpWorkspaceProjectConfiguration" backward_compatibility_performed="true" />
   <component name="ProjectFrameBounds">
+    <option name="x" value="1366" />
     <option name="y" value="24" />
     <option name="width" value="1366" />
     <option name="height" value="744" />
@@ -367,7 +369,13 @@
       <option name="project" value="LOCAL" />
       <updated>1456824430289</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="entity decoding">
+      <created>1456825191052</created>
+      <option name="number" value="00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1456825191052</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="TodoView">
@@ -380,7 +388,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="24" width="1366" height="744" extended-state="6" />
+    <frame x="1366" y="24" width="1366" height="744" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.26136363" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -468,7 +476,11 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="14" column="41" selection-start-line="11" selection-start-column="0" selection-end-line="14" selection-end-column="41" />
-          <folding />
+          <folding>
+            <marker date="1456825131623" expanded="true" signature="0:534" placeholder="services:" />
+            <marker date="1456825131623" expanded="true" signature="330:534" placeholder="trinity.elastic.log.service:" />
+            <marker date="1456825131623" expanded="true" signature="433:534" placeholder="arguments:" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -559,7 +571,11 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="15" column="48" selection-start-line="15" selection-start-column="48" selection-end-line="15" selection-end-column="48" />
-          <folding />
+          <folding>
+            <marker date="1456825131623" expanded="true" signature="0:534" placeholder="services:" />
+            <marker date="1456825131623" expanded="true" signature="330:534" placeholder="trinity.elastic.log.service:" />
+            <marker date="1456825131623" expanded="true" signature="433:534" placeholder="arguments:" />
+          </folding>
         </state>
       </provider>
     </entry>
