@@ -13,3 +13,4 @@ services:
       class: Trinity\Bundle\LoggerBundle\Services\ElasticLogService
       arguments:
         - "%trinity.logger.elastic_host%"
+        - "%trinity.logger.entity_manager%"

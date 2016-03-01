@@ -27,21 +27,32 @@ class ElasticLogService
     /**
      * @var index
      */
-    private $index = "Necktie";
+    private $index = "necktie";
 
+    /**
+     * @var em entity manager
+     */
+    private $em;
+
+
+    /**
+     * Gabi-TODO: split into two entities? So there is no EM for sending???
+     */
 
     /**
      * ElasticLogService constructor.
      * @param $clientHost // IP:port, default port is 9200
      */
-    public function __construct($clientHost)
+    public function __construct($clientHost,$em)
     {
+        $this->em = $em;
+
         $params = explode(':',$clientHost);
         $port = isset($params[1]) ? $params[1] : 9200;
 
         $this->ESClient = ClientBuilder::create()           // Instantiate a new ClientBuilder
-            ->setHosts(["${params[0]}:${port}"])          // Set the hosts
-            ->build();
+        ->setHosts(["${params[0]}:${port}"])          // Set the hosts
+        ->build();
     }
 
 
@@ -52,8 +63,32 @@ class ElasticLogService
      */
 
     public function writeInto($typeName, $entity){
-        $entityArray = $this->toArray($entity);
+        $entityArray = $entity;
+
+        $params = [
+            'index' => $this->index,
+            'type' => $typeName,
+            'id'    => 'serialTest',
+            'body' => $entityArray
+        ];
+
+        dump( $this->ESClient->index($params));
+
+
         return 0;
+    }
+
+
+    public function getById($typeName,$id){
+        $params = [
+            'index' => $this->index,
+            'type' => $typeName,
+            'id'    => $id,
+        ];
+        $response = $this->ESClient->get($params);
+
+        return $this->decodeArrayFormat($response['_source']);
+
     }
 
     /**
@@ -76,21 +111,12 @@ class ElasticLogService
      * @return array
      */
 
-    private function toArray($entity){
+    public function toArray($entity){
         $methods = get_class_methods(get_class($entity));
         $array = [];
         foreach($methods as $method){
             if(strpos($method,'get')===0) {
                 $key =substr($method, 3);
-//                if(strpos($key,'DynamoArray')===0){
-//                    //this would result in infinite recursion
-//                    continue;
-//                }
-
-                //date Time problem
-//                if(strpos($key,'ReceiveAt')===0){
-//                    continue;
-//                }
 
                 $value = $entity->$method();
                 if(!$value) continue;
@@ -102,7 +128,7 @@ class ElasticLogService
 
                 if($value){
 
-                    $array[$key] = $value;
+                    $array[lcfirst($key)] = is_string($value)?"${value}" : $value;
                 }
             }
         }
@@ -110,6 +136,40 @@ class ElasticLogService
     }
 
 
+    /**
+     * @var $responseArray
+     * @return $entity
+     */
+    public function decodeArrayFormat( $responseArray){
+
+        $entity=null;
+        $relatedEntities =  $responseArray['EntitiesToDecode'];
+        unset( $responseArray['EntitiesToDecode']);
+
+        foreach( $responseArray as $key => $value){
+
+            $attribute = explode("\x00",$key);
+
+            if(!$entity){
+
+                $entityPath= $attribute[1];
+                $entity = new $entityPath();
+            }
+
+
+            $setter ="set${attribute[2]}" ;
+
+            if(in_array($attribute[2],$relatedEntities)){
+                $subEntity = explode("\x00",$value);
+                $value = ($this->em->getRepository($subEntity[0])->find($subEntity[1]));
+            }
+
+            $entity->$setter($value);
+        }
+
+
+        return $entity;
+    }
 
     public function test(){
         $params = [

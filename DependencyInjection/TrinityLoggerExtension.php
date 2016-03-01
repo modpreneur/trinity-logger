@@ -50,10 +50,15 @@ class TrinityLoggerExtension extends Extension
         if (array_key_exists('elastic_logs', $config) && isset($config['elastic_logs'])) {
             $container->setParameter('trinity.logger.elastic_logs', true);
             $container->setParameter('trinity.logger.elastic_host', $config['elastic_logs']['elastic_host']);
+            $container->setParameter('trinity.logger.entity_manager', $config['elastic_logs']['entity_manager']);
+
         }else{
             $container->setParameter('trinity.logger.elastic_logs', false);
             $container->setParameter('trinity.logger.elastic_host', null);
+            $container->setParameter('trinity.logger.entity_manager', null);
+
         }
+
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.yml');
     }
