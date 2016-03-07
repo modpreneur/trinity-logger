@@ -14,3 +14,4 @@ services:
       arguments:
         - "%trinity.logger.elastic_host%"
         - '@doctrine.orm.default_entity_manager'
+        - "@service_container"
