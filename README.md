@@ -12,27 +12,29 @@ Write issue if you found something that doesn't work as it should.
 
 Logger works with one index of elasticSearch database. This index is specified in bundle configuration
 
-trinity_logger:
-  elastic_logs:
-    elastic_host: '127.0.0.1:9200'
-    managed_index: 'necktie'
+    trinity_logger:
+      elastic_logs:
+        elastic_host: '127.0.0.1:9200'
+        managed_index: 'necktie'
 
 Configurated index can be changed when method is called.
 
-Classic call:
-    $this->get('trinity.elastic.read.log.service')->getCount('ExceptionLog');
+  Classic call:
 
-Call different index:
+    $this->get('trinity.elastic.read.log.service')->getCount('ExceptionLog');
+    
+  Call different index:
+
     $this->get('trinity.elastic.read.log.service')->setIndex('venice')->getCount('ExceptionLog');
 
 For searching it is required to know where is entity class stored. Most classes are stored on same place
 and therefor they can be added into configuration as follow:
 
-trinity_logger:
-  elastic_logs:
-    elastic_host: '127.0.0.1:9200'
-    managed_index: 'necktie'
-    entities_path: 'Necktie\\AppBundle\\Entity'
+    trinity_logger:
+      elastic_logs:
+        elastic_host: '127.0.0.1:9200'
+        managed_index: 'necktie'
+        entities_path: 'Necktie\\AppBundle\\Entity'
 
 When we use nqlQuery (see trinity/search for more about used nqlQuery) we can call:
 
