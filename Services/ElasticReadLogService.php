@@ -209,10 +209,11 @@ class ElasticReadLogService
 
         $entities = [];
         $result = $this->ESClient->search($params);
-
             //Hits contains hits. It is not typ-o...
         foreach($result['hits']['hits'] as $arrayEntity){
             $entity = $this->decodeArrayFormat($arrayEntity['_source']);
+            if(!$entity)continue;
+
             $entity->setId($arrayEntity['_id']);
             $entities[] = $entity;
         }
@@ -247,13 +248,17 @@ class ElasticReadLogService
 
             if(in_array($attribute[2],$relatedEntities)){
                 $subEntity = explode("\x00",$value);
-                $value = ($this->em->getRepository($subEntity[0])->find($subEntity[1]));
+                $value=null;
+                if($subEntity[1]) {
+                    $value = ($this->em->getRepository($subEntity[0])->find($subEntity[1]));
+                }
                 if(!$value){
                     $value = new $subEntity[0]();
                 }
 
             }
-            $entity->$setter($value);
+            if($value)
+                $entity->$setter($value);
         }
 
         return $entity;

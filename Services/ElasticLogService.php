@@ -32,6 +32,7 @@ class ElasticLogService
     /**
      * ElasticLogService constructor.
      * @param $clientHost // IP:port, default port is 9200
+     *
      */
     public function __construct($clientHost,$index)
     {
@@ -114,12 +115,17 @@ class ElasticLogService
                 if(method_exists($value,'getId')) {
                     $class = (\Doctrine\Common\Util\ClassUtils::getClass($value));
 
-                    $entityArray[$key] = "${class}\x00${Id}";
+                    $Id = $value->getId();
+                    if($Id) {
+                        $entityArray[$key] = "${class}\x00${Id}";
 
-                    //explodeded are 0-null,1-entityClass,2-attributeName
-                    $attributeName = explode("\x00", $key)[2];
+                        //explodeded are 0-null,1-entityClass,2-attributeName
+                        $attributeName = explode("\x00", $key)[2];
 
-                    array_push($entityArray['EntitiesToDecode'], $attributeName);
+                        array_push($entityArray['EntitiesToDecode'], $attributeName);
+                    }else{
+                        unset($entityArray[$key]);
+                    }
                 }
 
             }
