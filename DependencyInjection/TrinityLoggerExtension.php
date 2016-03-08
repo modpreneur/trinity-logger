@@ -48,8 +48,24 @@ class TrinityLoggerExtension extends Extension
         }
 
         if (array_key_exists('elastic_logs', $config) && isset($config['elastic_logs'])) {
+
             $container->setParameter('trinity.logger.elastic_logs', true);
             $container->setParameter('trinity.logger.elastic_host', $config['elastic_logs']['elastic_host']);
+
+            if(array_key_exists('managed_index',$config) && isset($config['managed_index'])){
+                $container->setParamemter('trinity.logger.elastic_managed_index',$config['managed_index']);
+            }else{
+                $container->setParamemter('trinity.logger.elastic_managed_index',null);
+
+            }
+
+            if(array_key_exists('entities_path',$config) && isset($config['entities_path'])){
+                $container->setParamemter('trinity.logger.base.entities.path',$config['managed_index']);
+            }else{
+                $container->setParamemter('trinity.logger.base.entities.path',null);
+
+            }
+
         }else{
             $container->setParameter('trinity.logger.elastic_logs', false);
             $container->setParameter('trinity.logger.elastic_host', null);

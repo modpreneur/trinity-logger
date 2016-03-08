@@ -2,7 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="4003e8a2-980c-471c-bb1f-e465a15ccdea" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Services/ElasticReadLogService.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DependencyInjection/Configuration.php" afterPath="$PROJECT_DIR$/DependencyInjection/Configuration.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DependencyInjection/TrinityLoggerExtension.php" afterPath="$PROJECT_DIR$/DependencyInjection/TrinityLoggerExtension.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/README.md" afterPath="$PROJECT_DIR$/README.md" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Resources/config/services.yml" afterPath="$PROJECT_DIR$/Resources/config/services.yml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Services/ElasticLogService.php" afterPath="$PROJECT_DIR$/Services/ElasticLogService.php" />
     </list>
@@ -29,17 +33,10 @@
       <file leaf-file-name="ElasticLogService.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Services/ElasticLogService.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="139" column="9" selection-start-line="139" selection-start-column="9" selection-end-line="139" selection-end-column="9" />
+            <state vertical-scroll-proportion="-78.666664">
+              <caret line="124" column="0" selection-start-line="124" selection-start-column="0" selection-end-line="124" selection-end-column="0" />
               <folding>
-                <marker date="1457346269486" expanded="true" signature="445:606" placeholder=" @var /Elasticsearch\Client; ..." />
-                <marker date="1457346269486" expanded="true" signature="771:923" placeholder=" Gabi-TODO: split into two entities? So there is no EM for sending??? ..." />
-                <marker date="1457346269486" expanded="true" signature="2771:3104" placeholder="..." />
-                <marker date="1457346269486" expanded="true" signature="3450:5366" placeholder="..." />
-                <marker date="1457346269486" expanded="true" signature="3626:4765" placeholder="..." />
-                <marker date="1457346269486" expanded="true" signature="3626:5284" placeholder="..." />
-                <marker date="1457346269486" expanded="true" signature="4566:4636" placeholder="..." />
-                <marker date="1457346269486" expanded="true" signature="6499:6737" placeholder="..." />
+                <marker date="1457426432474" expanded="true" signature="436:485" placeholder=" @var /Elasticsearch\Client; ..." />
               </folding>
             </state>
           </provider>
@@ -55,12 +52,24 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="DynamoDBService.php" pinned="false" current-in-tab="true">
+      <file leaf-file-name="DynamoDBService.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Services/DynamoDBService.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.1227758">
+            <state vertical-scroll-proportion="-2.7037036">
               <caret line="155" column="0" selection-start-line="155" selection-start-column="0" selection-end-line="155" selection-end-column="0" />
               <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ElasticReadLogService.php" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/Services/ElasticReadLogService.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-1.7084745">
+              <caret line="60" column="63" selection-start-line="60" selection-start-column="63" selection-end-line="60" selection-end-column="63" />
+              <folding>
+                <element signature="e#136#161#0#PHP" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -69,7 +78,7 @@
         <entry file="file://$PROJECT_DIR$/Resources/config/services.yml">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="15" column="48" selection-start-line="15" selection-start-column="48" selection-end-line="15" selection-end-column="48" />
+              <caret line="23" column="47" selection-start-line="23" selection-start-column="47" selection-end-line="23" selection-end-column="47" />
               <folding />
             </state>
           </provider>
@@ -78,8 +87,8 @@
       <file leaf-file-name="TrinityLoggerExtension.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/DependencyInjection/TrinityLoggerExtension.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="52" column="0" selection-start-line="52" selection-start-column="0" selection-end-line="52" selection-end-column="0" />
+            <state vertical-scroll-proportion="-13.185185">
+              <caret line="62" column="42" selection-start-line="62" selection-start-column="42" selection-end-line="62" selection-end-column="77" />
               <folding />
             </state>
           </provider>
@@ -88,8 +97,18 @@
       <file leaf-file-name="Configuration.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/DependencyInjection/Configuration.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="37" column="51" selection-start-line="37" selection-start-column="51" selection-end-line="37" selection-end-column="51" />
+            <state vertical-scroll-proportion="-14.518518">
+              <caret line="46" column="53" selection-start-line="46" selection-start-column="53" selection-end-line="46" selection-end-column="53" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="README.md" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/README.md">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-19.034483">
+              <caret line="52" column="1" selection-start-line="52" selection-start-column="1" selection-end-line="52" selection-end-column="1" />
               <folding />
             </state>
           </provider>
@@ -109,13 +128,15 @@
         <option value="$PROJECT_DIR$/Services/DynamoDBService.php" />
         <option value="$PROJECT_DIR$/LoggerBundle/LoggerBundle.php" />
         <option value="$PROJECT_DIR$/LoggerBundle.php" />
-        <option value="$PROJECT_DIR$/README.md" />
         <option value="$PROJECT_DIR$/composer.json" />
         <option value="$PROJECT_DIR$/Resources/Resources/config/services.yml" />
+        <option value="$PROJECT_DIR$/Services/ElasticBaseService.php" />
         <option value="$PROJECT_DIR$/Services/ElasticLogService.php" />
-        <option value="$PROJECT_DIR$/Resources/config/services.yml" />
+        <option value="$PROJECT_DIR$/README.md" />
         <option value="$PROJECT_DIR$/DependencyInjection/Configuration.php" />
         <option value="$PROJECT_DIR$/DependencyInjection/TrinityLoggerExtension.php" />
+        <option value="$PROJECT_DIR$/Services/ElasticReadLogService.php" />
+        <option value="$PROJECT_DIR$/Resources/config/services.yml" />
       </list>
     </option>
   </component>
@@ -129,9 +150,9 @@
   </component>
   <component name="PhpWorkspaceProjectConfiguration" backward_compatibility_performed="true" />
   <component name="ProjectFrameBounds">
-    <option name="y" value="24" />
+    <option name="y" value="-4" />
     <option name="width" value="1366" />
-    <option name="height" value="744" />
+    <option name="height" value="772" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
     <OptionsSetting value="true" id="Add" />
@@ -158,8 +179,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scratches" />
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -240,27 +259,29 @@
           </PATH>
         </subPane>
       </pane>
+      <pane id="Scope" />
+      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../vendor/trinity/logger" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="ignore_missing_gitignore" value="true" />
     <property name="two.files.diff.last.used.file" value="$PROJECT_DIR$/../backups/framework/framework/FrameworkBundle/Services/DynamoDBService.php" />
     <property name="two.files.diff.last.used.folder" value="$PROJECT_DIR$/../../vendor/trinity/logger" />
   </component>
   <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/Resources" />
-      <recent name="$PROJECT_DIR$" />
-      <recent name="$PROJECT_DIR$/Services" />
-      <recent name="$PROJECT_DIR$/DependencyInjection" />
-      <recent name="$PROJECT_DIR$/Entity" />
-    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/Resources/config" />
       <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/LoggerBundle" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/Services" />
+      <recent name="$PROJECT_DIR$/Resources" />
+      <recent name="$PROJECT_DIR$" />
+      <recent name="$PROJECT_DIR$/DependencyInjection" />
+      <recent name="$PROJECT_DIR$/Entity" />
     </key>
   </component>
   <component name="RunManager">
@@ -395,10 +416,10 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="24" width="1366" height="744" extended-state="0" />
-    <editor active="false" />
+    <frame x="0" y="-4" width="1366" height="772" extended-state="6" />
+    <editor active="true" />
     <layout>
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2659091" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.27045456" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32921174" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32921174" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -474,16 +495,59 @@
     <entry file="file://$PROJECT_DIR$/Services/ElasticLogService.php">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
+          <caret line="139" column="9" selection-start-line="139" selection-start-column="9" selection-end-line="139" selection-end-column="9" />
+          <folding>
+            <marker date="1457426432474" expanded="true" signature="436:485" placeholder=" @var /Elasticsearch\Client; ..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Entity/BaseDynamoLog.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="86" column="22" selection-start-line="57" selection-start-column="6" selection-end-line="86" selection-end-column="22" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Services/DynamoDBService.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Resources/config/services.yml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="15" column="48" selection-start-line="15" selection-start-column="48" selection-end-line="15" selection-end-column="48" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/DependencyInjection/TrinityLoggerExtension.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="52" column="0" selection-start-line="52" selection-start-column="0" selection-end-line="52" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/DependencyInjection/Configuration.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="37" column="51" selection-start-line="37" selection-start-column="51" selection-end-line="37" selection-end-column="51" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Services/ElasticLogService.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
           <caret line="91" column="5" selection-start-line="91" selection-start-column="5" selection-end-line="91" selection-end-column="5" />
           <folding>
-            <marker date="1457346269486" expanded="true" signature="445:606" placeholder=" @var /Elasticsearch\Client; ..." />
-            <marker date="1457346269486" expanded="true" signature="771:923" placeholder=" Gabi-TODO: split into two entities? So there is no EM for sending??? ..." />
-            <marker date="1457346269486" expanded="true" signature="2771:3104" placeholder="..." />
-            <marker date="1457346269486" expanded="true" signature="3450:5366" placeholder="..." />
-            <marker date="1457346269486" expanded="true" signature="3626:4765" placeholder="..." />
-            <marker date="1457346269486" expanded="true" signature="3626:5284" placeholder="..." />
-            <marker date="1457346269486" expanded="true" signature="4566:4636" placeholder="..." />
-            <marker date="1457346269486" expanded="true" signature="6499:6737" placeholder="..." />
+            <marker date="1457426432474" expanded="true" signature="436:485" placeholder=" @var /Elasticsearch\Client; ..." />
           </folding>
         </state>
       </provider>
@@ -533,14 +597,7 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <marker date="1457346269486" expanded="true" signature="445:606" placeholder=" @var /Elasticsearch\Client; ..." />
-            <marker date="1457346269486" expanded="true" signature="771:923" placeholder=" Gabi-TODO: split into two entities? So there is no EM for sending??? ..." />
-            <marker date="1457346269486" expanded="true" signature="2771:3104" placeholder="..." />
-            <marker date="1457346269486" expanded="true" signature="3450:5366" placeholder="..." />
-            <marker date="1457346269486" expanded="true" signature="3626:4765" placeholder="..." />
-            <marker date="1457346269486" expanded="true" signature="3626:5284" placeholder="..." />
-            <marker date="1457346269486" expanded="true" signature="4566:4636" placeholder="..." />
-            <marker date="1457346269486" expanded="true" signature="6499:6737" placeholder="..." />
+            <marker date="1457426432474" expanded="true" signature="436:485" placeholder=" @var /Elasticsearch\Client; ..." />
           </folding>
         </state>
       </provider>
@@ -598,58 +655,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/README.md">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.18367347">
-          <caret line="6" column="61" selection-start-line="6" selection-start-column="61" selection-end-line="6" selection-end-column="61" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/composer.json">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.6101695">
           <caret line="20" column="0" selection-start-line="20" selection-start-column="0" selection-end-line="20" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Services/ElasticLogService.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="139" column="9" selection-start-line="139" selection-start-column="9" selection-end-line="139" selection-end-column="9" />
-          <folding>
-            <marker date="1457346269486" expanded="true" signature="445:606" placeholder=" @var /Elasticsearch\Client; ..." />
-            <marker date="1457346269486" expanded="true" signature="771:923" placeholder=" Gabi-TODO: split into two entities? So there is no EM for sending??? ..." />
-            <marker date="1457346269486" expanded="true" signature="2771:3104" placeholder="..." />
-            <marker date="1457346269486" expanded="true" signature="3450:5366" placeholder="..." />
-            <marker date="1457346269486" expanded="true" signature="3626:4765" placeholder="..." />
-            <marker date="1457346269486" expanded="true" signature="3626:5284" placeholder="..." />
-            <marker date="1457346269486" expanded="true" signature="4566:4636" placeholder="..." />
-            <marker date="1457346269486" expanded="true" signature="6499:6737" placeholder="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Resources/config/services.yml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="15" column="48" selection-start-line="15" selection-start-column="48" selection-end-line="15" selection-end-column="48" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/DependencyInjection/TrinityLoggerExtension.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="52" column="0" selection-start-line="52" selection-start-column="0" selection-end-line="52" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/DependencyInjection/Configuration.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="37" column="51" selection-start-line="37" selection-start-column="51" selection-end-line="37" selection-end-column="51" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -663,9 +672,61 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Services/DynamoDBService.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.1227758">
+        <state vertical-scroll-proportion="-2.7037036">
           <caret line="155" column="0" selection-start-line="155" selection-start-column="0" selection-end-line="155" selection-end-column="0" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Services/ElasticLogService.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-78.666664">
+          <caret line="124" column="0" selection-start-line="124" selection-start-column="0" selection-end-line="124" selection-end-column="0" />
+          <folding>
+            <marker date="1457426432474" expanded="true" signature="436:485" placeholder=" @var /Elasticsearch\Client; ..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/README.md">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-19.034483">
+          <caret line="52" column="1" selection-start-line="52" selection-start-column="1" selection-end-line="52" selection-end-column="1" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/DependencyInjection/Configuration.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-14.518518">
+          <caret line="46" column="53" selection-start-line="46" selection-start-column="53" selection-end-line="46" selection-end-column="53" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/DependencyInjection/TrinityLoggerExtension.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-13.185185">
+          <caret line="62" column="42" selection-start-line="62" selection-start-column="42" selection-end-line="62" selection-end-column="77" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Resources/config/services.yml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="23" column="47" selection-start-line="23" selection-start-column="47" selection-end-line="23" selection-end-column="47" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Services/ElasticReadLogService.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-1.7084745">
+          <caret line="60" column="63" selection-start-line="60" selection-start-column="63" selection-end-line="60" selection-end-column="63" />
+          <folding>
+            <element signature="e#136#161#0#PHP" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

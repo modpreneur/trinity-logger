@@ -44,7 +44,8 @@ class Configuration implements ConfigurationInterface
                 ->arrayNode('elastic_logs')
                     ->children()
                         ->scalarNode('elastic_host')->isRequired()->cannotBeEmpty()->end()
-
+                        ->scalarNode('managed_index')->cannotBeEmpty()->end()
+                        ->scalarNode('entities_path')->cannotBeEmpty()->end()
         ;
 
         return $treeBuilder;
