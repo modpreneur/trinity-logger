@@ -47,11 +47,19 @@ class ElasticLogService
 
 
     /**
+     * @param $index
+     * @return $this
+     */
+    public function setIndex($index){
+        $this->index = $index;
+        return $this;
+    }
+
+    /**
      * @param $typeName //log name
      * @param $entity   //entity
      * @return int      //ID of the logged
      */
-
     public function writeInto($typeName, $entity){
             /*
              * Transform entity into array. Elastic can do it for you, but result is not in your hands.
@@ -64,11 +72,8 @@ class ElasticLogService
             'type' => $typeName,
             'body' => $entityArray
         ];
-//        try {
-            $response = $this->ESClient->index($params);
-//        }catch(){
+        $response = $this->ESClient->index($params);
 
-//        };
         return $response['_id'];
     }
 

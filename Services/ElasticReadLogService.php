@@ -79,6 +79,7 @@ class ElasticReadLogService
      * @param $typeName
      * @param $id
      * @return $entity matching ID
+     * @throws 404 exceptions when not found
      */
     public function getById($typeName,$id){
         $params = [
@@ -112,6 +113,26 @@ class ElasticReadLogService
         ];
 
         return $this->ESClient->count($params)['count'];
+    }
+
+
+    /**
+     * @param $index
+     * @return $this
+     */
+    public function setIndex($index){
+        $this->index = $index;
+        return $this;
+    }
+
+
+    /**
+     * @param $entityPath
+     * @return $this
+     */
+    public function setEntityPath($entityPath){
+        $this->entityPath = $entityPath;
+        return $this;
     }
 
 
