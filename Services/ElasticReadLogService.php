@@ -163,7 +163,7 @@ class ElasticReadLogService
         ];
 
             // \u0000Necktie\\AppBundle\\Entity\\Ipn\u0000invoice";
-        $keyPrefix = $this->container->getParameter('trinity.search.namespace') . "\\" . $entityName;
+        $keyPrefix = $this->entityPath . "\\" . $entityName;
 
         if ($offset = $nqLQuery->getOffset()) {
             $params['body']['from'] = $offset;
