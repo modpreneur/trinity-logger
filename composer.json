@@ -13,10 +13,9 @@
   "require": {
     "php": ">=7",
     "symfony/symfony": "~2.8 | ~3.0",
-    "aws/aws-sdk-php": "~3.11",
     "elasticsearch/elasticsearch": "~2.0",
     "doctrine/orm": "~2.5",
-    "doctrine/doctrine-bundle": "~1.6",
+    "doctrine/doctrine-bundle": "~1.6"
 
   },
 

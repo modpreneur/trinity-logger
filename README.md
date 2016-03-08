@@ -53,5 +53,3 @@ As main use of this bundle for now is Necktie, following values are used as defa
 configuration.
  managed_index: 'necktie'
  entities_path: 'Necktie\\AppBundle\\Entity'
-
-The
