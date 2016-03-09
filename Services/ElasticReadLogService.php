@@ -156,9 +156,7 @@ class ElasticReadLogService
         $params = [
             'index' => $this->index,
             'type' => $typeName,
-
             'body' => [
-
             ]
         ];
 
@@ -198,9 +196,9 @@ class ElasticReadLogService
 
                 //created is object, for sort has to be attribute
             if($attributeName === 'created')
-                $fields["\x00$keyPrefix\x00$attributeName.date"] = ['order' => $column->getOrdering()];
+                $fields["\x00$keyPrefix\x00$attributeName.date"] = ['order' => strtolower($column->getOrdering())];
             else
-                $fields["\x00$keyPrefix\x00$attributeName"] = ['order' => $column->getOrdering()];
+                $fields["\x00$keyPrefix\x00$attributeName"] = ['order' => strtolower($column->getOrdering())];
         }
 
         if ($fields) {
@@ -212,14 +210,12 @@ class ElasticReadLogService
             //Hits contains hits. It is not typ-o...
         foreach($result['hits']['hits'] as $arrayEntity){
             $entity = $this->decodeArrayFormat($arrayEntity['_source']);
-            if(!$entity)continue;
 
             $entity->setId($arrayEntity['_id']);
             $entities[] = $entity;
         }
         return $entities;
     }
-
 
     /**
      * Transform document from ElasticSearch obtained as array into entity matching
@@ -228,7 +224,8 @@ class ElasticReadLogService
      * @var $responseArray
      * @return $entity
      */
-    public function decodeArrayFormat( $responseArray){
+    public function decodeArrayFormat($responseArray)
+    {
 
         $entity=null;
         $relatedEntities =  $responseArray['EntitiesToDecode'];
