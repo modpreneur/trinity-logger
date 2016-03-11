@@ -251,6 +251,10 @@ class ElasticReadLogService
                 $entity = new $entityPath();
             }
 
+            if($attribute[2] ==='created' ){
+                    $value = \DateTime::__set_state($value);
+            }
+
             $setter ="set${attribute[2]}" ;
 
             if(in_array($attribute[2],$relatedEntities)){
