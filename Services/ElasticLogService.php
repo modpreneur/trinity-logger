@@ -32,7 +32,7 @@ class ElasticLogService
     /**
      * ElasticLogService constructor.
      * @param $clientHost // IP:port, default port is 9200
-     *
+     * @param $index // name of DB
      */
     public function __construct($clientHost,$index)
     {
