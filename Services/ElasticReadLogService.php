@@ -10,6 +10,8 @@ namespace Trinity\Bundle\LoggerBundle\Services;
 use Elasticsearch\Client;
 use Elasticsearch\ClientBuilder;
 
+use \Elasticsearch\Common\Exceptions\Missing404Exception as NFException;
+
 
 class ElasticReadLogService
 {
@@ -111,8 +113,12 @@ class ElasticReadLogService
             'index' => $this->index,
             'type' => $typeName,
         ];
+        try {
+            return $this->ESClient->count($params)['count'];
+        }catch(NFException $e){
+            return 0;
+        }
 
-        return $this->ESClient->count($params)['count'];
     }
 
 
@@ -206,7 +212,11 @@ class ElasticReadLogService
         }
 
         $entities = [];
-        $result = $this->ESClient->search($params);
+        try {
+            $result = $this->ESClient->search($params);
+        }catch(NFException $e){
+            return [];
+        }
             //Hits contains hits. It is not typ-o...
         foreach($result['hits']['hits'] as $arrayEntity){
             $entity = $this->decodeArrayFormat($arrayEntity['_source']);
