@@ -75,6 +75,8 @@ class ElasticLogService
         ];
         $response = $this->ESClient->index($params);
 
+        $this->ESClient->indices()->refresh(['index' => $this->index]);
+
         return $response['_id'];
     }
 
