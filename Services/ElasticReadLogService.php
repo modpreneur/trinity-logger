@@ -10,6 +10,8 @@ namespace Trinity\Bundle\LoggerBundle\Services;
 use Elasticsearch\Client;
 use Elasticsearch\ClientBuilder;
 
+
+use \Symfony\Component\HttpKernel\Exception\NotFoundHttpException as Exception404;
 use \Elasticsearch\Common\Exceptions\Missing404Exception as NFException;
 
 
@@ -89,7 +91,11 @@ class ElasticReadLogService
             'type' => $typeName,
             'id'    => $id,
         ];
-        $response = $this->ESClient->get($params);
+        try {
+            $response = $this->ESClient->get($params);
+        }catch(NFException $e){
+            throw new Exception404();
+        }
 
         $entity =$this->decodeArrayFormat($response['_source']);
 
@@ -157,7 +163,7 @@ class ElasticReadLogService
              * TODO: SQL where part
              */
         $entityName = $nqLQuery->getFrom()->getTables()[0]->getName();
-        $typeName = $this->translation[$entityName];
+        $typeName = isset($this->translation[$entityName])?$this->translation[$entityName]:$entityName;
 
         $params = [
             'index' => $this->index,
@@ -165,6 +171,13 @@ class ElasticReadLogService
             'body' => [
             ]
         ];
+
+        if($entityName === 'ExceptionLog'){
+            //it is exception because it is not in standard namespace
+            $this->entityPath="Trinity\\FrameworkBundle\\Entity";
+
+        }
+
 
             // \u0000Necktie\\AppBundle\\Entity\\Ipn\u0000invoice";
         $keyPrefix = $this->entityPath . "\\" . $entityName;
@@ -217,6 +230,7 @@ class ElasticReadLogService
         }catch(NFException $e){
             return [];
         }
+
             //Hits contains hits. It is not typ-o...
         foreach($result['hits']['hits'] as $arrayEntity){
             $entity = $this->decodeArrayFormat($arrayEntity['_source']);
@@ -236,7 +250,6 @@ class ElasticReadLogService
      */
     public function decodeArrayFormat($responseArray)
     {
-
         $entity=null;
         $relatedEntities =  $responseArray['EntitiesToDecode'];
         unset( $responseArray['EntitiesToDecode']);
