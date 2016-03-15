@@ -178,7 +178,6 @@ class ElasticReadLogService
 
         }
 
-
             // \u0000Necktie\\AppBundle\\Entity\\Ipn\u0000invoice";
         $keyPrefix = $this->entityPath . "\\" . $entityName;
 
@@ -212,12 +211,12 @@ class ElasticReadLogService
             if ($column->getName() === '_id') continue;
 
             $attributeName = ($column->getName());
-
-                //created is object, for sort has to be attribute
-            if($attributeName === 'created')
-                $fields["\x00$keyPrefix\x00$attributeName.date"] = ['order' => strtolower($column->getOrdering())];
-            else
-                $fields["\x00$keyPrefix\x00$attributeName"] = ['order' => strtolower($column->getOrdering())];
+//      //FALSE -created is timestamp =  int
+//                //created is object, for sort has to be attribute
+//            if($attributeName === 'created')
+//                $fields["\x00$keyPrefix\x00$attributeName.date"] = ['order' => strtolower($column->getOrdering())];
+//            else
+            $fields["\x00$keyPrefix\x00$attributeName"] = ['order' => strtolower($column->getOrdering())];
         }
 
         if ($fields) {
@@ -264,9 +263,9 @@ class ElasticReadLogService
                 $entity = new $entityPath();
             }
 
-            if($attribute[2] ==='created' ){
-                    $value = \DateTime::__set_state($value);
-            }
+//            if($attribute[2] ==='created' ){
+//                    $value = \DateTime::__set_state($value);
+//            }
 
             $setter ="set${attribute[2]}" ;
 

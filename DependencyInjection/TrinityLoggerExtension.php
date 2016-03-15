@@ -60,7 +60,7 @@ class TrinityLoggerExtension extends Extension
             }
 
             if(array_key_exists('entities_path',$config['elastic_logs']) && isset($config['elastic_logs']['entities_path'])){
-                $container->setParameter('trinity.logger.base.entities.path',$config['elastic_logs']['managed_index']);
+                $container->setParameter('trinity.logger.base.entities.path',$config['elastic_logs']['entities_path']);
             }else{
                 $container->setParameter('trinity.logger.base.entities.path',null);
 
