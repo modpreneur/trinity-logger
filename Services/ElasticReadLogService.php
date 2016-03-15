@@ -28,7 +28,8 @@ class ElasticReadLogService
      * @var entity to table translation
      */
     private $translation = [
-        'Ipn' => 'IpnLog'
+        'Ipn' => 'IpnLog',
+        'Notification' => 'NotificationLog'
     ];
 
 
