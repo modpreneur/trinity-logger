@@ -11,8 +11,9 @@ use Elasticsearch\Client;
 use Elasticsearch\ClientBuilder;
 
 
-use \Symfony\Component\HttpKernel\Exception\NotFoundHttpException as Exception404;
-use \Elasticsearch\Common\Exceptions\Missing404Exception as NFException;
+use Elasticsearch\Common\Exceptions\BadRequest400Exception;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException as Exception404;
+use Elasticsearch\Common\Exceptions\Missing404Exception as NFException;
 
 
 class ElasticReadLogService
@@ -228,6 +229,8 @@ class ElasticReadLogService
         try {
             $result = $this->ESClient->search($params);
         }catch(NFException $e){
+            return [];
+        }catch(BadRequest400Exception $e){
             return [];
         }
 
