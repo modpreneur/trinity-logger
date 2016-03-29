@@ -7,6 +7,7 @@
  */
 
 namespace Trinity\Bundle\LoggerBundle\Services;
+
 use Elasticsearch\Client;
 use Elasticsearch\ClientBuilder;
 
@@ -34,15 +35,23 @@ class ElasticLogService
      * @param $clientHost // IP:port, default port is 9200
      * @param $index // name of DB
      */
-    public function __construct($clientHost,$index)
+    public function __construct($clientHost, $index)
     {
-        $this->index = $index? $index : 'necktie';
+        $this->index = $index ? $index : 'necktie';
 
-        $params = explode(':',$clientHost);
+        $params = explode(':', $clientHost);
         $port = isset($params[1]) ? $params[1] : 9200;
 
-        $this->ESClient = ClientBuilder::create()           // Instantiate a new ClientBuilder
-        ->setHosts(["${params[0]}:${port}"])          // Set the hosts
+        //Gabi-TODO: in settings?
+        $handlerParams = [
+            'max_handles' => 50
+        ];
+
+        $defaultHandler = ClientBuilder::defaultHandler($handlerParams);
+
+        $this->ESClient = ClientBuilder::create()// Instantiate a new ClientBuilder
+        ->setHosts(["${params[0]}:${port}"])// Set the hosts
+        ->setHandler($defaultHandler)
         ->build();
     }
 
@@ -51,20 +60,49 @@ class ElasticLogService
      * @param $index
      * @return $this
      */
-    public function setIndex($index){
+    public function setIndex($index)
+    {
         $this->index = $index;
         return $this;
     }
 
     /**
      * @param $typeName //log name
-     * @param $entity   //entity
+     * @param $entity //entity
      * @return int      //ID of the logged
      */
-    public function writeInto($typeName, $entity){
-            /*
-             * Transform entity into array. Elastic can do it for you, but result is not in your hands.
-             */
+    public function writeIntoAsync($typeName, $entity)
+    {
+        /*
+         * Transform entity into array. Elastic can do it for you, but result is not in your hands.
+         */
+
+        $entityArray = $this->getElasticArray($entity);
+
+        $params = [
+            'index' => $this->index,
+            'type' => $typeName,
+            'body' => $entityArray,
+            'client' => ['future' => 'lazy']
+        ];
+        $response = $this->ESClient->index($params);
+
+
+//        $this->ESClient->indices()->refresh(['index' => $this->index]);
+
+        return $response['_id'];
+    }
+
+    /**
+     * @param $typeName //log name
+     * @param $entity //entity
+     * @return int      //ID of the logged
+     */
+    public function writeInto($typeName, $entity)
+    {
+        /*
+         * Transform entity into array. Elastic can do it for you, but result is not in your hands.
+         */
 
         $entityArray = $this->getElasticArray($entity);
 
@@ -81,7 +119,6 @@ class ElasticLogService
     }
 
 
-
     /**
      * Function transforms entity into array, the array stores type of entity
      * for recreation when obtain from elastic search and type and id of related
@@ -95,37 +132,38 @@ class ElasticLogService
      * @param $entity
      * @return array
      */
-    private function getElasticArray($entity){
-        $entityArray = (array) $entity;
+    private function getElasticArray($entity)
+    {
+        $entityArray = (array)$entity;
         $entityArray['EntitiesToDecode'] = [];
 
-        foreach($entityArray as $key => $value){
+        foreach ($entityArray as $key => $value) {
             /*
              * Elastic can manage just few objects when passed. Here we preprocess them
              * so elastic doesn't have problems
              */
-            if(is_object($value)){
+            if (is_object($value)) {
 
-                    //elastic can work with DateTime, not with ours entities
-                if(get_class($value) === 'DateTime'){
+                //elastic can work with DateTime, not with ours entities
+                if (get_class($value) === 'DateTime') {
                     continue;
                 }
-                if(get_class($value) === 'Symfony\Component\HttpFoundation\Request'){
+                if (get_class($value) === 'Symfony\Component\HttpFoundation\Request') {
                     $entityArray[$key] = $value->__toString();
                 }
 
-                if(method_exists($value,'getId')) {
+                if (method_exists($value, 'getId')) {
                     $class = (\Doctrine\Common\Util\ClassUtils::getClass($value));
 
                     $Id = $value->getId();
-                    if($Id) {
+                    if ($Id) {
                         $entityArray[$key] = "${class}\x00${Id}";
 
                         //explodeded are 0-null,1-entityClass,2-attributeName
                         $attributeName = explode("\x00", $key)[2];
 
                         array_push($entityArray['EntitiesToDecode'], $attributeName);
-                    }else{
+                    } else {
                         unset($entityArray[$key]);
                     }
                 }
@@ -133,7 +171,7 @@ class ElasticLogService
             }
         }
 
-       return $entityArray;
+        return $entityArray;
     }
 
 }

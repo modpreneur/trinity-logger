@@ -227,6 +227,8 @@ class ElasticReadLogService
 
         $entities = [];
         try {
+            $this->ESClient->indices()->refresh(['index' => $this->index]);
+
             $result = $this->ESClient->search($params);
         }catch(NFException $e){
             return [];
