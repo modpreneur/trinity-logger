@@ -12,15 +12,14 @@
 
   "require": {
     "php": ">=7",
-    "symfony/symfony": "~2.8 | ~3.0",
-    "elasticsearch/elasticsearch": "~2.0",
-    "doctrine/orm": "~2.5",
-    "doctrine/doctrine-bundle": "~1.6"
-
+    "symfony/http-kernel": "~2.8|~3.0",
+    "symfony/dependency-injection": "~2.8|~3.0",
+    "symfony/config": "~2.8|~3.0",
+    "elasticsearch/elasticsearch": "~2.0"
   },
 
   "require-dev": {
-
+    "symfony/var-dumper": "~3.0"
   },
 
   "autoload": {

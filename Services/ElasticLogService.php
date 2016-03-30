@@ -21,7 +21,7 @@ class ElasticLogService
      */
 
     /**
-     * @var /Elasticsearch\Client;
+     * @var Client;
      */
     private $ESClient;
     /**
