@@ -1,21 +1,12 @@
 services:
 
-    trinity.logger.dynamo.log.service:
-      class: Trinity\Bundle\LoggerBundle\Services\DynamoDBService
-      arguments:
-        - "%trinity.logger.dynamo_host%"
-        - "%trinity.logger.dynamo_port%"
-        - "%trinity.logger.aws_key%"
-        - "%trinity.logger.aws_secret%"
-        - "%trinity.logger.aws_region%"
-
-    trinity.logger.elastic.log.service:
+    trinity.elastic.log.service:
       class: Trinity\Bundle\LoggerBundle\Services\ElasticLogService
       arguments:
         - "%trinity.logger.elastic_host%"
         - "%trinity.logger.elastic_managed_index%"
 
-    trinity.logger.elastic.read.log.service:
+    trinity.elastic.read.log.service:
       class: Trinity\Bundle\LoggerBundle\Services\ElasticReadLogService
       arguments:
         - "%trinity.logger.elastic_host%"

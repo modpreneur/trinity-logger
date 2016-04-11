@@ -26,7 +26,7 @@ class ElasticReadLogService
 
 
     /**
-     * @var entity to table translation
+     * @var array entity to table translation
      */
     private $translation = [
         'Ipn' => 'IpnLog',
