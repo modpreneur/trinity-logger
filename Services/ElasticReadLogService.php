@@ -177,8 +177,12 @@ class ElasticReadLogService
         if($entityName === 'ExceptionLog'){
             //it is exception because it is not in standard namespace
             $this->entityPath="Trinity\\FrameworkBundle\\Entity";
-
         }
+        if($entityName === 'PaymentErrorLog'){
+            //it is exception because it is not in standard namespace
+            $this->entityPath="Necktie\\PaymentBundle\\Entity";
+        }
+
 
             // \u0000Necktie\\AppBundle\\Entity\\Ipn\u0000invoice";
         $keyPrefix = $this->entityPath . "\\" . $entityName;
