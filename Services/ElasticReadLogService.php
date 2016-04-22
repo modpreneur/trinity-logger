@@ -227,6 +227,9 @@ class ElasticReadLogService
 
             $attributeName = $column->getName();
             $fields[$attributeName] = ['order' => strtolower($column->getOrdering())];
+            if ($attributeName === 'changedEntityClass') {
+                $fields['changedEntityId'] = ['order' => strtolower($column->getOrdering())];
+            }
         }
 
         if ($fields) {
@@ -257,10 +260,10 @@ class ElasticReadLogService
 
     /**
      * Takes entity and try to search AdminActionLog for matching nodes.
-     *
      * @param $entity
-     * @param $path
+     * @return array
      */
+
     public function getStatusByEntity($entity)
     {
 
