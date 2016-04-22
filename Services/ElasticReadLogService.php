@@ -278,9 +278,9 @@ class ElasticReadLogService
         $params['body']['_source'] = $fields;
         $params['body']['sort']['createdAt']['order'] = 'desc';
 
-        $params['body']['query']['bool']['filter'] = ['term' =>['changedEntityClass' => get_class($entity)]];
+        $params['body']['query']['bool']['filter']['term']['changedEntityClass'] = get_class($entity);
         if (method_exists($entity, 'getId')) {
-            $params['body']['query']['bool']['filter'] = ['term' => ['changedEntityId' => $entity->getId()]];
+            $params['body']['query']['bool']['filter']['term']['changedEntityId'] = $entity->getId();
         }
 
 
