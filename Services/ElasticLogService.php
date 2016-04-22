@@ -134,22 +134,23 @@ class ElasticLogService
      */
     private function getElasticArray($entity)
     {
-        $entityArray = (array)$entity;
         $entityArray['EntitiesToDecode'] = [];
+        $entityArray['SourceEntityClass'] = get_class($entity);
 
-        foreach ($entityArray as $key => $value) {
+        foreach ((array)$entity as $key => $value) {
+            $keyParts = explode("\x00", $key);
+            $key = array_pop($keyParts);
             /*
              * Elastic can manage just few objects when passed. Here we preprocess them
              * so elastic doesn't have problems
              */
             if (is_object($value)) {
-
                 //elastic can work with DateTime, not with ours entities
                 if (get_class($value) === 'DateTime') {
                     continue;
                 }
                 if (get_class($value) === 'Symfony\Component\HttpFoundation\Request') {
-                    $entityArray[$key] = $value->__toString();
+                    $entityArray[$key] = (string) $value;
                 }
 
                 if (method_exists($value, 'getId')) {
@@ -158,16 +159,13 @@ class ElasticLogService
                     $Id = $value->getId();
                     if ($Id) {
                         $entityArray[$key] = "${class}\x00${Id}";
-
-                        //explodeded are 0-null,1-entityClass,2-attributeName
-                        $attributeName = explode("\x00", $key)[2];
-
-                        array_push($entityArray['EntitiesToDecode'], $attributeName);
+                        $entityArray['EntitiesToDecode'][] = $key;
                     } else {
                         unset($entityArray[$key]);
                     }
                 }
-
+            } else {
+                $entityArray[$key] = $value;
             }
         }
 

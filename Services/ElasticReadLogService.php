@@ -7,14 +7,12 @@
  */
 
 namespace Trinity\Bundle\LoggerBundle\Services;
+
 use Elasticsearch\Client;
 use Elasticsearch\ClientBuilder;
-
-
 use Elasticsearch\Common\Exceptions\BadRequest400Exception;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException as Exception404;
 use Elasticsearch\Common\Exceptions\Missing404Exception as NFException;
-
 
 class ElasticReadLogService
 {
@@ -42,7 +40,7 @@ class ElasticReadLogService
     /**
      * @var index
      */
-    private $index = "necktie";
+    private $index = 'necktie';
 
     /**
      * @var em entity manager
@@ -68,15 +66,15 @@ class ElasticReadLogService
     {
         $this->em = $em;
 
-        $this->index = $index? $index : 'necktie';
+        $this->index = $index ?: 'necktie';
 
-        $this->entityPath = $baseEntityPath? $baseEntityPath : "Necktie\\AppBundle\\Entity";
+        $this->entityPath = $baseEntityPath ?: "Necktie\\AppBundle\\Entity";
 
-        $params = explode(':',$clientHost);
-        $port = isset($params[1]) ? $params[1] : 9200;
+        $params = explode(':', $clientHost);
+        $port = array_key_exists(1, $params) ? $params[1] : 9200;
 
-        $this->ESClient = ClientBuilder::create()           // Instantiate a new ClientBuilder
-        ->setHosts(["${params[0]}:${port}"])          // Set the hosts
+        $this->ESClient = ClientBuilder::create()// Instantiate a new ClientBuilder
+        ->setHosts(["${params[0]}:${port}"])// Set the hosts
         ->build();
     }
 
@@ -87,21 +85,22 @@ class ElasticReadLogService
      * @return $entity matching ID
      * @throws 404 exceptions when not found
      */
-    public function getById($typeName,$id){
+    public function getById($typeName, $id)
+    {
         $params = [
             'index' => $this->index,
             'type' => $typeName,
-            'id'    => $id,
+            'id' => $id,
         ];
         try {
             $response = $this->ESClient->get($params);
-        }catch(NFException $e){
+        } catch (NFException $e) {
             throw new Exception404();
         }
 
-        $entity =$this->decodeArrayFormat($response['_source']);
+        $entity = $this->decodeArrayFormat($response['_source']);
 
-        if(!$entity->getId()){
+        if (!$entity->getId()) {
             $entity->setId($response['_id']);
         }
 
@@ -116,14 +115,15 @@ class ElasticReadLogService
      * @param $typeName
      * @return mixed
      */
-    public function getCount($typeName){
+    public function getCount($typeName)
+    {
         $params = [
             'index' => $this->index,
             'type' => $typeName,
         ];
         try {
             return $this->ESClient->count($params)['count'];
-        }catch(NFException $e){
+        } catch (NFException $e) {
             return 0;
         }
 
@@ -134,7 +134,8 @@ class ElasticReadLogService
      * @param $index
      * @return $this
      */
-    public function setIndex($index){
+    public function setIndex($index)
+    {
         $this->index = $index;
         return $this;
     }
@@ -144,7 +145,8 @@ class ElasticReadLogService
      * @param $entityPath
      * @return $this
      */
-    public function setEntityPath($entityPath){
+    public function setEntityPath($entityPath)
+    {
         $this->entityPath = $entityPath;
         return $this;
     }
@@ -161,11 +163,11 @@ class ElasticReadLogService
     public function getByQuery($nqLQuery)
     {
 
-            /*
-             * TODO: SQL where part
-             */
+        /*
+         * TODO: SQL where part
+         */
         $entityName = $nqLQuery->getFrom()->getTables()[0]->getName();
-        $typeName = isset($this->translation[$entityName])?$this->translation[$entityName]:$entityName;
+        $typeName = array_key_exists($entityName, $this->translation) ? $this->translation[$entityName] : $entityName;
 
         $params = [
             'index' => $this->index,
@@ -174,19 +176,19 @@ class ElasticReadLogService
             ]
         ];
 
-        if($entityName === 'ExceptionLog'){
-            //it is exception because it is not in standard namespace
-            $this->entityPath="Trinity\\FrameworkBundle\\Entity";
-        }
-        if($entityName === 'PaymentErrorLog'){
-            //it is exception because it is not in standard namespace
-            $this->entityPath="Necktie\\PaymentBundle\\Entity";
-        }
+//        if ($entityName === 'ExceptionLog') {
+//            //it is exception because it is not in standard namespace
+//            $this->entityPath = "Trinity\\FrameworkBundle\\Entity";
+//        }
+//        if ($entityName === 'PaymentErrorLog') {
+//            //it is exception because it is not in standard namespace
+//            $this->entityPath = "Necktie\\PaymentBundle\\Entity";
+//        }
 
 
-            // \u0000Necktie\\AppBundle\\Entity\\Ipn\u0000invoice";
-        $keyPrefix = $this->entityPath . "\\" . $entityName;
-
+        // \u0000Necktie\\AppBundle\\Entity\\Ipn\u0000invoice";
+//        $keyPrefix = $this->entityPath . "\\" . $entityName;
+//
         if ($offset = $nqLQuery->getOffset()) {
             $params['body']['from'] = $offset;
         }
@@ -197,32 +199,34 @@ class ElasticReadLogService
 
         $fields = [];
         foreach ($nqLQuery->getSelect()->getColumns() as $column) {
-            if ($column->getName() === '_id') continue;
-            if ($column->getName() === 'id') continue;
-            $attributeName = ($column->getName());
+            if ($column->getName() === '_id') {
+                continue;
+            }
+            if ($column->getName() === 'id') {
+                continue;
+            }
+            $attributeName = $column->getName();
 
-            $fields[] = "\x00$keyPrefix\x00$attributeName";
+            $fields[] = "$attributeName";
         }
 
 
         if ($fields) {
             $fields[] = 'EntitiesToDecode';
+            $fields[] = 'SourceEntityClass';
             $params['body']['_source'] = $fields;
         }
 
 
         $fields = [];
         foreach ($nqLQuery->getOrderBy()->getColumns() as $column) {
-                //For grid use, is not stored in elasticSearch
-            if ($column->getName() === '_id') continue;
+            //For grid use, is not stored in elasticSearch
+            if ($column->getName() === '_id') {
+                continue;
+            }
 
-            $attributeName = ($column->getName());
-//      //FALSE -created is timestamp =  int
-//                //created is object, for sort has to be attribute
-//            if($attributeName === 'created')
-//                $fields["\x00$keyPrefix\x00$attributeName.date"] = ['order' => strtolower($column->getOrdering())];
-//            else
-            $fields["\x00$keyPrefix\x00$attributeName"] = ['order' => strtolower($column->getOrdering())];
+            $attributeName = $column->getName();
+            $fields[$attributeName] = ['order' => strtolower($column->getOrdering())];
         }
 
         if ($fields) {
@@ -234,14 +238,14 @@ class ElasticReadLogService
             $this->ESClient->indices()->refresh(['index' => $this->index]);
 
             $result = $this->ESClient->search($params);
-        }catch(NFException $e){
+        } catch (NFException $e) {
             return [];
-        }catch(BadRequest400Exception $e){
+        } catch (BadRequest400Exception $e) {
             return [];
         }
 
-            //Hits contains hits. It is not typ-o...
-        foreach($result['hits']['hits'] as $arrayEntity){
+        //Hits contains hits. It is not typ-o...
+        foreach ($result['hits']['hits'] as $arrayEntity) {
             $entity = $this->decodeArrayFormat($arrayEntity['_source']);
 
             $entity->setId($arrayEntity['_id']);
@@ -250,52 +254,111 @@ class ElasticReadLogService
         return $entities;
     }
 
+
+    /**
+     * Takes entity and try to search AdminActionLog for matching nodes.
+     *
+     * @param $entity
+     * @param $path
+     */
+    public function getStatusByEntity($entity)
+    {
+
+        $params = [
+            'index' => $this->index,
+            'type' => 'AdminActionLog',
+            'body' => [
+            ]
+        ];
+
+        $fields[] = 'changeSet';
+        $fields[] = 'createdAt';
+        $fields[] = 'actionType';
+        $fields[] = 'user';
+        $params['body']['_source'] = $fields;
+        $params['body']['sort']['createdAt']['order'] = 'desc';
+
+        $params['body']['query']['bool']['filter'] = ['term' =>['changedEntityClass' => get_class($entity)]];
+        if (method_exists($entity, 'getId')) {
+            $params['body']['query']['bool']['filter'] = ['term' => ['changedEntityId' => $entity->getId()]];
+        }
+
+
+        try {
+            $this->ESClient->indices()->refresh(['index' => $this->index]);
+
+            $result = $this->ESClient->search($params);
+        } catch (NFException $e) {
+            return [];
+        } catch (BadRequest400Exception $e) {
+            return [];
+        }
+
+        dump($result);
+        $entities = [];
+        foreach ($result['hits']['hits'] as $arrayEntity) {
+            $entity = $arrayEntity['_source'];
+            $entity['_id'] = $arrayEntity['_id'];
+            $entity['user'] = $this->getEntity($entity['user']);
+            $entity['changeSet'] = array_keys((array) json_decode($entity['changeSet']));
+            $entities[] = $entity;//[$entity['createdAt'], $entity['changeSet'], $entity['actionType'], ];
+        }
+        return $entities;
+
+        return $result['hits']['hits'];
+
+
+    }
+
+
     /**
      * Transform document from ElasticSearch obtained as array into entity matching
      * original entity. The relations 1:1 are recreated.     *
      *
-     * @var $responseArray
+     * @param $responseArray
      * @return $entity
      */
     public function decodeArrayFormat($responseArray)
     {
-        $entity=null;
-        $relatedEntities =  $responseArray['EntitiesToDecode'];
-        unset( $responseArray['EntitiesToDecode']);
+        $entity = null;
+        $relatedEntities = $responseArray['EntitiesToDecode'];
+        unset($responseArray['EntitiesToDecode']);
+        $entityClass = $responseArray['SourceEntityClass'];
+        unset($responseArray['SourceEntityClass']);
 
-        foreach( $responseArray as $key => $value){
+        $entity = new $entityClass();
 
-            $attribute = explode("\x00",$key);
+        foreach ($responseArray as $key => $value) {
+            $setter = "set${key}";
 
-            if(!$entity){
-
-                $entityPath= $attribute[1];
-                $entity = new $entityPath();
+            if (in_array($key, $relatedEntities, true)) {
+                $value = $this->getEntity($value);
             }
-
-//            if($attribute[2] ==='created' ){
-//                    $value = \DateTime::__set_state($value);
-//            }
-
-            $setter ="set${attribute[2]}" ;
-
-            if(in_array($attribute[2],$relatedEntities)){
-                $subEntity = explode("\x00",$value);
-                $value=null;
-                if($subEntity[1]) {
-                    $value = ($this->em->getRepository($subEntity[0])->find($subEntity[1]));
-                }
-                if(!$value){
-                    $value = new $subEntity[0]();
-                }
-
-            }
-            if($value)
+            if ($value) {
                 $entity->$setter($value);
+            }
         }
 
         return $entity;
     }
 
 
+    /**
+     * Transform reference into doctrine entity
+     * @param string $identification
+     * @return $value
+     */
+    private function getEntity(string $identification)
+    {
+        $subEntity = explode("\x00", $identification);
+        $value = null;
+        if ($subEntity[1]) {
+            $value = $this->em->getRepository($subEntity[0])->find($subEntity[1]);
+        }
+        if (!$value) {
+            $value = new $subEntity[0]();
+        }
+        
+        return $value;
+    }
 }
