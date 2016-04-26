@@ -98,11 +98,7 @@ class ElasticReadLogService
             throw new Exception404();
         }
 
-        $entity = $this->decodeArrayFormat($response['_source']);
-
-        if (!$entity->getId()) {
-            $entity->setId($response['_id']);
-        }
+        $entity = $this->decodeArrayFormat($response['_source'], $response['_id']);
 
         return $entity;
     }
@@ -249,9 +245,7 @@ class ElasticReadLogService
 
         //Hits contains hits. It is not typ-o...
         foreach ($result['hits']['hits'] as $arrayEntity) {
-            $entity = $this->decodeArrayFormat($arrayEntity['_source']);
-
-            $entity->setId($arrayEntity['_id']);
+            $entity = $this->decodeArrayFormat($arrayEntity['_source'], $arrayEntity['_id']);
             $entities[] = $entity;
         }
         return $entities;
@@ -319,17 +313,20 @@ class ElasticReadLogService
      * original entity. The relations 1:1 are recreated.     *
      *
      * @param $responseArray
+     * @param $id
      * @return $entity
      */
-    public function decodeArrayFormat($responseArray)
+    public function decodeArrayFormat($responseArray, $id)
     {
+        dump($responseArray);
+
         $entity = null;
         $relatedEntities = $responseArray['EntitiesToDecode'];
         unset($responseArray['EntitiesToDecode']);
         $entityClass = $responseArray['SourceEntityClass'];
         unset($responseArray['SourceEntityClass']);
 
-        $entity = new $entityClass();
+        $entity = new $entityClass($id);
 
         foreach ($responseArray as $key => $value) {
             $setter = "set${key}";
