@@ -13,7 +13,13 @@ use Elasticsearch\ClientBuilder;
 use Elasticsearch\Common\Exceptions\BadRequest400Exception;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException as Exception404;
 use Elasticsearch\Common\Exceptions\Missing404Exception as NFException;
+use Doctrine\ORM\EntityManager;
+use Trinity\Bundle\SearchBundle\NQL\NQLQuery;
 
+/**
+ * Class ElasticReadLogService
+ * @package Trinity\Bundle\LoggerBundle\Services
+ */
 class ElasticReadLogService
 {
 
@@ -38,43 +44,33 @@ class ElasticReadLogService
     private $ESClient;
 
     /**
-     * @var index
+     * @var string index
      */
     private $index = 'necktie';
 
     /**
-     * @var em entity manager
+     * @var EntityManager entity manager
      */
     private $em;
 
 
     /**
-     * @var string entityPath
-     *
-     */
-    private $entityPath;
-
-
-    /**
      * ElasticReadLogService constructor.
-     * @param $clientHost // IP:port, default port is 9200
-     * @param $em
-     * @param $index
-     * @param $baseEntityPath
+     * @param string $clientHost // IP:port, default port is 9200
+     * @param EntityManager $em
+     * @param string $index
      */
-    public function __construct($clientHost, $em, $index, $baseEntityPath)
+    public function __construct($clientHost, $em, $index)
     {
         $this->em = $em;
 
         $this->index = $index ?: 'necktie';
 
-        $this->entityPath = $baseEntityPath ?: "Necktie\\AppBundle\\Entity";
-
         $params = explode(':', $clientHost);
-        $port = array_key_exists(1, $params) ? $params[1] : 9200;
+        $portNumber = array_key_exists(1, $params) ? $params[1] : 9200;
 
         $this->ESClient = ClientBuilder::create()// Instantiate a new ClientBuilder
-        ->setHosts(["${params[0]}:${port}"])// Set the hosts
+        ->setHosts(["${params[0]}:${portNumber}"])// Set the hosts
         ->build();
     }
 
@@ -83,7 +79,7 @@ class ElasticReadLogService
      * @param $typeName
      * @param $id
      * @return $entity matching ID
-     * @throws 404 exceptions when not found
+     * @throws Exception404 404 exceptions when not found
      */
     public function getById($typeName, $id)
     {
@@ -98,9 +94,8 @@ class ElasticReadLogService
             throw new Exception404();
         }
 
-        $entity = $this->decodeArrayFormat($response['_source'], $response['_id']);
+        return $this->decodeArrayFormat($response['_source'], $response['_id']);
 
-        return $entity;
     }
 
 
@@ -138,22 +133,11 @@ class ElasticReadLogService
 
 
     /**
-     * @param $entityPath
-     * @return $this
-     */
-    public function setEntityPath($entityPath)
-    {
-        $this->entityPath = $entityPath;
-        return $this;
-    }
-
-
-    /**
      * Take $nqlQuery and turns it into elasticSearch parameters,
      * get matching documents from ES and transform them into array
      * of entities.
      *
-     * @param $nqLQuery
+     * @param NQLQuery $nqLQuery
      * @return array of entities
      */
     public function getByQuery($nqLQuery)
@@ -172,20 +156,8 @@ class ElasticReadLogService
             ]
         ];
 
-//        if ($entityName === 'ExceptionLog') {
-//            //it is exception because it is not in standard namespace
-//            $this->entityPath = "Trinity\\FrameworkBundle\\Entity";
-//        }
-//        if ($entityName === 'PaymentErrorLog') {
-//            //it is exception because it is not in standard namespace
-//            $this->entityPath = "Necktie\\PaymentBundle\\Entity";
-//        }
-
-
-        // \u0000Necktie\\AppBundle\\Entity\\Ipn\u0000invoice";
-//        $keyPrefix = $this->entityPath . "\\" . $entityName;
-//
-        if ($offset = $nqLQuery->getOffset()) {
+        $offset = $nqLQuery->getOffset();
+        if ($offset) {
             $params['body']['from'] = $offset;
         }
 
@@ -195,14 +167,12 @@ class ElasticReadLogService
 
         $fields = [];
         foreach ($nqLQuery->getSelect()->getColumns() as $column) {
-            if ($column->getName() === '_id') {
-                continue;
-            }
-            if ($column->getName() === 'id') {
-                continue;
-            }
             $attributeName = $column->getName();
 
+            if ($attributeName === '_id' || $attributeName === 'id') {
+                continue;
+            }
+            
             $fields[] = "$attributeName";
         }
 
@@ -216,7 +186,7 @@ class ElasticReadLogService
 
         $fields = [];
         foreach ($nqLQuery->getOrderBy()->getColumns() as $column) {
-            //For grid use, is not stored in elasticSearch
+                //For grid use, is not stored in elasticSearch
             if ($column->getName() === '_id') {
                 continue;
             }
@@ -243,7 +213,7 @@ class ElasticReadLogService
             return [];
         }
 
-        //Hits contains hits. It is not typ-o...
+            //Hits contains hits. It is not typ-o...
         foreach ($result['hits']['hits'] as $arrayEntity) {
             $entity = $this->decodeArrayFormat($arrayEntity['_source'], $arrayEntity['_id']);
             $entities[] = $entity;
@@ -291,7 +261,6 @@ class ElasticReadLogService
             return [];
         }
 
-        dump($result);
         $entities = [];
         foreach ($result['hits']['hits'] as $arrayEntity) {
             $entity = $arrayEntity['_source'];
@@ -302,9 +271,7 @@ class ElasticReadLogService
         }
         return $entities;
 
-        return $result['hits']['hits'];
-
-
+//        return $result['hits']['hits'];
     }
 
 
@@ -318,7 +285,6 @@ class ElasticReadLogService
      */
     public function decodeArrayFormat($responseArray, $id)
     {
-        dump($responseArray);
 
         $entity = null;
         $relatedEntities = $responseArray['EntitiesToDecode'];
@@ -346,7 +312,7 @@ class ElasticReadLogService
     /**
      * Transform reference into doctrine entity
      * @param string $identification
-     * @return $value
+     * @return mixed $value
      */
     private function getEntity(string $identification)
     {

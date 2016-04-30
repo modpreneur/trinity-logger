@@ -15,7 +15,8 @@
     "symfony/http-kernel": "~2.8|~3.0",
     "symfony/dependency-injection": "~2.8|~3.0",
     "symfony/config": "~2.8|~3.0",
-    "elasticsearch/elasticsearch": "~2.0"
+    "elasticsearch/elasticsearch": "~2.0",
+    "trinity/search": "dev-master"
   },
 
   "require-dev": {
