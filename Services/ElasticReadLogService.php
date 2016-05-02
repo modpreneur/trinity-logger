@@ -70,7 +70,7 @@ class ElasticReadLogService
         $portNumber = array_key_exists(1, $params) ? $params[1] : 9200;
 
         $this->ESClient = ClientBuilder::create()// Instantiate a new ClientBuilder
-        ->setHosts(["${params[0]}:${portNumber}"])// Set the hosts
+        ->setHosts([$params[0].':'.$portNumber])// Set the hosts
         ->build();
     }
 
