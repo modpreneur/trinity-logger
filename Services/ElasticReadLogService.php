@@ -242,18 +242,18 @@ class ElasticReadLogService
         $fields[] = 'createdAt';
         $fields[] = 'actionType';
         $fields[] = 'user';
+        $temp = [];
         $params['body']['_source'] = $fields;
         $params['body']['sort']['createdAt']['order'] = 'desc';
 
         $params['body']['query']['bool']['filter']['term']['changedEntityClass'] = get_class($entity);
         if (method_exists($entity, 'getId')) {
-            $params['body']['query']['bool']['filter']['term']['changedEntityId'] = $entity->getId();
+            $temp['term']['changedEntityId'] = $entity->getId();
+            $params['body']['query']['bool']['filter'][] = $temp;
         }
-
 
         try {
             $this->ESClient->indices()->refresh(['index' => $this->index]);
-
             $result = $this->ESClient->search($params);
         } catch (NFException $e) {
             return [];
