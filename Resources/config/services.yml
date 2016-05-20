@@ -1,12 +1,12 @@
 services:
 
-    trinity.logger.elastic.log.service:
+    trinity.logger.elastic_log_service:
       class: Trinity\Bundle\LoggerBundle\Services\ElasticLogService
       arguments:
         - "%trinity.logger.elastic_host%"
         - "%trinity.logger.elastic_managed_index%"
 
-    trinity.logger.elastic.read.log.service:
+    trinity.logger.elastic_read_log_service:
       class: Trinity\Bundle\LoggerBundle\Services\ElasticReadLogService
       arguments:
         - "%trinity.logger.elastic_host%"
