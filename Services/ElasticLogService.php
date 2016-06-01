@@ -11,7 +11,10 @@ namespace Trinity\Bundle\LoggerBundle\Services;
 use Elasticsearch\Client;
 use Elasticsearch\ClientBuilder;
 
-
+/**
+ * Class ElasticLogService
+ * @package Trinity\Bundle\LoggerBundle\Services
+ */
 class ElasticLogService
 {
 
@@ -98,7 +101,7 @@ class ElasticLogService
      * @param $entity //entity
      * @return int      //ID of the logged
      */
-    public function writeInto($typeName, $entity)
+    public function writeInto(string $typeName, $entity)
     {
         /*
          * Transform entity into array. Elastic can do it for you, but result is not in your hands.
@@ -154,11 +157,11 @@ class ElasticLogService
                 }
 
                 if (method_exists($value, 'getId')) {
-                    $class = (\Doctrine\Common\Util\ClassUtils::getClass($value));
+                    $class = \Doctrine\Common\Util\ClassUtils::getClass($value);
 
-                    $Id = $value->getId();
-                    if ($Id) {
-                        $entityArray[$key] = "${class}\x00${Id}";
+                    $id = $value->getId();
+                    if ($id) {
+                        $entityArray[$key] = "$class\x00$id";
                         $entityArray['EntitiesToDecode'][] = $key;
                     } else {
                         unset($entityArray[$key]);
@@ -170,6 +173,25 @@ class ElasticLogService
         }
 
         return $entityArray;
+    }
+
+
+    /**
+     * @param string $typeName
+     * @param string $id
+     * @param array $types
+     * @param array $values
+     */
+    public function update(string $typeName, string $id, array $types, array $values)
+    {
+        $body = array_combine($types, $values);
+        $params = [
+            'index' => $this->index,
+            'type'  => $typeName,
+            'id'    => $id,
+            'body' => ['doc' => $body]
+        ];
+        $this->ESClient->update($params);
     }
 
 }

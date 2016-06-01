@@ -76,12 +76,12 @@ class ElasticReadLogService
 
 
     /**
-     * @param $typeName
-     * @param $id
+     * @param string $typeName
+     * @param string $id
      * @return $entity matching ID
      * @throws Exception404 404 exceptions when not found
      */
-    public function getById($typeName, $id)
+    public function getById(string $typeName, string $id)
     {
         $params = [
             'index' => $this->index,
@@ -131,11 +131,72 @@ class ElasticReadLogService
         return $this;
     }
 
+    /**
+     * @param string $typeName
+     * @param array $searchParams
+     * @param int $limit
+     * @param array $select
+     * @param array $order
+     *
+     * @return array
+     */
+    public function getMatchingEntities(
+        string $typeName,
+        array $searchParams = [],
+        int $limit = 0,
+        array $select = [],
+        array $order = [['createdAt' => ['order' => 'desc']]]
+    ) {
+        $params = [
+            'index' => $this->index,
+            'type' => $typeName,
+            'body' => [
+            ]
+        ];
+
+        if ($limit) {
+            $params['body']['size'] = $limit;
+        }
+
+        $params['body']['sort'] = $order;
+
+        if ($select) {
+            $select[] = 'EntitiesToDecode';
+            $select[] = 'SourceEntityClass';
+            $params['body']['_source'] = $select;
+        }
+
+        if ($searchParams) {
+            $params['body']['query'] = $searchParams;
+        }
+        dump($params);
+        try {
+            $this->ESClient->indices()->refresh(['index' => $this->index]);
+            $result = $this->ESClient->search($params);
+        } catch (NFException $e) {
+            return [];
+        } catch (BadRequest400Exception $e) {
+            dump($e);
+            return [];
+        }
+        dump($result);
+//        throw new \Exception('Gabi Excepotion');
+        $entities = [];
+        foreach ($result['hits']['hits'] as $arrayEntity) {
+            $entity = $this->decodeArrayFormat($arrayEntity['_source'], $arrayEntity['_id']);
+            $entities[] = $entity;
+        }
+        return $entities;
+        
+    }
+
 
     /**
      * Take $nqlQuery and turns it into elasticSearch parameters,
      * get matching documents from ES and transform them into array
      * of entities.
+     *
+     * TODO: use function above to reduce complexity.
      *
      * @param NQLQuery $nqLQuery
      * @return array of entities
@@ -221,7 +282,7 @@ class ElasticReadLogService
         return $entities;
     }
 
-
+    
     /**
      * Takes entity and try to search AdminActionLog for matching nodes.
      * @param $entity
