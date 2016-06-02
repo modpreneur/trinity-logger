@@ -30,20 +30,22 @@ class ElasticLogService
     /**
      * @var index
      */
-    private $index = "necktie";
-
+    private $index = 'necktie';
 
     /**
      * ElasticLogService constructor.
+     *
      * @param $clientHost // IP:port, default port is 9200
      * @param $index // name of DB
+     *
+     * @throws \RuntimeException
      */
     public function __construct($clientHost, $index)
     {
-        $this->index = $index ? $index : 'necktie';
+        $this->index = $index ?: 'necktie';
 
         $params = explode(':', $clientHost);
-        $port = isset($params[1]) ? $params[1] : 9200;
+        $port = $params[1] ?? 9200;
 
         //Gabi-TODO: in settings?
         $handlerParams = [
@@ -97,8 +99,8 @@ class ElasticLogService
     }
 
     /**
-     * @param $typeName //log name
-     * @param $entity //entity
+     * @param string $typeName //log name
+     * @param object $entity //entity
      * @return int      //ID of the logged
      */
     public function writeInto(string $typeName, $entity)
@@ -157,6 +159,7 @@ class ElasticLogService
                 }
 
                 if (method_exists($value, 'getId')) {
+                    // @todo @GabrielBordovsky if you need this you have to add Doctrine to composer
                     $class = \Doctrine\Common\Util\ClassUtils::getClass($value);
 
                     $id = $value->getId();
@@ -193,5 +196,4 @@ class ElasticLogService
         ];
         $this->ESClient->update($params);
     }
-
 }
