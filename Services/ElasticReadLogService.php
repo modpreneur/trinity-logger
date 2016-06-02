@@ -177,7 +177,6 @@ class ElasticReadLogService
         } catch (BadRequest400Exception $e) {
             return [];
         }
-//        throw new \Exception('Gabi Excepotion');
         $entities = [];
         foreach ($result['hits']['hits'] as $arrayEntity) {
             $entity = $this->decodeArrayFormat($arrayEntity['_source'], $arrayEntity['_id']);

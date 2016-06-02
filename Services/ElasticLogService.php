@@ -27,11 +27,17 @@ class ElasticLogService
      * @var Client;
      */
     private $ESClient;
+
     /**
-     * @var index
+     * @var string index
      */
     private $index = 'necktie';
 
+    /**
+     * @var string
+     */
+    protected $proxyFlag = 'Proxies\\__CG__\\';
+    
     /**
      * ElasticLogService constructor.
      *
@@ -159,9 +165,10 @@ class ElasticLogService
                 }
 
                 if (method_exists($value, 'getId')) {
-                    // @todo @GabrielBordovsky if you need this you have to add Doctrine to composer
-                    $class = \Doctrine\Common\Util\ClassUtils::getClass($value);
-
+                    $class = get_class($value);
+                    if (strpos($class, $this->proxyFlag) === 0) {
+                        $class = substr($class, strlen($this->proxyFlag));
+                    }
                     $id = $value->getId();
                     if ($id) {
                         $entityArray[$key] = "$class\x00$id";
