@@ -169,17 +169,14 @@ class ElasticReadLogService
         if ($searchParams) {
             $params['body']['query'] = $searchParams;
         }
-        dump($params);
         try {
             $this->ESClient->indices()->refresh(['index' => $this->index]);
             $result = $this->ESClient->search($params);
         } catch (NFException $e) {
             return [];
         } catch (BadRequest400Exception $e) {
-            dump($e);
             return [];
         }
-        dump($result);
 //        throw new \Exception('Gabi Excepotion');
         $entities = [];
         foreach ($result['hits']['hits'] as $arrayEntity) {
