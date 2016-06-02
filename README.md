@@ -1,4 +1,8 @@
 # trinity-logger
+
+[![Coverage Status](https://coveralls.io/repos/github/modpreneur/trinity-logger/badge.svg?branch=master)](https://coveralls.io/github/modpreneur/trinity-settings?branch=master)
+[![Build Status](https://travis-ci.org/modpreneur/trinity-logger.svg?branch=master)](https://travis-ci.org/modpreneur/trinity-settings)
+
 Bundle for storing and loading logs.
 Originaly this should be for Amazon's DynamoDB and basic work with it.
 But dynamo come with more headache then we could accept.
