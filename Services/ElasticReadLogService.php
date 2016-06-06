@@ -104,14 +104,20 @@ class ElasticReadLogService
      * understand as table count
      *
      * @param $typeName
+     * @param $query
      * @return mixed
      */
-    public function getCount($typeName)
+    public function getCount(string $typeName, array $query = [])
     {
         $params = [
             'index' => $this->index,
             'type' => $typeName,
         ];
+
+        if ($query) {
+            $params['body']['query'] = $query;
+        }
+
         try {
             return $this->ESClient->count($params)['count'];
         } catch (NFException $e) {
