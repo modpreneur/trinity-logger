@@ -138,6 +138,9 @@ class ElasticReadLogService
     }
 
     /**
+     * WARNING: In case aggregation was selected result is returned as given by elasticsearch.
+     *     Parsing, such as transforming entities back from array, has to be made on result.
+     *
      * @param string $typeName
      * @param array $searchParams
      * @param int $limit
@@ -173,7 +176,7 @@ class ElasticReadLogService
         }
 
         if ($searchParams) {
-            $params['body']['query'] = $searchParams;
+            $params['body'] = $searchParams;
         }
         try {
             $this->ESClient->indices()->refresh(['index' => $this->index]);
@@ -183,11 +186,17 @@ class ElasticReadLogService
         } catch (BadRequest400Exception $e) {
             return [];
         }
+        
+        if (array_key_exists('aggregations', $result)) {
+            return $result;
+        }
+        
         $entities = [];
         foreach ($result['hits']['hits'] as $arrayEntity) {
             $entity = $this->decodeArrayFormat($arrayEntity['_source'], $arrayEntity['_id']);
             $entities[] = $entity;
         }
+
         return $entities;
         
     }
