@@ -299,7 +299,6 @@ class ElasticReadLogService
      * @param $entity
      * @return array
      */
-
     public function getStatusByEntity($entity)
     {
 
