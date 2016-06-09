@@ -10,6 +10,7 @@ namespace Trinity\Bundle\LoggerBundle\Services;
 
 use Elasticsearch\Client;
 use Elasticsearch\ClientBuilder;
+use Trinity\FrameworkBundle\Entity\EntityInterface;
 
 /**
  * Class ElasticLogService
@@ -17,7 +18,6 @@ use Elasticsearch\ClientBuilder;
  */
 class ElasticLogService
 {
-
     /*
      * In Elastic search is table called type, id is called id and index is something that may be
      * similar to database. There may be some miss writing as when i write table instead of type..
@@ -38,11 +38,12 @@ class ElasticLogService
      */
     protected $proxyFlag = 'Proxies\\__CG__\\';
     
+    
     /**
      * ElasticLogService constructor.
      *
-     * @param $clientHost // IP:port, default port is 9200
-     * @param $index // name of DB
+     * @param string $clientHost // IP:port, default port is 9200
+     * @param string $index // name of DB
      *
      * @throws \RuntimeException
      */
@@ -68,7 +69,8 @@ class ElasticLogService
 
 
     /**
-     * @param $index
+     * @param string $index
+     *
      * @return $this
      */
     public function setIndex($index)
@@ -77,10 +79,11 @@ class ElasticLogService
         return $this;
     }
 
+
     /**
-     * @param $typeName //log name
-     * @param $entity //entity
-     * @return int      //ID of the logged
+     * @param string $typeName  //log name
+     * @param EntityInterface $entity   //entity
+     * @return int  //ID of the logged
      */
     public function writeIntoAsync($typeName, $entity)
     {
@@ -106,7 +109,7 @@ class ElasticLogService
 
     /**
      * @param string $typeName //log name
-     * @param object $entity //entity
+     * @param EntityInterface $entity //entity
      * @return int      //ID of the logged
      */
     public function writeInto(string $typeName, $entity)
@@ -137,8 +140,6 @@ class ElasticLogService
      *
      * Gabi-TODO:Was not tested on M:N , N:1 or 1:N relations !!!
      * Gabi-TODO-2: it is as simple as it could be. N part is usually mapped, on elastic site should not FK
-     *
-     *
      *
      * @param $entity
      * @return array

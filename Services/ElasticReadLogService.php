@@ -15,6 +15,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException as Exception404
 use Elasticsearch\Common\Exceptions\Missing404Exception as NFException;
 use Doctrine\ORM\EntityManager;
 use Trinity\Bundle\SearchBundle\NQL\NQLQuery;
+use Trinity\FrameworkBundle\Entity\EntityInterface;
 
 /**
  * Class ElasticReadLogService
@@ -103,8 +104,8 @@ class ElasticReadLogService
      * Get number of documents with same type,
      * understand as table count
      *
-     * @param $typeName
-     * @param $query
+     * @param string $typeName
+     * @param array $query
      * @return mixed
      */
     public function getCount(string $typeName, array $query = [])
@@ -128,7 +129,7 @@ class ElasticReadLogService
 
 
     /**
-     * @param $index
+     * @param string $index
      * @return $this
      */
     public function setIndex($index)
@@ -296,12 +297,11 @@ class ElasticReadLogService
     
     /**
      * Takes entity and try to search AdminActionLog for matching nodes.
-     * @param $entity
+     * @param EntityInterface $entity
      * @return array
      */
     public function getStatusByEntity($entity)
     {
-
         $params = [
             'index' => $this->index,
             'type' => 'AdminActionLog',
@@ -334,11 +334,11 @@ class ElasticReadLogService
 
         $entities = [];
         foreach ($result['hits']['hits'] as $arrayEntity) {
-            $entity = $arrayEntity['_source'];
-            $entity['_id'] = $arrayEntity['_id'];
-            $entity['user'] = $this->getEntity($entity['user']);
-            $entity['changeSet'] = array_keys((array) json_decode($entity['changeSet']));
-            $entities[] = $entity;//[$entity['createdAt'], $entity['changeSet'], $entity['actionType'], ];
+            $source = $arrayEntity['_source'];
+            $source['_id'] = $arrayEntity['_id'];
+            $source['user'] = $this->getEntity($source['user']);
+            $source['changeSet'] = array_keys((array) json_decode($source['changeSet']));
+            $entities[] = $source;//[$entity['createdAt'], $entity['changeSet'], $entity['actionType'], ];
         }
         return $entities;
 
@@ -350,8 +350,8 @@ class ElasticReadLogService
      * Transform document from ElasticSearch obtained as array into entity matching
      * original entity. The relations 1:1 are recreated.     *
      *
-     * @param $responseArray
-     * @param $id
+     * @param array $responseArray
+     * @param string $id
      * @return $entity
      */
     public function decodeArrayFormat($responseArray, $id)
