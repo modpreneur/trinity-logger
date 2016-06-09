@@ -10,7 +10,7 @@ namespace Trinity\Bundle\LoggerBundle\Services;
 
 use Elasticsearch\Client;
 use Elasticsearch\ClientBuilder;
-use Trinity\FrameworkBundle\Entity\EntityInterface;
+//use Trinity\FrameworkBundle\Entity\EntityInterface;
 
 /**
  * Class ElasticLogService
@@ -79,13 +79,16 @@ class ElasticLogService
         return $this;
     }
 
-
     /**
+     * If the ttl is not set default mapping in elastic is used (if exist).
+     * The type(log) has to have enabled ttl in its mapping.
+     *
+     *
      * @param string $typeName  //log name
      * @param EntityInterface $entity   //entity
      * @return int  //ID of the logged
      */
-    public function writeIntoAsync($typeName, $entity)
+    public function writeIntoAsync(string $typeName, $entity, int $ttl = 0)
     {
         /*
          * Transform entity into array. Elastic can do it for you, but result is not in your hands.
@@ -97,22 +100,28 @@ class ElasticLogService
             'index' => $this->index,
             'type' => $typeName,
             'body' => $entityArray,
-            'client' => ['future' => 'lazy']
+            'client' => ['future' => 'lazy'],
         ];
+
+        if ($ttl) {
+            $params['ttl'] = "{$ttl}d";
+        }
+
         $response = $this->ESClient->index($params);
-
-
-//        $this->ESClient->indices()->refresh(['index' => $this->index]);
 
         return $response['_id'];
     }
 
     /**
+     * If the ttl is not set default mapping in elastic is used (if exist).
+     * The type(log) has to have enabled ttl in its mapping.
+     *
      * @param string $typeName //log name
-     * @param EntityInterface $entity //entity
+     * @param object $entity //entity
+     * @param int $ttl      // in days
      * @return int      //ID of the logged
      */
-    public function writeInto(string $typeName, $entity)
+    public function writeInto(string $typeName, $entity, int $ttl = 0)
     {
         /*
          * Transform entity into array. Elastic can do it for you, but result is not in your hands.
@@ -123,8 +132,13 @@ class ElasticLogService
         $params = [
             'index' => $this->index,
             'type' => $typeName,
-            'body' => $entityArray
+            'body' => $entityArray,
         ];
+
+        if ($ttl) {
+            $params['ttl'] = "{$ttl}d";
+        }
+
         $response = $this->ESClient->index($params);
 
         $this->ESClient->indices()->refresh(['index' => $this->index]);
@@ -140,6 +154,8 @@ class ElasticLogService
      *
      * Gabi-TODO:Was not tested on M:N , N:1 or 1:N relations !!!
      * Gabi-TODO-2: it is as simple as it could be. N part is usually mapped, on elastic site should not FK
+     *
+     *
      *
      * @param $entity
      * @return array
@@ -192,8 +208,10 @@ class ElasticLogService
      * @param string $id
      * @param array $types
      * @param array $values
+     * @param int $ttl
+     *
      */
-    public function update(string $typeName, string $id, array $types, array $values)
+    public function update(string $typeName, string $id, array $types, array $values, int $ttl = 0)
     {
         $body = array_combine($types, $values);
         $params = [
@@ -202,6 +220,11 @@ class ElasticLogService
             'id'    => $id,
             'body' => ['doc' => $body]
         ];
+        
+        if ($ttl) {
+            $params['ttl'] = $ttl;
+        }
+        
         $this->ESClient->update($params);
     }
 }

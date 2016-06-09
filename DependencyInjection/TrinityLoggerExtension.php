@@ -38,7 +38,7 @@ class TrinityLoggerExtension extends Extension
             $container->setParameter('trinity.logger.aws_key', $config['dynamo_logs']['aws_key']);
             $container->setParameter('trinity.logger.aws_secret', $config['dynamo_logs']['aws_secret']);
             $container->setParameter('trinity.logger.aws_region', $config['dynamo_logs']['aws_region']);
-        }else{
+        } else {
             $container->setParameter('trinity.logger.dynamo_logs', false);
             $container->setParameter('trinity.logger.dynamo_host', null);
             $container->setParameter('trinity.logger.dynamo_port', null);
@@ -52,21 +52,26 @@ class TrinityLoggerExtension extends Extension
             $container->setParameter('trinity.logger.elastic_logs', true);
             $container->setParameter('trinity.logger.elastic_host', $config['elastic_logs']['elastic_host']);
 
-            if(array_key_exists('managed_index',$config['elastic_logs']) && isset($config['elastic_logs']['managed_index'])){
-                $container->setParameter('trinity.logger.elastic_managed_index',$config['elastic_logs']['managed_index']);
-            }else{
-                $container->setParameter('trinity.logger.elastic_managed_index',null);
+            if (array_key_exists('managed_index',
+                    $config['elastic_logs']) && isset($config['elastic_logs']['managed_index'])
+            ) {
+                $container->setParameter('trinity.logger.elastic_managed_index',
+                    $config['elastic_logs']['managed_index']);
+            } else {
+                $container->setParameter('trinity.logger.elastic_managed_index', null);
 
             }
 
-            if(array_key_exists('entities_path',$config['elastic_logs']) && isset($config['elastic_logs']['entities_path'])){
-                $container->setParameter('trinity.logger.base.entities.path',$config['elastic_logs']['entities_path']);
-            }else{
-                $container->setParameter('trinity.logger.base.entities.path',null);
+            if (array_key_exists('entities_path',
+                    $config['elastic_logs']) && isset($config['elastic_logs']['entities_path'])
+            ) {
+                $container->setParameter('trinity.logger.base.entities.path', $config['elastic_logs']['entities_path']);
+            } else {
+                $container->setParameter('trinity.logger.base.entities.path', null);
 
             }
 
-        }else{
+        } else {
             $container->setParameter('trinity.logger.elastic_logs', false);
             $container->setParameter('trinity.logger.elastic_host', null);
         }

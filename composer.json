@@ -15,17 +15,20 @@
     "symfony/http-kernel": "~2.8|~3.0",
     "symfony/dependency-injection": "~2.8|~3.0",
     "symfony/config": "~2.8|~3.0",
+    "doctrine/orm": "~2.5",
     "elasticsearch/elasticsearch": "~2.0",
-    "trinity/framework": "dev-master",
     "trinity/search": "dev-master",
-    "friendsofsymfony/user-bundle": "dev-master",
     "trinity/settings": "dev-master"
+
+
+//    "friendsofsymfony/user-bundle": "dev-master",
+//    "trinity/framework": "dev-master",
   },
 
   "require-dev": {
-    "symfony/var-dumper": "~3.0",
-    "phpunit/phpunit": "~5",
-    "satooshi/php-coveralls" : "1.0.*"
+    "symfony/var-dumper": "~3.0"
+//    "phpunit/phpunit": "~5",
+//    "satooshi/php-coveralls" : "1.0.*"
   },
 
   "autoload": {
