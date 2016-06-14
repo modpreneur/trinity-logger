@@ -307,7 +307,6 @@ class ElasticReadLogService
             $entity = $this->decodeArrayFormat($arrayEntity['_source'], $arrayEntity['_id']);
             $entities[] = $entity;
         }
-        dump($entities);
         return $entities;
     }
 
