@@ -94,9 +94,10 @@ class ElasticReadLogService
         } catch (NFException $e) {
             throw new Exception404();
         }
-
+        if (array_key_exists('_ttl', $response)) {
+            $response['_source']['ttl'] = intdiv($response['_ttl'], 1000);
+        }
         return $this->decodeArrayFormat($response['_source'], $response['_id']);
-
     }
 
 
@@ -139,7 +140,7 @@ class ElasticReadLogService
     }
 
     /**
-     * WARNING: In case aggregation was selected result is returned as given by elasticsearch.
+     * WARNING: In case aggregation was selected result is returned as given by elastic-search.
      *     Parsing, such as transforming entities back from array, has to be made on result.
      *
      * @param string $typeName
@@ -194,6 +195,9 @@ class ElasticReadLogService
         
         $entities = [];
         foreach ($result['hits']['hits'] as $arrayEntity) {
+            if (array_key_exists('_ttl', $arrayEntity)) {
+                $arrayEntity['_source']['ttl'] = intdiv($arrayEntity['_ttl'], 1000);
+            }
             $entity = $this->decodeArrayFormat($arrayEntity['_source'], $arrayEntity['_id']);
             $entities[] = $entity;
         }
@@ -228,6 +232,15 @@ class ElasticReadLogService
             'body' => [
             ]
         ];
+
+//        "changedEntityClass" => "Logger TTL settings"
+//
+//        $query['bool']['must'][] = [
+//            'match' => [
+//                'changedEntityClass' => 'Logger TTL settings'
+//            ]
+//        ];
+//        $params['body']['query'] = $query;
 
         $offset = $nqLQuery->getOffset();
         if ($offset) {
@@ -288,9 +301,13 @@ class ElasticReadLogService
 
             //Hits contains hits. It is not typ-o...
         foreach ($result['hits']['hits'] as $arrayEntity) {
+            if (array_key_exists('_ttl', $arrayEntity)) {
+                $arrayEntity['_source']['ttl'] = intdiv($arrayEntity['_ttl'], 1000);
+            }
             $entity = $this->decodeArrayFormat($arrayEntity['_source'], $arrayEntity['_id']);
             $entities[] = $entity;
         }
+        dump($entities);
         return $entities;
     }
 
@@ -356,7 +373,6 @@ class ElasticReadLogService
      */
     public function decodeArrayFormat($responseArray, $id)
     {
-
         $entity = null;
         $relatedEntities = $responseArray['EntitiesToDecode'];
         unset($responseArray['EntitiesToDecode']);

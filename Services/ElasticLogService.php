@@ -168,10 +168,17 @@ class ElasticLogService
         foreach ((array)$entity as $key => $value) {
             $keyParts = explode("\x00", $key);
             $key = array_pop($keyParts);
+            
+            //ttl is elastic thing, we only need place to store it in entity, not send it
+            if ($key === 'ttl') {
+                continue;
+            }
+
             /*
              * Elastic can manage just few objects when passed. Here we preprocess them
              * so elastic doesn't have problems
              */
+
             if (is_object($value)) {
                 //elastic can work with DateTime, not with ours entities
                 if (get_class($value) === 'DateTime') {
