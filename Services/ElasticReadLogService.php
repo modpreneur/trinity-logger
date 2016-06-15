@@ -353,7 +353,12 @@ class ElasticReadLogService
             $source = $arrayEntity['_source'];
             $source['_id'] = $arrayEntity['_id'];
             $source['user'] = $this->getEntity($source['user']);
-            $source['changeSet'] = array_keys((array) json_decode($source['changeSet']));
+            $changeSet = (array) json_decode($source['changeSet']);
+            if (array_key_exists('info', $changeSet)) {
+                $source['changeSet'] = $changeSet;
+            } else {
+                $source['changeSet'] = array_keys($changeSet);
+            }
             $entities[] = $source;//[$entity['createdAt'], $entity['changeSet'], $entity['actionType'], ];
         }
         return $entities;

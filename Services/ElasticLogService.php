@@ -86,6 +86,7 @@ class ElasticLogService
      *
      * @param string $typeName  //log name
      * @param EntityInterface $entity   //entity
+     * @param int $ttl
      * @return int  //ID of the logged
      */
     public function writeIntoAsync(string $typeName, $entity, int $ttl = 0)
