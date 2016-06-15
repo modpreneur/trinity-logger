@@ -312,7 +312,7 @@ class ElasticReadLogService
 
     
     /**
-     * Takes entity and try to search AdminActionLog for matching nodes.
+     * Takes entity and try to search EntityActionLog for matching nodes.
      * @param $entity
      * @return array
      */
