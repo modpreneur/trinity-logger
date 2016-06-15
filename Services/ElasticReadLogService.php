@@ -320,7 +320,7 @@ class ElasticReadLogService
     {
         $params = [
             'index' => $this->index,
-            'type' => 'AdminActionLog',
+            'type' => 'EntityActionLog',
             'body' => [
             ]
         ];
