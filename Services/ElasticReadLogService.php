@@ -15,7 +15,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException as Exception404
 use Elasticsearch\Common\Exceptions\Missing404Exception as NFException;
 use Doctrine\ORM\EntityManager;
 use Trinity\Bundle\SearchBundle\NQL\NQLQuery;
-//use Trinity\FrameworkBundle\Entity\EntityInterface;
 
 /**
  * Class ElasticReadLogService

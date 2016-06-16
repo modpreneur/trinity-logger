@@ -10,7 +10,6 @@ namespace Trinity\Bundle\LoggerBundle\Services;
 
 use Elasticsearch\Client;
 use Elasticsearch\ClientBuilder;
-//use Trinity\FrameworkBundle\Entity\EntityInterface;
 
 /**
  * Class ElasticLogService
@@ -85,7 +84,7 @@ class ElasticLogService
      *
      *
      * @param string $typeName  //log name
-     * @param EntityInterface $entity   //entity
+     * @param $entity   //entity
      * @param int $ttl
      * @return int  //ID of the logged
      */
@@ -118,7 +117,7 @@ class ElasticLogService
      * The type(log) has to have enabled ttl in its mapping.
      *
      * @param string $typeName //log name
-     * @param object $entity //entity
+     * @param $entity //entity
      * @param int $ttl      // in days
      * @return int      //ID of the logged
      */

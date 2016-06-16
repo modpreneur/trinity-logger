@@ -8,7 +8,10 @@
 
 namespace Trinity\LoggerBundle\Entity;
 
-
+/**
+ * Class BaseDynamoLog
+ * @package Trinity\LoggerBundle\Entity
+ */
 class BaseDynamoLog
 {
 
@@ -53,41 +56,35 @@ class BaseDynamoLog
      * @return array
      */
 
-    public function getDynamoArray(){
-
+    public function getDynamoArray()
+    {
         $methods = get_class_methods(get_class($this));
         $array = [];
-        foreach($methods as $method){
-            if(strpos($method,'get')===0) {
-                $key =substr($method, 3);
-                if(strpos($key,'DynamoArray')===0){
+
+        foreach ($methods as $method) {
+            if (strpos($method, 'get') === 0) {
+                $key = substr($method, 3);
+                if (strpos($key, 'DynamoArray') === 0) {
                     //this would result in infinite recursion
                     continue;
                 }
-
-                    //date Time problem
-                if(strpos($key,'ReceiveAt')===0){
+                //date Time problem
+                if (strpos($key, 'ReceiveAt') === 0) {
                     continue;
                 }
-
                 $value = $this->$method();
-                if(!$value) continue;
-
-
-                if(is_object($value)&& method_exists($value,'getId')){
+                if (!$value) {
+                    continue;
+                }
+                if (is_object($value) && method_exists($value, 'getId')) {
                     $value=$value->getId();
                 }
-
-                if($value){
-
+                if ($value) {
                     $array[$key] = is_numeric($value)? ['N'=>$value ]: ['S' => "${value}"] ;
                 }
             }
         }
+
         return $array;
-
-
     }
-
-
 }
