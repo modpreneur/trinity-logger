@@ -164,6 +164,10 @@ class ElasticReadLogService
             ]
         ];
 
+        if ($searchParams) {
+            $params['body'] = $searchParams;
+        }
+
         if ($limit) {
             $params['body']['size'] = $limit;
         }
@@ -176,9 +180,6 @@ class ElasticReadLogService
             $params['body']['_source'] = $select;
         }
 
-        if ($searchParams) {
-            $params['body'] = $searchParams;
-        }
         try {
             $this->ESClient->indices()->refresh(['index' => $this->index]);
             $result = $this->ESClient->search($params);
