@@ -18,8 +18,7 @@
     "doctrine/orm": "~2.5",
     "elasticsearch/elasticsearch": "~2.0",
     "trinity/search": "dev-master",
-    "trinity/settings": "dev-master"
-
+    "trinity/settings": "~1.1"
   },
 
   "require-dev": {
