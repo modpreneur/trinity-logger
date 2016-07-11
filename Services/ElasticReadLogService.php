@@ -188,7 +188,6 @@ class ElasticReadLogService
         } catch (BadRequest400Exception $e) {
             return [];
         }
-        
         if (array_key_exists('aggregations', $result)) {
             return $result;
         }
@@ -375,7 +374,7 @@ class ElasticReadLogService
      * @param string $id
      * @return $entity
      */
-    public function decodeArrayFormat($responseArray, $id)
+    public function decodeArrayFormat($responseArray, $id = '')
     {
         $entity = null;
         $relatedEntities = $responseArray['EntitiesToDecode'];
