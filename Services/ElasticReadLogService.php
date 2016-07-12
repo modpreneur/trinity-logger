@@ -205,7 +205,6 @@ class ElasticReadLogService
         
     }
 
-
     /**
      * Take $nqlQuery and turns it into elasticSearch parameters,
      * get matching documents from ES and transform them into array
@@ -214,14 +213,15 @@ class ElasticReadLogService
      * TODO: use function above to reduce complexity.
      *
      * @param NQLQuery $nqLQuery
-     * @return array of entities
+     * @param string $globalSearch
+     *
+     * @return array (array of entities, total matches)
      */
-    public function getByQuery($nqLQuery)
+    public function getByQuery($nqLQuery, string $globalSearch)
     {
-
-        /*
-         * TODO: SQL where part
-         */
+            /*
+             * No joins accepted, so we work only with one 'table'
+             */
         $entityName = $nqLQuery->getFrom()->getTables()[0]->getName();
         $typeName = array_key_exists($entityName, $this->translation) ? $this->translation[$entityName] : $entityName;
 
@@ -232,15 +232,14 @@ class ElasticReadLogService
             ]
         ];
 
-//        "changedEntityClass" => "Logger TTL settings"
-//
-//        $query['bool']['must'][] = [
-//            'match' => [
-//                'changedEntityClass' => 'Logger TTL settings'
-//            ]
-//        ];
-//        $params['body']['query'] = $query;
-
+        if ($globalSearch) {
+            $params['body']['query']['multi_match'] = [
+                'query' => $globalSearch,
+                'type' => 'phrase_prefix',
+                'fields' => '*', //all fields
+                'lenient' => true // ignore fields with bad type
+            ];
+        }
         $offset = $nqLQuery->getOffset();
         if ($offset) {
             $params['body']['from'] = $offset;
@@ -288,6 +287,7 @@ class ElasticReadLogService
         }
 
         $entities = [];
+        $score = [];
         try {
             $this->ESClient->indices()->refresh(['index' => $this->index]);
 
@@ -297,7 +297,7 @@ class ElasticReadLogService
         } catch (BadRequest400Exception $e) {
             return [];
         }
-
+        $totalScore = $result['hits']['max_score'];
             //Hits contains hits. It is not typ-o...
         foreach ($result['hits']['hits'] as $arrayEntity) {
             if (array_key_exists('_ttl', $arrayEntity)) {
@@ -305,8 +305,11 @@ class ElasticReadLogService
             }
             $entity = $this->decodeArrayFormat($arrayEntity['_source'], $arrayEntity['_id']);
             $entities[] = $entity;
+            if ($totalScore) {
+                $score[] = $arrayEntity['_score'] / $totalScore;
+            }
         }
-        return $entities;
+        return [$entities, $result['hits']['total'], $score];
     }
 
     
