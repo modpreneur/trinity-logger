@@ -229,7 +229,7 @@ class ElasticLogService
         ];
         
         if ($ttl) {
-            $params['ttl'] = $ttl;
+            $params['ttl'] = "{$ttl}d";
         }
         
         $this->ESClient->update($params);

@@ -11,10 +11,12 @@ namespace Trinity\Bundle\LoggerBundle\Services;
 use Elasticsearch\Client;
 use Elasticsearch\ClientBuilder;
 use Elasticsearch\Common\Exceptions\BadRequest400Exception;
+use Trinity\Component\Utils\Hydrators\ColumnHydrator;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException as Exception404;
 use Elasticsearch\Common\Exceptions\Missing404Exception as NFException;
 use Doctrine\ORM\EntityManager;
 use Trinity\Bundle\SearchBundle\NQL\NQLQuery;
+use Trinity\Bundle\SearchBundle\NQL\WherePart;
 
 /**
  * Class ElasticReadLogService
@@ -53,7 +55,10 @@ class ElasticReadLogService
      */
     private $em;
 
-
+    /**
+     * @var array for extended search
+     */
+    private $query;
     /**
      * ElasticReadLogService constructor.
      * @param string $clientHost // IP:port, default port is 9200
@@ -216,8 +221,9 @@ class ElasticReadLogService
      * @param string $globalSearch
      *
      * @return array (array of entities, total matches)
+     * @throws \RuntimeException
      */
-    public function getByQuery($nqLQuery, string $globalSearch)
+    public function getByQuery($nqLQuery, string $globalSearch, array $configuration = [])
     {
             /*
              * No joins accepted, so we work only with one 'table'
@@ -256,10 +262,9 @@ class ElasticReadLogService
             if ($attributeName === '_id' || $attributeName === 'id') {
                 continue;
             }
-            
+
             $fields[] = "$attributeName";
         }
-
 
         if ($fields) {
             $fields[] = 'EntitiesToDecode';
@@ -268,6 +273,39 @@ class ElasticReadLogService
         }
 
 
+        if ($nqLQuery->getWhere()->getConditions()) {
+            if (!$configuration) {
+                throw new \RuntimeException('Configuration for searching on '. $entityName. ' was not found.');
+            }
+            $types = $this->getColumnTypes($configuration['columns']);
+            $keyBase = 'must';
+            $elem = null;
+
+            /*
+             * If there is only one element in conditions we store him into $elem
+             * and process him after loop.
+             *
+             * If there is more,  it is expected (and currently only working way)
+             * that each even element is operator AND or OR. The OR/AND tells which keyword
+             * is used in filter, of element before and after. So we may process condition
+             * after we have read the operator.
+             */
+            foreach ($nqLQuery->getWhere()->getConditions() as $condition) {
+                if ($condition->type !== 'condition') {
+                    $keyBase = ($condition->value === 'OR') ? 'should' : 'must';
+                    $this->translateCondition($elem, $types, $keyBase);
+                } else {
+                    $elem = $condition;
+                }
+            }
+            $this->translateCondition($elem, $types, $keyBase);
+
+            if (array_key_exists('error', $this->query)) {
+                return [[], 0, 0];
+            }
+
+            $params['body']['filter'] = $this->query;
+        }
         $fields = [];
         foreach ($nqLQuery->getOrderBy()->getColumns() as $column) {
                 //For grid use, is not stored in elasticSearch
@@ -282,6 +320,10 @@ class ElasticReadLogService
             }
         }
 
+//        if (! array_key_exists('createdAt', $fields)) {
+//            $fields['createdAt'] = ['order' => 'desc'];
+//        }
+
         if ($fields) {
             $params['body']['sort'] = [$fields];
         }
@@ -293,9 +335,9 @@ class ElasticReadLogService
 
             $result = $this->ESClient->search($params);
         } catch (NFException $e) {
-            return [];
+            return [[], 0, 0];
         } catch (BadRequest400Exception $e) {
-            return [];
+            return [[], 0, 0];
         }
         $totalScore = $result['hits']['max_score'];
             //Hits contains hits. It is not typ-o...
@@ -312,7 +354,93 @@ class ElasticReadLogService
         return [$entities, $result['hits']['total'], $score];
     }
 
-    
+
+    /**
+     * @param WherePart $condition
+     * @param array $types
+     * @param string $key
+     */
+    private function translateCondition(WherePart $condition, array $types, string $key)
+    {
+        $term = 'term';
+
+        if ($types[$condition->key->getName()] === 'string') {
+            $raw = '.raw';
+        }
+
+        if (is_array($types[$condition->key->getName()]) &&
+            array_key_exists('entity', $types[$condition->key->getName()])
+        ) {
+            $this->em->getConfiguration()->addCustomHydrationMode('COLUMN_HYDRATOR', ColumnHydrator::class);
+            $values = $this->em->getRepository($types[$condition->key->getName()]['entity'])
+                ->createQueryBuilder('b')
+                ->select('b.id')
+                ->where("LOWER(b.{$types[$condition->key->getName()]['column']}) LIKE LOWER(:value)")
+                ->setParameter('value', $condition->value)
+                ->getQuery()
+                ->getResult('COLUMN_HYDRATOR');
+            $name = $condition->key->getName() . '.raw';
+            $key = 'should';
+
+            if (!$values) {
+                if ($condition->value !== '') {
+                    $this->query = ['error' => 'No matching values.'];
+                } else {
+                    $this->query['bool'][$key][] = [$term => [$name => '']];
+                }
+            } else {
+                foreach ($values as $id) {
+                    $value = "{$types[$condition->key->getName()]['entity']}\x00$id";
+                    $this->query['bool'][$key][] = [$term => [$name => $value]];
+                }
+            }
+        } else {
+            switch ($condition->operator) {
+                case '=':
+                    break;
+                case '!=':
+                    $key .= '_not';
+                    break;
+                case 'LIKE':
+                    $value = $condition->value;
+                    $term = 'wildcard';
+                    if ($value[0] === '%') {
+                        $value[0] = '*';
+                    }
+                    if ($value[strlen($value) - 1] === '%') {
+                        $value[strlen($value) - 1] = '*';
+                    }
+                    break;
+                case '>':
+                    $term = 'range';
+                    $value = ['gt' => $condition->value];
+                    break;
+                case '<':
+                    $term = 'range';
+                    $value = ['lt' => $condition->value];
+                    break;
+                case '>=':
+                    $term = 'range';
+                    $value = ['gte' => $condition->value];
+                    break;
+                case '<=':
+                    $term = 'range';
+                    $value = ['lte' => $condition->value];
+                    break;
+                default:
+                    dump($condition);
+                    throw new \RuntimeException("Unexpected operator: {$condition->operator}");
+            }
+            $name = $condition->key->getName() . ($raw ??'');
+            $value = $value ?? (is_int($condition->value)? (int) $condition->value: $condition->value);
+            $this->query['bool'][$key][] = [$term => [$name => $value]];
+        }
+    }
+
+    /*
+     * @TODO: @GabrielBordovsky
+     *   composing terms
+    */
     /**
      * Takes entity and try to search EntityActionLog for matching nodes.
      * @param $entity
@@ -335,7 +463,7 @@ class ElasticReadLogService
         $params['body']['_source'] = $fields;
         $params['body']['sort']['createdAt']['order'] = 'desc';
 
-        $params['body']['query']['bool']['filter']['term']['changedEntityClass'] = get_class($entity);
+        $params['body']['query']['bool']['filter'][0]['term']['changedEntityClass.raw'] = get_class($entity);
         if (method_exists($entity, 'getId')) {
             $temp['term']['changedEntityId'] = $entity->getId();
             $params['body']['query']['bool']['filter'][] = $temp;
@@ -366,6 +494,23 @@ class ElasticReadLogService
         return $entities;
 
 //        return $result['hits']['hits'];
+    }
+
+    /**
+     * @param array $columns
+     * @return array
+     */
+    private function getColumnTypes(array $columns)
+    {
+        $types = [];
+        foreach ($columns as $column) {
+            $types[$column['name']] = $column['elasticType']??$column['type']??null;
+            if ($types[$column['name']] === 'enum') {
+                $types[$column['name']] = 'string';
+            }
+        }
+
+        return $types;
     }
 
 
