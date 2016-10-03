@@ -206,6 +206,9 @@ class ElasticLogService
             }
         }
 
+        if (array_key_exists('id', $entityArray) && !$entityArray['id']) {
+            unset($entityArray['id']);
+        }
         return $entityArray;
     }
 

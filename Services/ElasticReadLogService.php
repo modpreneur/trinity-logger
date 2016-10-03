@@ -207,7 +207,6 @@ class ElasticReadLogService
         }
 
         return $entities;
-        
     }
 
     /**
