@@ -458,6 +458,7 @@ class ElasticReadLogService
         $fields[] = 'createdAt';
         $fields[] = 'actionType';
         $fields[] = 'user';
+        $fields[] = 'system';
         $temp = [];
         $params['body']['_source'] = $fields;
         $params['body']['sort']['createdAt']['order'] = 'desc';
