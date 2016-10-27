@@ -2,7 +2,6 @@
 /**
  * This file is part of Trinity package.
  */
-
 namespace Trinity\Bundle\LoggerBundle\DependencyInjection;
 
 use Symfony\Component\Config\FileLocator;
@@ -11,15 +10,14 @@ use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 /**
- * Class TrinityLoggerExtension
- * @package Trinity\Bundle\LoggerBundle\DependencyInjection
+ * Class TrinityLoggerExtension.
  */
 class TrinityLoggerExtension extends Extension
 {
     /**
      * Loads a specific configuration.
      *
-     * @param array $configs An array of configuration values
+     * @param array            $configs   An array of configuration values
      * @param ContainerBuilder $container A ContainerBuilder instance
      *
      * @throws \InvalidArgumentException When provided tag is not defined in this extension
@@ -68,13 +66,15 @@ class TrinityLoggerExtension extends Extension
             } else {
                 $container->setParameter('trinity.logger.base.entities.path', null);
             }
-
         } else {
             $container->setParameter('trinity.logger.elastic_logs', false);
             $container->setParameter('trinity.logger.elastic_host', null);
         }
 
-        $loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
+        $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
+
+        $container->setAlias('trinity.logger.ttl_provider', $config['logger_ttl_provider']);
+        $container->setAlias('trinity.logger.user_provider', $config['logger_user_provider']);
     }
 }
