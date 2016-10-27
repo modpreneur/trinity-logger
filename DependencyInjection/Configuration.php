@@ -45,7 +45,7 @@ class Configuration implements ConfigurationInterface
         ;
 
         //reference to a service - starting with '@'
-        $rootNode->children()->scalarNode('user_provider')->cannotBeEmpty()->isRequired()->beforeNormalization()
+        $rootNode->children()->scalarNode('logger_user_provider')->cannotBeEmpty()->isRequired()->beforeNormalization()
             //if the string starts with @, e.g. @service.name
             ->ifTrue(
                 function ($v) {
