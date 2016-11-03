@@ -35,8 +35,8 @@ services:
             - { name: doctrine.event_listener, event: postRemove }
             - { name: doctrine.event_listener, event: postPersist }
             - { name: doctrine.event_listener, event: postUpdate }
-            - { name: "kernel.event_listener", event: "trinity.notifications.afterNotificationBatchProcess", method: "clearUserFromNotification" }
-            - { name: "kernel.event_listener", event: "trinity.notifications.beforeNotificationBatchProcess", method: "setUserFromNotification" }
+            - { name: "kernel.event_listener", event: "trinity.logger.removeNotificationUser", method: "clearUserFromNotification" }
+            - { name: "kernel.event_listener", event: "trinity.logger.setNotificationUser", method: "setUserFromNotification" }
 
     trinity.logger.elastic_logger_listener:
         class: Trinity\Bundle\LoggerBundle\EventListener\ElasticLoggerListener
@@ -44,3 +44,11 @@ services:
             - "@trinity.logger.elastic_log_service_with_ttl"
         tags:
             - { name: kernel.event_listener, event: trinity.logger.elastic_logger_event, method: onLog }
+
+    trinity.logger.database_handler:
+        class: Trinity\Bundle\LoggerBundle\Services\DatabaseHandler
+        arguments:
+          - "@session"
+          - "@security.token_storage"
+          - "@request_stack"
+          - "@trinity.logger.elastic_log_service_with_ttl"

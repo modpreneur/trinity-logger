@@ -14,6 +14,8 @@ use Trinity\Component\Core\Interfaces\UserInterface;
  */
 class ExceptionLog extends BaseElasticLog implements EntityInterface
 {
+    const NAME = 'ExceptionLog';
+
     /**
      * @var string Analyzed by elasticSearch
      */

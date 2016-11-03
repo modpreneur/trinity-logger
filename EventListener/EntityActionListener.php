@@ -7,23 +7,25 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\PersistentCollection;
 use Doctrine\Common\Annotations\Reader;
+use Monolog\Logger;
 use Trinity\Bundle\LoggerBundle\Annotation\EntityActionLoggable;
-use Symfony\Bridge\Monolog\Logger;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Trinity\Bundle\LoggerBundle\Event\ElasticLoggerEvent;
+use Trinity\Bundle\LoggerBundle\Event\RemoveNotificationUserEvent;
+use Trinity\Bundle\LoggerBundle\Event\SetNotificationUserEvent;
 use Trinity\Bundle\LoggerBundle\Interfaces\UserProviderInterface;
 use Trinity\Bundle\LoggerBundle\Services\ElasticLogService;
 use Trinity\Bundle\LoggerBundle\Entity\EntityActionLog;
 use JMS\Serializer\Serializer as JMS;
 use Trinity\Component\Core\Interfaces\UserInterface;
-use Trinity\NotificationBundle\Event\AfterNotificationBatchProcessEvent;
-use Trinity\NotificationBundle\Event\BeforeNotificationBatchProcessEvent;
 
 /**
  * Class EntityActionListener.
+ *
+ * This class has an invisible dependency on trinity/notifications.
  */
 class EntityActionListener
 {
@@ -96,7 +98,7 @@ class EntityActionListener
      * @param Reader                   $reader
      * @param Logger                   $mo
      * @param UserProviderInterface    $userProvider
-     * @param string                   $ke
+     * @param string                   $kernelEnvironment
      */
     public function __construct(
         TokenStorageInterface $ts,
@@ -105,20 +107,20 @@ class EntityActionListener
         Reader $reader,
         Logger $mo,
         UserProviderInterface $userProvider,
-        string $ke = ''
+        string $kernelEnvironment = ''
     ) {
         $this->serializer = $serializer;
         $this->tokenStorage = $ts;
         $this->eventDispatcher = $eventDispatcher;
         $this->reader = $reader;
-        $this->kernelEnvironment = $ke;
+        $this->kernelEnvironment = $kernelEnvironment;
         $this->moLogger = $mo;
     }
 
     /**
-     * @param BeforeNotificationBatchProcessEvent $event
+     * @param SetNotificationUserEvent $event
      */
-    public function setUserFromNotification(BeforeNotificationBatchProcessEvent $event)
+    public function setUserFromNotification(SetNotificationUserEvent $event)
     {
         $this->notificationUser = 0;
 
@@ -131,11 +133,11 @@ class EntityActionListener
     }
 
     /**
-     * @param AfterNotificationBatchProcessEvent $event
+     * @param RemoveNotificationUserEvent $event
      *
      * @throws \InvalidArgumentException
      */
-    public function clearUserFromNotification(AfterNotificationBatchProcessEvent $event)
+    public function clearUserFromNotification(RemoveNotificationUserEvent $event)
     {
         $user = $event->getUserIdentification();
         $clientId = $event->getClientId();
