@@ -115,6 +115,7 @@ class EntityActionListener
         $this->reader = $reader;
         $this->kernelEnvironment = $kernelEnvironment;
         $this->moLogger = $mo;
+        $this->userProvider = $userProvider;
     }
 
     /**
