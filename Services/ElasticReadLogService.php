@@ -29,7 +29,7 @@ class ElasticReadLogService
      * In Elastic search is table called type, id is called id and index is something that may be
      * similar to database. There may be some miss writing as when i write table instead of type..
      */
-
+    protected $proxyFlag = 'Proxies\\__CG__\\';
 
     /**
      * @var array entity to table translation
@@ -463,7 +463,12 @@ class ElasticReadLogService
         $params['body']['_source'] = $fields;
         $params['body']['sort']['createdAt']['order'] = 'desc';
 
-        $params['body']['query']['bool']['filter'][0]['term']['changedEntityClass.raw'] = get_class($entity);
+        $class = get_class($entity);
+        if (strpos($class, $this->proxyFlag) === 0) {
+            $class = substr($class, strlen($this->proxyFlag));
+        }
+        $params['body']['query']['bool']['filter'][0]['term']['changedEntityClass.raw'] = $class;
+
         if (method_exists($entity, 'getId')) {
             $temp['term']['changedEntityId'] = $entity->getId();
             $params['body']['query']['bool']['filter'][] = $temp;
