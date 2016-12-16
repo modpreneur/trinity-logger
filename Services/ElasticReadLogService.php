@@ -17,6 +17,9 @@ use Elasticsearch\Common\Exceptions\Missing404Exception as NFException;
 use Doctrine\ORM\EntityManager;
 use Trinity\Bundle\SearchBundle\NQL\NQLQuery;
 use Trinity\Bundle\SearchBundle\NQL\WherePart;
+// TODO @GabrielBordovsky I have to put this use here, otherwise I see
+// Class 'Trinity\FrameworkBundle\Entity\ExceptionLog' not found
+use Trinity\Bundle\LoggerBundle\Entity\ExceptionLog;
 
 /**
  * Class ElasticReadLogService
