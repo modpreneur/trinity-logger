@@ -15,11 +15,12 @@
     "symfony/http-kernel": "~2.8|~3.0",
     "symfony/dependency-injection": "~2.8|~3.0",
     "symfony/config": "~2.8|~3.0",
+    "symfony/monolog-bundle": "~2.8",
     "doctrine/orm": "~2.5",
     "elasticsearch/elasticsearch": "~2.0",
     "trinity/search": "dev-master",
     "trinity/utils": "dev-master",
-    "trinity/settings": "~1.1"
+    "trinity/core-interfaces": "dev-master"
   },
 
   "require-dev": {

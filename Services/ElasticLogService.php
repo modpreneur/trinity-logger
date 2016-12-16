@@ -3,17 +3,15 @@
  * Created by PhpStorm.
  * User: gabriel
  * Date: 26.2.16
- * Time: 18:04
+ * Time: 18:04.
  */
-
 namespace Trinity\Bundle\LoggerBundle\Services;
 
 use Elasticsearch\Client;
 use Elasticsearch\ClientBuilder;
 
 /**
- * Class ElasticLogService
- * @package Trinity\Bundle\LoggerBundle\Services
+ * Class ElasticLogService.
  */
 class ElasticLogService
 {
@@ -36,13 +34,12 @@ class ElasticLogService
      * @var string
      */
     protected $proxyFlag = 'Proxies\\__CG__\\';
-    
-    
+
     /**
      * ElasticLogService constructor.
      *
-     * @param string $clientHost // IP:port, default port is 9200
-     * @param string $index // name of DB
+     * @param string $clientHost IP:port, default port is 9200
+     * @param string $index      name of DB
      *
      * @throws \RuntimeException
      */
@@ -55,7 +52,7 @@ class ElasticLogService
 
         //Gabi-TODO: in settings?
         $handlerParams = [
-            'max_handles' => 50
+            'max_handles' => 50,
         ];
 
         $defaultHandler = ClientBuilder::defaultHandler($handlerParams);
@@ -66,7 +63,6 @@ class ElasticLogService
         ->build();
     }
 
-
     /**
      * @param string $index
      *
@@ -75,6 +71,7 @@ class ElasticLogService
     public function setIndex($index)
     {
         $this->index = $index;
+
         return $this;
     }
 
@@ -83,10 +80,11 @@ class ElasticLogService
      * The type(log) has to have enabled ttl in its mapping.
      *
      *
-     * @param string $typeName  //log name
+     * @param string $typeName //log name
      * @param $entity   //entity
      * @param int $ttl
-     * @return int  //ID of the logged
+     *
+     * @return int //ID of the logged
      */
     public function writeIntoAsync(string $typeName, $entity, int $ttl = 0)
     {
@@ -118,8 +116,9 @@ class ElasticLogService
      *
      * @param string $typeName //log name
      * @param $entity //entity
-     * @param int $ttl      // in days
-     * @return int      //ID of the logged
+     * @param int $ttl // in days
+     *
+     * @return int //ID of the logged
      */
     public function writeInto(string $typeName, $entity, int $ttl = 0)
     {
@@ -146,7 +145,6 @@ class ElasticLogService
         return $response['_id'];
     }
 
-
     /**
      * Function transforms entity into array, the array stores type of entity
      * for recreation when obtain from elastic search and type and id of related
@@ -158,6 +156,7 @@ class ElasticLogService
      *
      *
      * @param $entity
+     *
      * @return array
      */
     private function getElasticArray($entity)
@@ -165,10 +164,10 @@ class ElasticLogService
         $entityArray['EntitiesToDecode'] = [];
         $entityArray['SourceEntityClass'] = get_class($entity);
 
-        foreach ((array)$entity as $key => $value) {
+        foreach ((array) $entity as $key => $value) {
             $keyParts = explode("\x00", $key);
             $key = array_pop($keyParts);
-            
+
             //ttl is elastic thing, we only need place to store it in entity, not send it
             if ($key === 'ttl') {
                 continue;
@@ -209,32 +208,31 @@ class ElasticLogService
         if (array_key_exists('id', $entityArray) && !$entityArray['id']) {
             unset($entityArray['id']);
         }
+
         return $entityArray;
     }
-
 
     /**
      * @param string $typeName
      * @param string $id
-     * @param array $types
-     * @param array $values
-     * @param int $ttl
-     *
+     * @param array  $types
+     * @param array  $values
+     * @param int    $ttl
      */
     public function update(string $typeName, string $id, array $types, array $values, int $ttl = 0)
     {
         $body = array_combine($types, $values);
         $params = [
             'index' => $this->index,
-            'type'  => $typeName,
-            'id'    => $id,
-            'body' => ['doc' => $body]
+            'type' => $typeName,
+            'id' => $id,
+            'body' => ['doc' => $body],
         ];
-        
+
         if ($ttl) {
             $params['ttl'] = "{$ttl}d";
         }
-        
+
         $this->ESClient->update($params);
     }
 }
