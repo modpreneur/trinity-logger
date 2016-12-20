@@ -273,6 +273,7 @@ class EntityActionListener
             $className = substr($className, strlen(self::PROXY_FLAG));
             $emptyEntity = new $className();
             $reflect = new \ReflectionClass($emptyEntity);
+            /** @var EntityActionLoggable $annotation */
             $annotation = $this->reader->getClassAnnotation(
                 $reflect,
                 EntityActionLoggable::class
@@ -454,7 +455,7 @@ class EntityActionListener
     private function setRelationChanges(array $changeSet, array $updates, array $loggedFields)
     {
         /**
-         * @var PersistentCollection
+         * @var PersistentCollection $update
          */
         foreach ($updates as $update) {
             $fieldName = $update->getMapping()['fieldName'];

@@ -135,7 +135,8 @@ class DatabaseHandler extends AbstractProcessingHandler
          * Known SQL codes
          */
         $sqlTag = 'PDOException';
-        if (strncmp($e['message'], $sqlTag, strlen($sqlTag)) === 0) {
+
+        if (0 === strncmp($e['message'], $sqlTag, strlen($sqlTag))) {
             /*
              * we got some DBALException
              */
