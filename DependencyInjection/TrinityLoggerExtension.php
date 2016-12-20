@@ -74,7 +74,12 @@ class TrinityLoggerExtension extends Extension
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
 
-        $container->setAlias('trinity.logger.ttl_provider', $config['logger_ttl_provider']);
+        if (array_key_exists('logger_ttl_provider', $config) && $config['logger_ttl_provider'] !== null) {
+            $container->setAlias('trinity.logger.ttl_provider', $config['logger_ttl_provider']);
+        } else {
+            $container->setAlias('trinity.logger.ttl_provider', 'trinity.logger.default_ttl_provider');
+        }
+
         $container->setAlias('trinity.logger.user_provider', $config['logger_user_provider']);
     }
 }
