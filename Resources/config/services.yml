@@ -52,3 +52,7 @@ services:
           - "@security.token_storage"
           - "@request_stack"
           - "@trinity.logger.elastic_log_service_with_ttl"
+
+
+    trinity.logger.default_ttl_provider:
+        class: Trinity\Bundle\LoggerBundle\Services\DefaultTtlProvider
