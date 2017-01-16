@@ -40,7 +40,8 @@ class EntityActionListener
 
     const NECKTIE_SYSTEM_NAME = 'Necktie';
 
-    private $ids = [];
+    private $deletedId = null;
+    private $deleteEntity = null;
 
     /**
      * @var TokenStorageInterface
@@ -222,7 +223,8 @@ class EntityActionListener
      */
     public function preRemove(LifecycleEventArgs $args)
     {
-        $this->ids[] = $args->getObject()->getId();
+        $this->deletedId = $args->getObject()->getId();
+        $this->deleteEntity = $this->serializer->serialize($args->getObject(), 'json');
     }
 
     /**
@@ -505,11 +507,8 @@ class EntityActionListener
             $entity->setDeletedBy(null);
         }
         $this->setClass($log, $entity);
-        $log->setChangedEntityId(array_pop($this->ids));
-
-        $serialized = $this->serializer->serialize($entity, 'json');
-
-        $log->setChangedEntity($serialized);
+        $log->setChangedEntityId($this->deletedId);
+        $log->setChangedEntity($this->deleteEntity);
     }
 
     /**
