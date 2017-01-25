@@ -4,4 +4,4 @@ composer update
 
 phpunit
 
-#tail -f /dev/null
+tail -f /dev/null

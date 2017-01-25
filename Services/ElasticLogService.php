@@ -44,7 +44,7 @@ class ElasticLogService
      *
      * @throws \RuntimeException
      */
-    public function __construct(string $clientHost, string $index, int $asyncQueLength = 50)
+    public function __construct(string $clientHost, $index, int $asyncQueLength = 50)
     {
         $this->index = $index ?: 'necktie';
 
