@@ -32,7 +32,7 @@ class ExceptionLog extends BaseElasticLog implements EntityInterface
     private $serverData;
 
     /**
-     * @var int This is MONOLOG exception level, not http response!
+     * @var int This is mono-log exception level used in mono-log bundle, not http response!
      */
     private $level;
 
@@ -182,7 +182,7 @@ class ExceptionLog extends BaseElasticLog implements EntityInterface
     /**
      * @param UserInterface $user
      */
-    public function setUser($user)
+    public function setUser(UserInterface $user)
     {
         $this->user = $user;
     }

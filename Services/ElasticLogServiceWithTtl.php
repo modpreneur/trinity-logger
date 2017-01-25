@@ -31,13 +31,13 @@ class ElasticLogServiceWithTtl
      * The type(log) has to have enabled ttl in its mapping.
      *
      * @param string $typeName //log name
-     * @param object $entity   //entity
+     * @param Object $entity   //entity
      *
      * @return int //ID of the logged
      */
     public function writeInto(string $typeName, $entity)
     {
-        $this->elasticLogger->writeInto($typeName, $entity, $this->ttlProvider->getTtlForType($typeName));
+        return $this->elasticLogger->writeInto($typeName, $entity, $this->ttlProvider->getTtlForType($typeName));
     }
 
     /**
@@ -51,7 +51,7 @@ class ElasticLogServiceWithTtl
      */
     public function writeIntoAsync(string $typeName, $entity)
     {
-        $this->elasticLogger->writeIntoAsync($typeName, $entity, $this->ttlProvider->getTtlForType($typeName));
+        return $this->elasticLogger->writeIntoAsync($typeName, $entity, $this->ttlProvider->getTtlForType($typeName));
     }
 
     /**

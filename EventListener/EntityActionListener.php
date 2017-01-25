@@ -31,7 +31,7 @@ class EntityActionListener
 {
     const NEW_VALUE = 1;
     const OLD_VALUE = 0;
-        //@TODO @GabrielBordovsky remove admin prefixes
+    //@TODO @GabrielBordovsky remove admin prefixes
     const UPDATE = 'admin_update';
     const DELETE = 'admin_delete';
     const CREATE = 'admin_create';
@@ -40,8 +40,10 @@ class EntityActionListener
 
     const NECKTIE_SYSTEM_NAME = 'Necktie';
 
-    private $deletedId = null;
-    private $deleteEntity = null;
+    /** @var int */
+    private $deletedId = 0;
+    /** @var null */
+    private $deleteEntity = 0;
 
     /**
      * @var TokenStorageInterface
@@ -93,13 +95,13 @@ class EntityActionListener
     /**
      * EntityActionListener constructor.
      *
-     * @param TokenStorageInterface    $ts
+     * @param TokenStorageInterface $ts
      * @param EventDispatcherInterface $eventDispatcher
-     * @param JMS                      $serializer
-     * @param Reader                   $reader
-     * @param Logger                   $mo
-     * @param UserProviderInterface    $userProvider
-     * @param string                   $kernelEnvironment
+     * @param JMS $serializer
+     * @param Reader $reader
+     * @param Logger $mo
+     * @param UserProviderInterface $userProvider
+     * @param string $kernelEnvironment
      */
     public function __construct(
         TokenStorageInterface $ts,
@@ -127,7 +129,7 @@ class EntityActionListener
         $this->notificationUser = 0;
 
         if ($event->getUserIdentification() && is_numeric($event->getUserIdentification())) {
-            $this->notificationUser = (int) $event->getUserIdentification();
+            $this->notificationUser = (int)$event->getUserIdentification();
         }
 
         $this->notificationClient = $event->getClientId();
@@ -143,20 +145,20 @@ class EntityActionListener
     {
         $user = $event->getUserIdentification();
         $clientId = $event->getClientId();
-            /*
-             * There should never be clear for A when B is active. If this happens on prod we log it as error and clear
-             * it ,when it happen in dev, we throw the error.
-             */
+        /*
+         * There should never be clear for A when B is active. If this happens on prod we log it as error and clear
+         * it ,when it happen in dev, we throw the error.
+         */
 
         try {
             if ("$user" !== "$this->notificationUser") {
                 throw new \InvalidArgumentException(
-                    'Received end of event for '.$user.' but '.$this->notificationUser.'is still active.'
+                    'Received end of event for ' . $user . ' but ' . $this->notificationUser . 'is still active.'
                 );
             }
             if ("$clientId" !== "$this->notificationClient") {
                 throw new \InvalidArgumentException(
-                    'Received end of event for '.$clientId.' but '.$this->notificationClient.'is still active.'
+                    'Received end of event for ' . $clientId . ' but ' . $this->notificationClient . 'is still active.'
                 );
             }
         } catch (\InvalidArgumentException $e) {
@@ -199,9 +201,7 @@ class EntityActionListener
     /**
      * @param LifecycleEventArgs $args
      *
-     * @throws Exception
-     * @throws \RuntimeException
-     * @throws \UnexpectedValueException
+     * @throws \Exception
      */
     public function postRemove(LifecycleEventArgs $args)
     {
@@ -230,9 +230,7 @@ class EntityActionListener
     /**
      * @param LifecycleEventArgs $args
      *
-     * @throws Exception
-     * @throws \RuntimeException
-     * @throws \UnexpectedValueException
+     * @throws \Exception
      */
     public function postPersist(LifecycleEventArgs $args)
     {
@@ -313,7 +311,7 @@ class EntityActionListener
 
     /**
      * @param EntityActionLog $log
-     * @param ObjectManager   $manager
+     * @param ObjectManager $manager
      *
      * @throws \UnexpectedValueException
      * @throws \RuntimeException
@@ -332,23 +330,27 @@ class EntityActionListener
             $log->setSystem($this->notificationClient);
         } elseif (!$log->getUser()) {
             if ($this->tokenStorage->getToken()
-                && $this->tokenStorage->getToken()->getUser() instanceof UserInterface) {
+                && $this->tokenStorage->getToken()->getUser() instanceof UserInterface
+            ) {
                 $log->setUser($this->tokenStorage->getToken()->getUser());
             } else {
                 if ($this->kernelEnvironment === 'dev') {
-                    dump('Add user to create/update/delete actions'.
+                    dump('Add user to create/update/delete actions' .
                         'or use PROD environment to ignore following exception:');
                 }
-                throw new \UnexpectedValueException('Could not identify user making this entity action.');
+                $exception = new \UnexpectedValueException(
+                    'Could not identify user making this entity action.'
+                );
+                $this->moLogger->addError($exception);
             }
         }
     }
 
     /**
-     * @param EntityActionLog      $log
+     * @param EntityActionLog $log
      * @param EntityActionLoggable $annotation
-     * @param ObjectManager        $objectManager
-     * @param object               $entity
+     * @param ObjectManager $objectManager
+     * @param Object $entity
      *
      * @throws \RuntimeException
      */
@@ -405,7 +407,7 @@ class EntityActionListener
             if (array_key_exists(self::OLD_VALUE, $value)) {
                 //doctrine store numeric as string and it results in false changes
                 if (is_numeric($value[self::OLD_VALUE]) &&
-                    (double) $value[self::OLD_VALUE] === (double) $value[self::NEW_VALUE]
+                    (double)$value[self::OLD_VALUE] === (double)$value[self::NEW_VALUE]
                 ) {
                     unset($changeSet[$key]);
                     continue;
@@ -502,7 +504,7 @@ class EntityActionListener
         if (method_exists($entity, 'getDeletedBy') && $entity->getDeletedBy()) {
             $log->setUser($entity->getDeletedBy());
         }
-            //we don't want to serialize user info, user is in own attribute
+        //we don't want to serialize user info, user is in own attribute
         if (method_exists($entity, 'setDeletedBy')) {
             $entity->setDeletedBy(null);
         }
@@ -513,14 +515,14 @@ class EntityActionListener
 
     /**
      * @param EntityActionLog $log
-     * @param object          $entity
+     * @param Object $entity
      */
     private function setCreateLog(EntityActionLog $log, $entity)
     {
         if (method_exists($entity, 'getCreatedBy') && $entity->getCreatedBy()) {
             $log->setUser($entity->getCreatedBy());
         }
-            //we don't want to serialize user info, user is in own attribute
+        //we don't want to serialize user info, user is in own attribute
         if (method_exists($entity, 'setCreatedBy')) {
             $entity->setCreatedBy(null);
         }
@@ -533,7 +535,7 @@ class EntityActionListener
 
     /**
      * @param EntityActionLog $log
-     * @param object          $entity
+     * @param Object $entity
      */
     private function setClass(EntityActionLog $log, $entity)
     {

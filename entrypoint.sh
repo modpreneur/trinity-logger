@@ -1,7 +1,7 @@
-#!/bin/bash sh
+#!/bin/sh sh
 
 composer update
 
 phpunit
 
-#while true; do sleep 1000; done
+#tail -f /dev/null

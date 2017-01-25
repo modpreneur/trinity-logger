@@ -26,22 +26,12 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->children()
-                ->arrayNode('dynamo_logs')
-                    ->children()
-                        ->scalarNode('dynamo_host')->isRequired()->cannotBeEmpty()->end()
-                        ->scalarNode('dynamo_port')->isRequired()->cannotBeEmpty()->end()
-                        ->scalarNode('aws_key')->isRequired()->cannotBeEmpty()->end()
-                        ->scalarNode('aws_secret')->isRequired()->cannotBeEmpty()->end()
-                        ->scalarNode('aws_region')->isRequired()->cannotBeEmpty()->end()
-                    ->end()
-                ->end()
-            ->end()
-            ->children()
                 ->arrayNode('elastic_logs')
                     ->children()
                         ->scalarNode('elastic_host')->isRequired()->cannotBeEmpty()->end()
                         ->scalarNode('managed_index')->cannotBeEmpty()->end()
                         ->scalarNode('entities_path')->cannotBeEmpty()->end()
+                        ->scalarNode('async_queue_length')->defaultValue(50)->end()
         ;
 
         //reference to a service - starting with '@'

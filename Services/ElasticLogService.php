@@ -39,20 +39,20 @@ class ElasticLogService
      * ElasticLogService constructor.
      *
      * @param string $clientHost IP:port, default port is 9200
-     * @param string $index      name of DB
+     * @param string $index name of DB
+     * @param int $asyncQueLength
      *
      * @throws \RuntimeException
      */
-    public function __construct($clientHost, $index)
+    public function __construct(string $clientHost, string $index, int $asyncQueLength = 50)
     {
         $this->index = $index ?: 'necktie';
 
         $params = explode(':', $clientHost);
         $port = $params[1] ?? 9200;
 
-        //Gabi-TODO: in settings?
         $handlerParams = [
-            'max_handles' => 50,
+            'max_handles' => $asyncQueLength,
         ];
 
         $defaultHandler = ClientBuilder::defaultHandler($handlerParams);
@@ -152,8 +152,6 @@ class ElasticLogService
      *
      * Gabi-TODO:Was not tested on M:N , N:1 or 1:N relations !!!
      * Gabi-TODO-2: it is as simple as it could be. N part is usually mapped, on elastic site should not FK
-     *
-     *
      *
      * @param $entity
      *

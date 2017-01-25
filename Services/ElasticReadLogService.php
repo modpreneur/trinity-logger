@@ -10,7 +10,6 @@ namespace Trinity\Bundle\LoggerBundle\Services;
 
 use Elasticsearch\Client;
 use Elasticsearch\ClientBuilder;
-use Elasticsearch\Common\Exceptions\BadRequest400Exception;
 use Trinity\Component\Utils\Hydrators\ColumnHydrator;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException as Exception404;
 use Elasticsearch\Common\Exceptions\Missing404Exception as NFException;
@@ -129,7 +128,6 @@ class ElasticReadLogService
         } catch (NFException $e) {
             return 0;
         }
-
     }
 
 
@@ -190,9 +188,8 @@ class ElasticReadLogService
             $result = $this->ESClient->search($params);
         } catch (NFException $e) {
             return [];
-        } catch (BadRequest400Exception $e) {
-            return [];
         }
+
         if (array_key_exists('aggregations', $result)) {
             return $result;
         }
@@ -219,7 +216,8 @@ class ElasticReadLogService
      * @param NQLQuery $nqLQuery
      * @param string $globalSearch
      *
-     * @return array (array of entities, total matches)
+     * @param array $configuration
+     * @return array
      * @throws \RuntimeException
      */
     public function getByQuery($nqLQuery, string $globalSearch, array $configuration = [])
@@ -319,10 +317,6 @@ class ElasticReadLogService
             }
         }
 
-//        if (! array_key_exists('createdAt', $fields)) {
-//            $fields['createdAt'] = ['order' => 'desc'];
-//        }
-
         if ($fields) {
             $params['body']['sort'] = [$fields];
         }
@@ -335,9 +329,8 @@ class ElasticReadLogService
             $result = $this->ESClient->search($params);
         } catch (NFException $e) {
             return [[], 0, 0];
-        } catch (BadRequest400Exception $e) {
-            return [[], 0, 0];
         }
+
         $totalScore = $result['hits']['max_score'];
             //Hits contains hits. It is not typ-o...
         foreach ($result['hits']['hits'] as $arrayEntity) {
@@ -358,6 +351,7 @@ class ElasticReadLogService
      * @param WherePart $condition
      * @param array $types
      * @param string $key
+     * @throws \RuntimeException
      */
     private function translateCondition(WherePart $condition, array $types, string $key)
     {
@@ -427,7 +421,6 @@ class ElasticReadLogService
                     $value = ['lte' => $condition->value];
                     break;
                 default:
-                    dump($condition);
                     throw new \RuntimeException("Unexpected operator: {$condition->operator}");
             }
             $name = $condition->key->getName() . ($raw ??'');
@@ -436,10 +429,10 @@ class ElasticReadLogService
         }
     }
 
+
     /*
-     * @TODO: @GabrielBordovsky
-     *   composing terms
-    */
+     * @TODO: @GabrielBordovsky move to Necktie !!
+     */
     /**
      * Takes entity and try to search EntityActionLog for matching nodes.
      * @param $entity
@@ -478,8 +471,6 @@ class ElasticReadLogService
             $this->ESClient->indices()->refresh(['index' => $this->index]);
             $result = $this->ESClient->search($params);
         } catch (NFException $e) {
-            return [];
-        } catch (BadRequest400Exception $e) {
             return [];
         }
 

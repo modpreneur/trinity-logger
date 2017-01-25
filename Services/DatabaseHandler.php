@@ -14,7 +14,8 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Trinity\Bundle\LoggerBundle\Entity\ExceptionLog;
 
 /**
- * Class DatabaseHandler.
+ * Class DatabaseHandler. Takes care of not caught exceptions and store them in
+ * configured elasticSearch database.
  */
 class DatabaseHandler extends AbstractProcessingHandler
 {
@@ -36,7 +37,7 @@ class DatabaseHandler extends AbstractProcessingHandler
      * @param RequestStack             $requestStack
      * @param ElasticLogServiceWithTtl $esLogger
      * @param int                      $level        = Logger::DEBUG
-     * @param bool                     $bubble       Whether the messages that are handled can bubble up the stack or not
+     * @param bool                     $bubble      Whether the messages that are handled can bubble up the stack or not
      */
     public function __construct(
         Session $session,
@@ -58,9 +59,9 @@ class DatabaseHandler extends AbstractProcessingHandler
      */
     protected function write(array $record)
     {
-        $readable = '';
         if ('doctrine' === $record['channel']) {
             if ((int) $record['level'] >= Logger::WARNING) {
+                /* not forgotten debug statement */
                 error_log($record['message']);
             }
 
@@ -91,20 +92,7 @@ class DatabaseHandler extends AbstractProcessingHandler
             $token = $this->tokenStorage->getToken();
             $readable = $this->getReadable($record);
             $serverData = $record['extra']['serverData'];
-            //sending into controller
 
-                // notification part
-//
-//
-//                $conn->commit();
-//            } catch (\Exception $e) {
-//
-//                $conn->rollBack();
-//
-//                // php logs
-//                error_log($record['message']);
-//                error_log($e->getMessage());
-//            }
             /*
              * Elastic part
              */
@@ -131,26 +119,30 @@ class DatabaseHandler extends AbstractProcessingHandler
     private function getReadable($e)
     {
         /*
+         * Known SQL codes:
          * https://www-304.ibm.com/support/knowledgecenter/SSEPEK_10.0.0/com.ibm.db2z10.doc.codes/src/tpc/db2z_sqlstatevalues.dita
-         * Known SQL codes
          */
         $sqlTag = 'PDOException';
 
         if (0 === strncmp($e['message'], $sqlTag, strlen($sqlTag))) {
-            /*
-             * we got some DBALException
-             */
-            //dump($e);
-            $line = strstr($e['message'], PHP_EOL, true);
-            $short = substr($line, strpos($line, 'R: ') + 4);
-            $readable = ucfirst($short);
-            if ($readable && $this->session->isStarted()) {
-                $this->session->set('readable', $readable);
-            }
-
-            return $readable;
+            return $this->processPDO($e['message']);
         }
-        //readable format not supported yet
+        //When readable format is not supported yet
         return '';
+    }
+
+    /**
+     * @param string $errorMessage
+     * @return string
+     */
+    private function processPDO(string $errorMessage) :string
+    {
+        $line = strstr($errorMessage, PHP_EOL, true);
+        $short = substr($line, strpos($line, 'R: ') + 4);
+        $readable = ucfirst($short);
+        if ($readable && $this->session->isStarted()) {
+            $this->session->set('readable', $readable);
+        }
+        return $readable;
     }
 }

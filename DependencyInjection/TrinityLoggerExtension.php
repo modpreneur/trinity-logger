@@ -28,25 +28,13 @@ class TrinityLoggerExtension extends Extension
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
-        if (array_key_exists('dynamo_logs', $config) && isset($config['dynamo_logs'])) {
-            $container->setParameter('trinity.logger.dynamo_logs', true);
-            $container->setParameter('trinity.logger.dynamo_host', $config['dynamo_logs']['dynamo_host']);
-            $container->setParameter('trinity.logger.dynamo_port', $config['dynamo_logs']['dynamo_port']);
-            $container->setParameter('trinity.logger.aws_key', $config['dynamo_logs']['aws_key']);
-            $container->setParameter('trinity.logger.aws_secret', $config['dynamo_logs']['aws_secret']);
-            $container->setParameter('trinity.logger.aws_region', $config['dynamo_logs']['aws_region']);
-        } else {
-            $container->setParameter('trinity.logger.dynamo_logs', false);
-            $container->setParameter('trinity.logger.dynamo_host', null);
-            $container->setParameter('trinity.logger.dynamo_port', null);
-            $container->setParameter('trinity.logger.aws_key', null);
-            $container->setParameter('trinity.logger.aws_secret', null);
-            $container->setParameter('trinity.logger.aws_region', null);
-        }
-
         if (array_key_exists('elastic_logs', $config) && isset($config['elastic_logs'])) {
             $container->setParameter('trinity.logger.elastic_logs', true);
             $container->setParameter('trinity.logger.elastic_host', $config['elastic_logs']['elastic_host']);
+            $container->setParameter(
+                'trinity.logger.async_queue_length',
+                $config['elastic_logs']['async_queue_length']
+            );
 
             if (array_key_exists('managed_index', $config['elastic_logs'])
                 && isset($config['elastic_logs']['managed_index'])

@@ -1,12 +1,11 @@
 <?php
 
-
-use PHPUnit_Framework_TestCase;
+namespace Trinity\Bundle\LoggerBundle\Tests;
 
 /**
  * Class WidgetTest.
  */
-class WidgetTest extends PHPUnit_Framework_TestCase
+class EmptyTest extends \PHPUnit_Framework_TestCase
 {
     public function testCanBeNegated()
     {
