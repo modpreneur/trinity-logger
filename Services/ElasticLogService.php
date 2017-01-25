@@ -44,7 +44,7 @@ class ElasticLogService
      *
      * @throws \RuntimeException
      */
-    public function __construct(string $clientHost, $index, int $asyncQueLength = 50)
+    public function __construct(string $clientHost, $index, $asyncQueLength = 50)
     {
         $this->index = $index ?: 'necktie';
 
@@ -52,7 +52,7 @@ class ElasticLogService
         $port = $params[1] ?? 9200;
 
         $handlerParams = [
-            'max_handles' => $asyncQueLength,
+            'max_handles' => (int) $asyncQueLength,
         ];
 
         $defaultHandler = ClientBuilder::defaultHandler($handlerParams);
