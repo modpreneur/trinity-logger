@@ -33,7 +33,7 @@ class TrinityLoggerExtension extends Extension
             $container->setParameter('trinity.logger.elastic_host', $config['elastic_logs']['elastic_host']);
             $container->setParameter(
                 'trinity.logger.async_queue_length',
-                $config['elastic_logs']['async_queue_length']
+                (int) $config['elastic_logs']['async_queue_length']
             );
 
             if (array_key_exists('managed_index', $config['elastic_logs'])
