@@ -40,7 +40,7 @@ class ElasticLogService
      *
      * @param string $clientHost IP:port, default port is 9200
      * @param string $index name of DB
-     * @param int $asyncQueLength
+     * @param $asyncQueLength
      *
      * @throws \RuntimeException
      */

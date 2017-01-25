@@ -5,7 +5,7 @@ services:
         arguments:
             - "%trinity.logger.elastic_host%"
             - "%trinity.logger.elastic_managed_index%"
-            - "%trinity.logger.async_queue_length"
+            - "%trinity.logger.async_queue_length%"
 
     trinity.logger.elastic_log_service_with_ttl:
         class: Trinity\Bundle\LoggerBundle\Services\ElasticLogServiceWithTtl
