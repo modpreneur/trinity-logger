@@ -52,17 +52,21 @@ class ElasticLogServiceWithTtlTest extends \PHPUnit_Framework_TestCase
         $ttlLogger->writeIntoAsync($this->logName, $this->object);
     }
 
-//    public function testUpdate()
-//    {
-//        $base = $this->getBase();
-//        /** @var ElasticLogServiceWithTtl $ttlLogger */
-//        $ttlLogger = $base['ttlLogger'];
-//
-//        $base['logger']->expects($this->once())->method('writeIntoAsync')
-//            ->with($this->logName, $this->object, $this->ttl);
-//
-//        $ttlLogger->update($this->logName, $this->object);
-//    }
+    public function testUpdate()
+    {
+        $base = $this->getBase();
+        /** @var ElasticLogServiceWithTtl $ttlLogger */
+        $ttlLogger = $base['ttlLogger'];
+
+        $updateKeys = ['firstKey', 'secondKey'];
+        $updateValues = ['firstValue', 'secondValue'];
+        $logId = 'logId';
+
+        $base['logger']->expects($this->once())->method('update')
+            ->with($this->logName, $logId, $updateKeys, $updateValues, $this->ttl);
+
+        $ttlLogger->update($this->logName, $logId, $updateKeys, $updateValues, true);
+    }
 
     /**
      * @return array
@@ -73,7 +77,6 @@ class ElasticLogServiceWithTtlTest extends \PHPUnit_Framework_TestCase
         $ttlProvider = $this->getMockBuilder(DefaultTtlProvider::class)->disableOriginalConstructor()->getMock();
         $ttlProvider->expects($this->once())->method('getTtlForType')->with($this->logName)
             ->will($this->returnValue($this->ttl));
-
 
 
         $ttlLogger = new ElasticLogServiceWithTtl(
