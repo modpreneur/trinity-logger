@@ -388,8 +388,15 @@ class ElasticReadLogService
                 }
             }
         } else {
+            $name = $condition->key->getName() . ($raw ?? '');
             switch ($condition->operator) {
                 case '=':
+                    if ($condition->value === '<NULL>') {
+                        $key = 'should';
+                        $this->query['bool'][$key][] = [$term => [$name => '']];
+                        // we don't want to continue and change value
+                        return;
+                    }
                     break;
                 case '!=':
                     $key .= '_not';
@@ -423,7 +430,7 @@ class ElasticReadLogService
                 default:
                     throw new \RuntimeException("Unexpected operator: {$condition->operator}");
             }
-            $name = $condition->key->getName() . ($raw ??'');
+
             $value = $value ?? (is_int($condition->value)? (int) $condition->value: $condition->value);
             $this->query['bool'][$key][] = [$term => [$name => $value]];
         }
