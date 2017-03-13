@@ -14,6 +14,9 @@ namespace Trinity\Bundle\LoggerBundle\Entity;
  */
 class BaseElasticLog
 {
+    /** change when class name and log name are different */
+    const LOG_NAME = self::class;
+
     /**
      * @var string
      */
