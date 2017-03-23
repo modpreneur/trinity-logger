@@ -221,7 +221,7 @@ class ExceptionLog extends BaseElasticLog implements EntityInterface
     /**
      * @return string
      */
-    public function getFlag(): string
+    public function getFlag(): ?string
     {
         return $this->flag;
     }
