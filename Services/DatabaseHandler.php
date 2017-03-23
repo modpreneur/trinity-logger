@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Trinity\Bundle\LoggerBundle\Entity\ExceptionLog;
+use Trinity\Component\Core\Interfaces\UserInterface;
 
 /**
  * Class DatabaseHandler. Takes care of not caught exceptions and store them in
@@ -31,13 +32,18 @@ class DatabaseHandler extends AbstractProcessingHandler
     /** @var  ElasticLogServiceWithTtl */
     private $esLogger;
 
+    /** @var string  */
+    private $flag;
+
+
     /**
-     * @param Session                  $session
-     * @param TokenStorageInterface    $tokenStorage
-     * @param RequestStack             $requestStack
+     * @param Session $session
+     * @param TokenStorageInterface $tokenStorage
+     * @param RequestStack $requestStack
      * @param ElasticLogServiceWithTtl $esLogger
-     * @param int                      $level        = Logger::DEBUG
-     * @param bool                     $bubble      Whether the messages that are handled can bubble up the stack or not
+     * @param int $level = Logger::DEBUG
+     * @param bool $bubble Whether the messages that are handled can bubble up the stack or not
+     * @param string $flag
      */
     public function __construct(
         Session $session,
@@ -45,15 +51,20 @@ class DatabaseHandler extends AbstractProcessingHandler
         RequestStack $requestStack,
         ElasticLogServiceWithTtl $esLogger,
         $level = Logger::DEBUG,
-        $bubble = true
+        $bubble = true,
+        $flag = 'unknown source'
     ) {
         $this->tokenStorage = $tokenStorage;
         $this->session = $session;
         $this->requestStack = $requestStack;
         $this->esLogger = $esLogger;
 
+        $this->flag = $flag;
+
         parent::__construct($level, $bubble);
     }
+
+
     /**
      * @param array $record
      */
@@ -91,7 +102,11 @@ class DatabaseHandler extends AbstractProcessingHandler
             }
             $token = $this->tokenStorage->getToken();
             $readable = $this->getReadable($record);
-            $serverData = $record['extra']['serverData'];
+            $serverData = '';
+
+            if (isset($record['extra']['serverData'])){
+                $serverData = $record['extra']['serverData'];
+            }
 
             /*
              * Elastic part
@@ -103,13 +118,17 @@ class DatabaseHandler extends AbstractProcessingHandler
             $exception->setCreatedAt(time());
             $exception->setUrl($url);
             $exception->setIp($ip);
+            $exception->setFlag($this->flag);
             if ($token && $token->getUser() && !is_string($token->getUser())) {
-                $exception->setUser($token->getUser());
+                if ($token->getUser() instanceof UserInterface) {
+                    $exception->setUser($token->getUser());
+                }
             }
             $exception->setReadable($readable);
             $this->esLogger->writeInto(ExceptionLog::NAME, $exception);
         }
     }
+
 
     /**
      * @param array $e
@@ -130,6 +149,7 @@ class DatabaseHandler extends AbstractProcessingHandler
         //When readable format is not supported yet
         return '';
     }
+
 
     /**
      * @param string $errorMessage
