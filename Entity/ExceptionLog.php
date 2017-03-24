@@ -47,7 +47,7 @@ class ExceptionLog extends BaseElasticLog implements EntityInterface
     private $ip;
 
     /** @var  string */
-    private $flag;
+    private $system;
 
     /**
      * Get log.
@@ -221,17 +221,17 @@ class ExceptionLog extends BaseElasticLog implements EntityInterface
     /**
      * @return string
      */
-    public function getFlag(): ?string
+    public function getSystem(): ?string
     {
-        return $this->flag;
+        return $this->system;
     }
 
 
     /**
-     * @param string $flag
+     * @param string $system
      */
-    public function setFlag(string $flag)
+    public function setSystem(string $system)
     {
-        $this->flag = $flag;
+        $this->system = $system;
     }
 }

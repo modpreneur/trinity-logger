@@ -33,7 +33,7 @@ class DatabaseHandler extends AbstractProcessingHandler
     private $esLogger;
 
     /** @var string  */
-    private $flag;
+    private $system;
 
 
     /**
@@ -43,7 +43,7 @@ class DatabaseHandler extends AbstractProcessingHandler
      * @param ElasticLogServiceWithTtl $esLogger
      * @param int $level = Logger::DEBUG
      * @param bool $bubble Whether the messages that are handled can bubble up the stack or not
-     * @param string $flag
+     * @param string $system
      */
     public function __construct(
         Session $session,
@@ -52,14 +52,14 @@ class DatabaseHandler extends AbstractProcessingHandler
         ElasticLogServiceWithTtl $esLogger,
         $level = Logger::DEBUG,
         $bubble = true,
-        $flag = 'unknown source'
+        $system = 'unknown source'
     ) {
         $this->tokenStorage = $tokenStorage;
         $this->session = $session;
         $this->requestStack = $requestStack;
         $this->esLogger = $esLogger;
 
-        $this->flag = $flag;
+        $this->system = $system;
 
         parent::__construct($level, $bubble);
     }
@@ -93,9 +93,11 @@ class DatabaseHandler extends AbstractProcessingHandler
                 $ip = $request->getClientIp();
             } else {
                 $requestedUrl = strpos($record['extra']['serverData'], 'REQUEST_URI:');
-                $requestedUrl += strlen('REQUEST_URI: ');
-                $endLine = strpos($record['extra']['serverData'], PHP_EOL, $requestedUrl);
-                $url = substr($record['extra']['serverData'], $requestedUrl, $endLine - $requestedUrl);
+                if ($requestedUrl !== false) {
+                    $requestedUrl += strlen('REQUEST_URI: ');
+                    $endLine = strpos($record['extra']['serverData'], PHP_EOL, $requestedUrl);
+                    $url = substr($record['extra']['serverData'], $requestedUrl, $endLine - $requestedUrl);
+                }
                 /*
                  * todo: get ip from extra too (which one?)
                  */
@@ -104,7 +106,7 @@ class DatabaseHandler extends AbstractProcessingHandler
             $readable = $this->getReadable($record);
             $serverData = '';
 
-            if (isset($record['extra']['serverData'])){
+            if (isset($record['extra']['serverData'])) {
                 $serverData = $record['extra']['serverData'];
             }
 
@@ -118,7 +120,7 @@ class DatabaseHandler extends AbstractProcessingHandler
             $exception->setCreatedAt(time());
             $exception->setUrl($url);
             $exception->setIp($ip);
-            $exception->setFlag($this->flag);
+            $exception->setSystem($this->system);
             if ($token && $token->getUser() && !is_string($token->getUser())) {
                 if ($token->getUser() instanceof UserInterface) {
                     $exception->setUser($token->getUser());
