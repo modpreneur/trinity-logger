@@ -376,7 +376,7 @@ class EntityActionListener
             $log->setUser($entity->getUpdatedBy());
         }
 
-        unset($changeSet['updatedBy'], $changeSet['updatedAt'], $changeSet['createdBy']);
+        unset($changeSet['updatedBy'], $changeSet['updatedAt'], $changeSet['createdBy'], $changeSet['createdAt']);
 
         $changeSet = $this->setRelationChanges(
             $changeSet,
