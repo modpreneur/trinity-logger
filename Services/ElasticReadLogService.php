@@ -38,16 +38,15 @@ class ElasticReadLogService
         'Notification' => 'NotificationLog'
     ];
 
-
     /**
      * @var Client;
      */
-    private $ESClient;
+    private $eSClient;
 
     /**
      * @var string index
      */
-    private $index = 'necktie';
+    private $index;
 
     /**
      * @var EntityManager entity manager
@@ -61,19 +60,18 @@ class ElasticReadLogService
     /**
      * ElasticReadLogService constructor.
      * @param string $clientHost // IP:port, default port is 9200
-     * @param EntityManager $em
+     * @param EntityManager|null $em
      * @param string $index
      */
-    public function __construct($clientHost, $em, $index)
+    public function __construct(string $clientHost, ?EntityManager $em = null, string $index)
     {
         $this->em = $em;
-
         $this->index = $index ?: 'necktie';
 
-        $params = explode(':', $clientHost);
-        $portNumber = array_key_exists(1, $params) ? $params[1] : 9200;
+        $params = \explode(':', $clientHost);
+        $portNumber = \array_key_exists(1, $params) ? $params[1] : 9200;
 
-        $this->ESClient = ClientBuilder::create()// Instantiate a new ClientBuilder
+        $this->eSClient = ClientBuilder::create()// Instantiate a new ClientBuilder
         ->setHosts([$params[0].':'.$portNumber])// Set the hosts
         ->build();
     }
@@ -89,15 +87,16 @@ class ElasticReadLogService
     {
         $params = [
             'index' => $this->index,
-            'type' => $typeName,
-            'id' => $id,
+            'type'  => $typeName,
+            'id'    => $id,
         ];
         try {
-            $response = $this->ESClient->get($params);
+            $response = $this->eSClient->get($params);
         } catch (NFException $e) {
             throw new Exception404();
         }
-        if (array_key_exists('_ttl', $response)) {
+
+        if (\array_key_exists('_ttl', $response)) {
             $response['_source']['ttl'] = intdiv($response['_ttl'], 1000);
         }
         return $this->decodeArrayFormat($response['_source'], $response['_id']);
@@ -124,7 +123,7 @@ class ElasticReadLogService
         }
 
         try {
-            return $this->ESClient->count($params)['count'];
+            return $this->eSClient->count($params)['count'];
         } catch (NFException $e) {
             return 0;
         }
@@ -133,13 +132,16 @@ class ElasticReadLogService
 
     /**
      * @param string $index
+     *
      * @return $this
      */
     public function setIndex($index)
     {
         $this->index = $index;
+
         return $this;
     }
+
 
     /**
      * WARNING: In case aggregation was selected result is returned as given by elastic-search.
@@ -184,20 +186,20 @@ class ElasticReadLogService
         }
 
         try {
-            $this->ESClient->indices()->refresh(['index' => $this->index]);
-            $result = $this->ESClient->search($params);
+            $this->eSClient->indices()->refresh(['index' => $this->index]);
+            $result = $this->eSClient->search($params);
         } catch (NFException $e) {
             return [];
         }
 
-        if (array_key_exists('aggregations', $result)) {
+        if (\array_key_exists('aggregations', $result)) {
             return $result;
         }
         
         $entities = [];
         foreach ($result['hits']['hits'] as $arrayEntity) {
-            if (array_key_exists('_ttl', $arrayEntity)) {
-                $arrayEntity['_source']['ttl'] = intdiv($arrayEntity['_ttl'], 1000);
+            if (\array_key_exists('_ttl', $arrayEntity)) {
+                $arrayEntity['_source']['ttl'] = \intdiv($arrayEntity['_ttl'], 1000);
             }
             $entity = $this->decodeArrayFormat($arrayEntity['_source'], $arrayEntity['_id']);
             $entities[] = $entity;
@@ -205,6 +207,7 @@ class ElasticReadLogService
 
         return $entities;
     }
+
 
     /**
      * Take $nqlQuery and turns it into elasticSearch parameters,
@@ -226,7 +229,7 @@ class ElasticReadLogService
              * No joins accepted, so we work only with one 'table'
              */
         $entityName = $nqLQuery->getFrom()->getTables()[0]->getName();
-        $typeName = array_key_exists($entityName, $this->translation) ? $this->translation[$entityName] : $entityName;
+        $typeName = \array_key_exists($entityName, $this->translation) ? $this->translation[$entityName] : $entityName;
 
         $params = [
             'index' => $this->index,
@@ -297,7 +300,7 @@ class ElasticReadLogService
             }
             $this->translateCondition($elem, $types, $keyBase);
 
-            if (array_key_exists('error', $this->query)) {
+            if (\array_key_exists('error', $this->query)) {
                 return [[], 0, 0];
             }
 
@@ -311,9 +314,9 @@ class ElasticReadLogService
             }
 
             $attributeName = $column->getName();
-            $fields[$attributeName] = ['order' => strtolower($column->getOrdering())];
+            $fields[$attributeName] = ['order' => \strtolower($column->getOrdering())];
             if ($attributeName === 'changedEntityClass') {
-                $fields['changedEntityId'] = ['order' => strtolower($column->getOrdering())];
+                $fields['changedEntityId'] = ['order' => \strtolower($column->getOrdering())];
             }
         }
 
@@ -324,9 +327,9 @@ class ElasticReadLogService
         $entities = [];
         $score = [];
         try {
-            $this->ESClient->indices()->refresh(['index' => $this->index]);
+            $this->eSClient->indices()->refresh(['index' => $this->index]);
 
-            $result = $this->ESClient->search($params);
+            $result = $this->eSClient->search($params);
         } catch (NFException $e) {
             return [[], 0, 0];
         }
@@ -334,8 +337,8 @@ class ElasticReadLogService
         $totalScore = $result['hits']['max_score'];
             //Hits contains hits. It is not typ-o...
         foreach ($result['hits']['hits'] as $arrayEntity) {
-            if (array_key_exists('_ttl', $arrayEntity)) {
-                $arrayEntity['_source']['ttl'] = intdiv($arrayEntity['_ttl'], 1000);
+            if (\array_key_exists('_ttl', $arrayEntity)) {
+                $arrayEntity['_source']['ttl'] = \intdiv($arrayEntity['_ttl'], 1000);
             }
             $entity = $this->decodeArrayFormat($arrayEntity['_source'], $arrayEntity['_id']);
             $entities[] = $entity;
@@ -361,9 +364,10 @@ class ElasticReadLogService
             $raw = '.raw';
         }
 
-        if (is_array($types[$condition->key->getName()]) &&
-            array_key_exists('entity', $types[$condition->key->getName()])
+        if (\is_array($types[$condition->key->getName()]) &&
+            \array_key_exists('entity', $types[$condition->key->getName()])
         ) {
+            //@todo em is empty?
             $this->em->getConfiguration()->addCustomHydrationMode('COLUMN_HYDRATOR', ColumnHydrator::class);
             $values = $this->em->getRepository($types[$condition->key->getName()]['entity'])
                 ->createQueryBuilder('b')
@@ -404,12 +408,15 @@ class ElasticReadLogService
                 case 'LIKE':
                     $value = $condition->value;
                     $term = 'wildcard';
+
                     if ($value[0] === '%') {
                         $value[0] = '*';
                     }
-                    if ($value[strlen($value) - 1] === '%') {
-                        $value[strlen($value) - 1] = '*';
+
+                    if ($value[\strlen($value) - 1] === '%') {
+                        $value[\strlen($value) - 1] = '*';
                     }
+
                     break;
                 case '>':
                     $term = 'range';
@@ -431,7 +438,7 @@ class ElasticReadLogService
                     throw new \RuntimeException("Unexpected operator: {$condition->operator}");
             }
 
-            $value = $value ?? (is_int($condition->value)? (int) $condition->value: $condition->value);
+            $value = $value ?? (\is_int($condition->value)? (int) $condition->value: $condition->value);
             $this->query['bool'][$key][] = [$term => [$name => $value]];
         }
     }
@@ -445,13 +452,12 @@ class ElasticReadLogService
      * @param $entity
      * @return array
      */
-    public function getStatusByEntity($entity)
+    public function getStatusByEntity($entity): array
     {
         $params = [
             'index' => $this->index,
-            'type' => 'EntityActionLog',
-            'body' => [
-            ]
+            'type'  => 'EntityActionLog',
+            'body'  => []
         ];
 
         $fields[] = 'changeSet';
@@ -463,20 +469,20 @@ class ElasticReadLogService
         $params['body']['_source'] = $fields;
         $params['body']['sort']['createdAt']['order'] = 'desc';
 
-        $class = get_class($entity);
-        if (strpos($class, $this->proxyFlag) === 0) {
-            $class = substr($class, strlen($this->proxyFlag));
+        $class = \get_class($entity);
+        if (\strpos($class, $this->proxyFlag) === 0) {
+            $class = \substr($class, \strlen($this->proxyFlag));
         }
         $params['body']['query']['bool']['filter'][0]['term']['changedEntityClass.raw'] = $class;
 
-        if (method_exists($entity, 'getId')) {
+        if (\method_exists($entity, 'getId')) {
             $temp['term']['changedEntityId'] = $entity->getId();
             $params['body']['query']['bool']['filter'][] = $temp;
         }
 
         try {
-            $this->ESClient->indices()->refresh(['index' => $this->index]);
-            $result = $this->ESClient->search($params);
+            $this->eSClient->indices()->refresh(['index' => $this->index]);
+            $result = $this->eSClient->search($params);
         } catch (NFException $e) {
             return [];
         }
@@ -486,11 +492,11 @@ class ElasticReadLogService
             $source = $arrayEntity['_source'];
             $source['_id'] = $arrayEntity['_id'];
             $source['user'] = $source['user'] ? $this->getEntity($source['user']) : null;
-            $changeSet = (array) json_decode($source['changeSet']);
-            if (array_key_exists('info', $changeSet)) {
+            $changeSet = (array) \json_decode($source['changeSet']);
+            if (\array_key_exists('info', $changeSet)) {
                 $source['changeSet'] = $changeSet;
             } else {
-                $source['changeSet'] = array_keys($changeSet);
+                $source['changeSet'] = \array_keys($changeSet);
             }
             $entities[] = $source;//[$entity['createdAt'], $entity['changeSet'], $entity['actionType'], ];
         }
@@ -499,11 +505,12 @@ class ElasticReadLogService
 //        return $result['hits']['hits'];
     }
 
+
     /**
      * @param array $columns
      * @return array
      */
-    private function getColumnTypes(array $columns)
+    private function getColumnTypes(array $columns): array
     {
         $types = [];
         foreach ($columns as $column) {
@@ -538,9 +545,10 @@ class ElasticReadLogService
         foreach ($responseArray as $key => $value) {
             $setter = "set${key}";
 
-            if (in_array($key, $relatedEntities, true)) {
+            if (\in_array($key, $relatedEntities, true)) {
                 $value = $this->getEntity($value);
             }
+
             if ($value) {
                 $entity->$setter($value);
             }
@@ -557,11 +565,17 @@ class ElasticReadLogService
      */
     private function getEntity(string $identification)
     {
-        $subEntity = explode("\x00", $identification);
+        if (null === $this->em) {
+            return null;
+        }
+
+        $subEntity = \explode("\x00", $identification);
         $value = null;
+
         if ($subEntity[1]) {
             $value = $this->em->getRepository($subEntity[0])->find($subEntity[1]);
         }
+
         if (!$value) {
             $value = new $subEntity[0]();
         }

@@ -124,7 +124,7 @@ class ElasticLogService
      * @param $entity //entity
      * @param int $ttl // in days
      *
-     * @return int //ID of the logged
+     * @return string //ID of the logged
      */
     public function writeInto(string $typeName, $entity, int $ttl = 0)
     {

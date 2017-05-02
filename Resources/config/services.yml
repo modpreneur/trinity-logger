@@ -18,7 +18,7 @@ services:
       class: Trinity\Bundle\LoggerBundle\Services\ElasticReadLogService
       arguments:
         - "%trinity.logger.elastic_host%"
-        - '@doctrine.orm.default_entity_manager'
+        - '@?doctrine.orm.default_entity_manager'
         - "%trinity.logger.elastic_managed_index%"
         - "%trinity.logger.base.entities.path%"
 
