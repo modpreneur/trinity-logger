@@ -50,6 +50,11 @@ class ExceptionLog extends BaseElasticLog implements EntityInterface
     private $system;
 
     /**
+     * @var UserInterface
+     */
+    private $user;
+
+    /**
      * Get log.
      *
      * @return string
@@ -168,11 +173,6 @@ class ExceptionLog extends BaseElasticLog implements EntityInterface
     {
         $this->ip = $ip;
     }
-
-    /**
-     * @var UserInterface
-     */
-    private $user;
 
     /**
      * @return UserInterface

@@ -41,10 +41,11 @@ class ElasticLogService
      * @param string $clientHost IP:port, default port is 9200
      * @param string $index name of DB
      * @param $asyncQueLength
+     * @param ClientBuilder $clientBuilder
      *
      * @throws \RuntimeException
      */
-    public function __construct(string $clientHost, $index, $asyncQueLength = 50)
+    public function __construct(string $clientHost, $index, $asyncQueLength = 50, ClientBuilder $clientBuilder = null)
     {
         $this->index = $index ?: 'necktie';
 
@@ -57,10 +58,15 @@ class ElasticLogService
 
         $defaultHandler = ClientBuilder::defaultHandler($handlerParams);
 
-        $this->ESClient = ClientBuilder::create()// Instantiate a new ClientBuilder
-        ->setHosts(["${params[0]}:${port}"])// Set the hosts
-        ->setHandler($defaultHandler)
-        ->build();
+        if($clientBuilder){
+            $this->ESClient = $clientBuilder
+                ->setHosts(["${params[0]}:${port}"])// Set the hosts
+
+                ->setHandler($defaultHandler)
+                ->build();
+        } else {
+            $this->ESClient = $this->createBuilder($params, $port, $defaultHandler);
+        }
     }
 
     /**
@@ -232,5 +238,21 @@ class ElasticLogService
         }
 
         $this->ESClient->update($params);
+    }
+
+    /**
+     * @param $params
+     * @param $port
+     * @param $defaultHandler
+     * @return Client
+     */
+    private function createBuilder($params, $port, $defaultHandler)
+    {
+        $client = ClientBuilder::create()// Instantiate a new ClientBuilder
+            ->setHosts(["${params[0]}:${port}"])// Set the hosts
+            ->setHandler($defaultHandler)
+            ->build();
+
+        return $client;
     }
 }

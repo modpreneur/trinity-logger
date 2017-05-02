@@ -9,6 +9,7 @@
 namespace Trinity\Bundle\LoggerBundle\Tests\Services;
 
 
+use PHPUnit\Framework\TestCase;
 use Trinity\Bundle\LoggerBundle\Services\DefaultTtlProvider;
 use Trinity\Bundle\LoggerBundle\Services\ElasticLogService;
 use Trinity\Bundle\LoggerBundle\Services\ElasticLogServiceWithTtl;
@@ -17,7 +18,7 @@ use Trinity\Bundle\LoggerBundle\Services\ElasticLogServiceWithTtl;
  * Class ElasticLogServiceWithTtlTest
  * @package Trinity\Bundle\LoggerBundle\Tests\Services
  */
-class ElasticLogServiceWithTtlTest extends \PHPUnit_Framework_TestCase
+class ElasticLogServiceWithTtlTest extends TestCase
 {
     /** @var string  */
     protected $logName = 'logName';

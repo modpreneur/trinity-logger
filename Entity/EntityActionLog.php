@@ -143,7 +143,7 @@ class EntityActionLog extends BaseElasticLog implements EntityInterface
     }
 
     /**
-     * @return string
+     * @return array|string
      */
     public function getChangeSet()
     {
@@ -151,7 +151,7 @@ class EntityActionLog extends BaseElasticLog implements EntityInterface
     }
 
     /**
-     * @param array  $changeSet
+     * @param array|string  $changeSet
      * @param string $param
      *
      * $param can be 'read'/'write'

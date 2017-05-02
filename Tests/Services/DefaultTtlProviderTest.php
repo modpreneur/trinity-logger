@@ -8,13 +8,14 @@
 
 namespace Trinity\Bundle\LoggerBundle\Tests\Services;
 
+use PHPUnit\Framework\TestCase;
 use Trinity\Bundle\LoggerBundle\Services\DefaultTtlProvider;
 
 /**
  * Class DefaultTtlProviderTest
  * @package Trinity\Bundle\LoggerBundle\Tests\Services
  */
-class DefaultTtlProviderTest extends \PHPUnit_Framework_TestCase
+class DefaultTtlProviderTest extends TestCase
 {
     public function testDefaultTtl()
     {

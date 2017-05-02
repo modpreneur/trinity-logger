@@ -9,6 +9,7 @@
 namespace Trinity\Bundle\LoggerBundle\Tests\Services;
 
 use Monolog\Logger;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -23,7 +24,7 @@ use Trinity\Component\Core\Interfaces\UserInterface;
  * Class DatabaseHandlerTest
  * @package Trinity\Bundle\LoggerBundle\Tests\Services
  */
-class DatabaseHandlerTest extends \PHPUnit_Framework_TestCase
+class DatabaseHandlerTest extends TestCase
 {
     public function testLogRecord()
     {
@@ -47,7 +48,7 @@ class DatabaseHandlerTest extends \PHPUnit_Framework_TestCase
         $session->expects($this->once())->method('set')->with('readable', 'TestErrorMessage');
         $session->expects($this->once())->method('isStarted')->will($this->returnValue(true));
 
-        $token->expects($this->exactly(3))->method('getUser')->will($this->returnValue($user));
+        $token->expects($this->exactly(4))->method('getUser')->will($this->returnValue($user));
 
 
         $esLogger->expects($this->once())->method('writeInto')->with(
