@@ -61,7 +61,7 @@ class ElasticReadLogService
      * ElasticReadLogService constructor.
      * @param string $clientHost // IP:port, default port is 9200
      * @param EntityManager|null $em
-     * @param string $index
+     * @param string|null $index
      */
     public function __construct(string $clientHost, ?EntityManager $em, ?string $index)
     {
