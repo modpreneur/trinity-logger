@@ -63,10 +63,10 @@ class ElasticReadLogService
      * @param EntityManager|null $em
      * @param string $index
      */
-    public function __construct(string $clientHost, ?EntityManager $em = null, ?string $index = 'necktie')
+    public function __construct(string $clientHost, ?EntityManager $em = null, ?string $index)
     {
         $this->em = $em;
-        $this->index = $index;
+        $this->index = $index ?: 'necktie';
 
         $params = \explode(':', $clientHost);
         $portNumber = \array_key_exists(1, $params) ? $params[1] : 9200;
