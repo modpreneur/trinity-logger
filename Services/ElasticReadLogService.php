@@ -63,7 +63,7 @@ class ElasticReadLogService
      * @param EntityManager|null $em
      * @param string $index
      */
-    public function __construct(string $clientHost, ?EntityManager $em = null, ?string $index)
+    public function __construct(string $clientHost, ?EntityManager $em, ?string $index)
     {
         $this->em = $em;
         $this->index = $index ?: 'necktie';
