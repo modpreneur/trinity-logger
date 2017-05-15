@@ -57,13 +57,21 @@ class ElasticReadLogService
      * @var array for extended search
      */
     private $query;
+
     /**
      * ElasticReadLogService constructor.
+     *
      * @param string $clientHost // IP:port, default port is 9200
      * @param EntityManager|null $em
      * @param string|null $index
+     * @param ClientBuilder|null $clientBuilder
      */
-    public function __construct(string $clientHost, ?EntityManager $em, ?string $index)
+    public function __construct(
+        string $clientHost,
+        ?EntityManager $em,
+        ?string $index,
+        ClientBuilder $clientBuilder = null
+    )
     {
         $this->em = $em;
         $this->index = $index ?: 'necktie';
@@ -71,9 +79,14 @@ class ElasticReadLogService
         $params = \explode(':', $clientHost);
         $portNumber = \array_key_exists(1, $params) ? $params[1] : 9200;
 
-        $this->eSClient = ClientBuilder::create()// Instantiate a new ClientBuilder
-        ->setHosts([$params[0].':'.$portNumber])// Set the hosts
-        ->build();
+        if ($clientBuilder) {
+            $this->eSClient = $clientBuilder->setHosts([$params[0].':'.$portNumber])// Set the hosts
+                ->build();
+        } else {
+            $this->eSClient = ClientBuilder::create()// Instantiate a new ClientBuilder
+            ->setHosts([$params[0].':'.$portNumber])// Set the hosts
+            ->build();
+        }
     }
 
 

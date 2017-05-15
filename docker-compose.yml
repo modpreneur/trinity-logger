@@ -1,4 +1,4 @@
-tests:
+ctests:
   build: .
   volumes:
     - .:/var/app
