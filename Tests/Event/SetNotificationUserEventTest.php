@@ -13,15 +13,18 @@ class SetNotificationUserEventTest extends TestCase
 {
     public function testConstructGetsAndSets()
     {
+        /** @var SetNotificationUserEvent $setNotificationUserEvent */
         $setNotificationUserEvent = new SetNotificationUserEvent('userIdentification', 'clientId');
 
         $this->assertEquals('userIdentification', $setNotificationUserEvent->getUserIdentification());
+
         $this->assertEquals('clientId', $setNotificationUserEvent->getClientId());
 
         $setNotificationUserEvent->setUserIdentification('identificationTest');
         $setNotificationUserEvent->setClientId('clientIdTest');
 
         $this->assertEquals('identificationTest', $setNotificationUserEvent->getUserIdentification());
+
         $this->assertEquals('clientIdTest', $setNotificationUserEvent->getClientId());
     }
 }

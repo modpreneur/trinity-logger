@@ -14,8 +14,10 @@ class ExceptionLogTest extends TestCase
 {
     public function testEntity()
     {
+        /** @var ExceptionLog $exceptionLog */
         $exceptionLog = new ExceptionLog();
 
+        /** @var MockUser $mockUser */
         $mockUser = new MockUser();
 
         $this->assertInstanceOf(ExceptionLog::class, $exceptionLog->setLog('test'));

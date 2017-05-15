@@ -17,22 +17,22 @@ class EntityActionLoggableTest extends TestCase
             'value' => [
                 'name' => 'foo',
                 'ip' => '123.456.78.9',
-                'price' => '25.99'
+                'price' => '25.99',
             ],
         ];
 
+        /** @var EntityActionLoggable  $entityActionLoggable */
         $entityActionLoggable = new EntityActionLoggable($option);
 
         $excepted = [
             'name' => 'foo',
             'ip' => '123.456.78.9',
-            'price' => '25.99'
+            'price' => '25.99',
         ];
 
         $this->assertEquals($excepted, $entityActionLoggable->getAttributeList());
 
         $this->assertEmpty($entityActionLoggable->getEmptyAttributes());
-
     }
 
     public function testEmptyAttributes()
@@ -41,16 +41,17 @@ class EntityActionLoggableTest extends TestCase
             'empty' => [
                 'name' => 'foo',
                 'ip' => '123.456.78.9',
-                'price' => '25.99'
+                'price' => '25.99',
             ],
         ];
 
+        /** @var EntityActionLoggable  $entityActionLoggable */
         $entityActionLoggable = new EntityActionLoggable($option);
 
         $excepted = [
             'name' => 'foo',
             'ip' => '123.456.78.9',
-            'price' => '25.99'
+            'price' => '25.99',
         ];
 
         $this->assertEquals($excepted, $entityActionLoggable->getEmptyAttributes());
@@ -71,13 +72,14 @@ class EntityActionLoggableTest extends TestCase
             ],
         ];
 
+        /** @var EntityActionLoggable  $entityActionLoggable */
         $entityActionLoggable = new EntityActionLoggable($option);
 
         $excepted = [
             'foo' => 'blah',
             'name' => 'foo',
             'ip' => '123.456.78.9',
-            'price' => '25.99'
+            'price' => '25.99',
         ];
 
         $this->assertEquals($excepted, $entityActionLoggable->getAttributeList());

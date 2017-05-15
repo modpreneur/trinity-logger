@@ -87,4 +87,124 @@ class DatabaseHandlerTest extends TestCase
 
         $handler->handle($record);
     }
+
+
+    public function testLogRecord2()
+    {
+        $uri = 'http://some_uri.fn';
+        $clientIp = '127.0.0.2';
+
+        $session = $this->getMockBuilder(Session::class)->disableOriginalConstructor()->getMock();
+        $tokenStorage = $this->getMockBuilder(TokenStorageInterface::class)->disableOriginalConstructor()->getMock();
+        $requestStack = $this->getMockBuilder(RequestStack::class)->disableOriginalConstructor()->getMock();
+        $esLogger = $this->getMockBuilder(ElasticLogServiceWithTtl::class)->disableOriginalConstructor()->getMock();
+        $user = $this->getMockBuilder(UserInterface::class)->disableOriginalConstructor()->getMock();
+
+        $request = $this->getMockBuilder(Request::class)->disableOriginalConstructor()->getMock();
+        $requestStack->expects($this->once())->method('getCurrentRequest')->will($this->returnValue(null));
+        //$request->expects($this->once())->method('getUri')->will($this->returnValue($uri));
+        //$request->expects($this->once())->method('getClientIp')->will($this->returnValue($clientIp));
+
+        $token = $this->getMockBuilder(TokenInterface::class)->disableOriginalConstructor()->getMock();
+        //$tokenStorage->expects($this->once())->method('getToken')->will($this->returnValue($token));
+
+        //$session->expects($this->once())->method('set')->with('readable', 'TestErrorMessage');
+        //$session->expects($this->once())->method('isStarted')->will($this->returnValue(true));
+
+        $token->expects($this->any(4))->method('getUser')->will($this->returnValue($user));
+
+        $databaseHandler = new DatabaseHandler($session, $tokenStorage, $requestStack, $esLogger);
+
+        $record = [
+            'level'         => 900,
+            'channel'       => 'doctrine',
+            'message'       => 'testErrorMessage'.PHP_EOL,
+            'context'       => [],
+            'extra'         => [
+                'serverData'    => 'testServerData',
+            ],
+
+        ];
+
+        $this->assertEmpty($this->invokeMethod($databaseHandler, 'write', [$record]));
+
+        $record = [
+            'level'         => 900,
+            'channel'       => 'testChannel',
+            'message'       => 'Uncaught'.PHP_EOL,
+            'context'       => [],
+            'extra'         => [
+                'serverData'    => 'testServerData',
+            ],
+
+        ];
+
+        $this->assertEmpty($this->invokeMethod($databaseHandler, 'write', [$record]));
+
+        $record = [
+            'level'         => Logger::ERROR,
+            'channel'       => 'testChannel',
+            'message'       => 'PDOException:R:  testErrorMessage'.PHP_EOL,
+            'context'       => [],
+            'extra'         => [
+                'serverData'    => 'REQUEST_URI: testServerData',
+            ],
+
+        ];
+
+        $this->assertEmpty($this->invokeMethod($databaseHandler, 'write', [$record]));
+    }
+
+
+    public function testGetReadable()
+    {
+        $uri = 'http://some_uri.fn';
+        $clientIp = '127.0.0.2';
+
+        $session = $this->getMockBuilder(Session::class)->disableOriginalConstructor()->getMock();
+        $tokenStorage = $this->getMockBuilder(TokenStorageInterface::class)->disableOriginalConstructor()->getMock();
+        $requestStack = $this->getMockBuilder(RequestStack::class)->disableOriginalConstructor()->getMock();
+        $esLogger = $this->getMockBuilder(ElasticLogServiceWithTtl::class)->disableOriginalConstructor()->getMock();
+        $user = $this->getMockBuilder(UserInterface::class)->disableOriginalConstructor()->getMock();
+
+        $request = $this->getMockBuilder(Request::class)->disableOriginalConstructor()->getMock();
+      //  $requestStack->expects($this->once())->method('getCurrentRequest')->will($this->returnValue(null));
+        //$request->expects($this->once())->method('getUri')->will($this->returnValue($uri));
+        //$request->expects($this->once())->method('getClientIp')->will($this->returnValue($clientIp));
+
+        $token = $this->getMockBuilder(TokenInterface::class)->disableOriginalConstructor()->getMock();
+        //$tokenStorage->expects($this->once())->method('getToken')->will($this->returnValue($token));
+
+        //$session->expects($this->once())->method('set')->with('readable', 'TestErrorMessage');
+        //$session->expects($this->once())->method('isStarted')->will($this->returnValue(true));
+
+        $token->expects($this->any(4))->method('getUser')->will($this->returnValue($user));
+
+        $databaseHandler = new DatabaseHandler($session, $tokenStorage, $requestStack, $esLogger);
+
+        $e = [
+            'message' => 'testMessage'
+        ];
+
+        $this->assertEquals('', $this->invokeMethod($databaseHandler, 'getReadable', [$e]));
+    }
+
+
+    /**
+     * Call protected/private method of a class.
+     *
+     * @param object &$object    Instantiated object that we will run method on.
+     * @param string $methodName Method name to call
+     * @param array  $parameters Array of parameters to pass into method.
+     *
+     * @return mixed Method return.
+     */
+    public function invokeMethod(&$object, $methodName, array $parameters = [])
+    {
+        $reflection = new \ReflectionClass(get_class($object));
+        $method = $reflection->getMethod($methodName);
+        $method->setAccessible(true);
+
+        return $method->invokeArgs($object, $parameters);
+    }
 }

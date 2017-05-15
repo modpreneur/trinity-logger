@@ -13,10 +13,12 @@ class BaseElasticLogTest extends TestCase
 {
     public function testEntity()
     {
-        $baseElasticLogParameterless = new BaseElasticLog();
+        /** @var BaseElasticLog $baseElasticLogWithoutParameters */
+        $baseElasticLogWithoutParameters = new BaseElasticLog();
 
-        $this->assertEquals('', $baseElasticLogParameterless->getId());
+        $this->assertEquals('', $baseElasticLogWithoutParameters->getId());
 
+        /** @var BaseElasticLog $baseElasticLog */
         $baseElasticLog = new BaseElasticLog('necktie');
 
         $this->assertEquals('necktie', $baseElasticLog->getId());
@@ -36,6 +38,5 @@ class BaseElasticLogTest extends TestCase
         $baseElasticLog->setTtl(null);
 
         $this->assertEquals(null, $baseElasticLog->getTtl());
-
     }
 }

@@ -41,6 +41,7 @@ class ElasticLogServiceWithTtlTest extends TestCase
         $ttlLogger->writeInto($this->logName, $this->object);
     }
 
+
     public function testAsyncWrite()
     {
         $base = $this->getBase();
@@ -52,6 +53,7 @@ class ElasticLogServiceWithTtlTest extends TestCase
 
         $ttlLogger->writeIntoAsync($this->logName, $this->object);
     }
+
 
     public function testUpdate()
     {
@@ -68,6 +70,7 @@ class ElasticLogServiceWithTtlTest extends TestCase
 
         $ttlLogger->update($this->logName, $logId, $updateKeys, $updateValues, true);
     }
+
 
     /**
      * @return array

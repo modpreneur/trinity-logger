@@ -14,8 +14,10 @@ class EntityActionLogTest extends TestCase
 {
     public function testEntity()
     {
+        /** @var EntityActionLog $entityActionLog */
         $entityActionLog = new EntityActionLog();
 
+        /** @var MockUser $mockUser */
         $mockUser = new MockUser();
 
         $entityActionLog->setUser($mockUser);

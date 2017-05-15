@@ -2,20 +2,13 @@
 
 namespace Trinity\Bundle\LoggerBundle\Tests\Services;
 
-
-use Closure;
 use Elasticsearch\Client;
 use Elasticsearch\ClientBuilder;
-use Elasticsearch\Endpoints\AbstractEndpoint;
-use Guzzle\Http\Message\Request;
-use GuzzleHttp\Ring\Client\CurlMultiHandler;
-use GuzzleHttp\Ring\Client\Middleware;
-use GuzzleHttp\Ring\Future\FutureArray;
 use PHPUnit\Framework\TestCase;
-use PHPUnit_Framework_MockObject_MockBuilder;
-use Trinity\Bundle\LoggerBundle\Services\DefaultTtlProvider;
+use Trinity\Bundle\LoggerBundle\Entity\EntityActionLog;
 use Trinity\Bundle\LoggerBundle\Services\ElasticLogService;
-use Trinity\Bundle\LoggerBundle\Services\ElasticLogServiceWithTtl;
+use Elasticsearch\Namespaces\IndicesNamespace;
+use Trinity\Component\Core\Interfaces\UserInterface;
 
 /**
  * Class ElasticLogServiceTest
@@ -23,7 +16,6 @@ use Trinity\Bundle\LoggerBundle\Services\ElasticLogServiceWithTtl;
  */
 class ElasticLogServiceTest extends TestCase
 {
-
     /** @var string  */
     protected $logName = 'logName';
 
@@ -37,126 +29,103 @@ class ElasticLogServiceTest extends TestCase
         'max_handles' => 50
     ];
 
-   /* public function testSetIndex()
+
+    public function testConstruct()
     {
-        $property = $this->getBase();
-
-        /** @var ElasticLogService $ELS */
-        /*$ELS = $property['ELS'];
-
-        //$ELClient = $property['ESClient'];
-
-
-
-        $this->assertInstanceOf(ElasticLogService::class, $ELS->setIndex('test123'));
-
-    }
-    */
-/*
-    public function testWriteIntoAsync()
-    {
-        $property = $this->getBase();*/
-
-        /** @var ElasticLogService $ELS */
-        /*$ELS = $property['ELS'];
-        $FutureArray = $this->getMockBuilder(FutureArray::class)->disableOriginalConstructor()->getMock();
-        //$ESClient = $property['ESClient'];
-        $ESClient = $this->getMockBuilder(Client::class)->disableOriginalConstructor()->getMock();
-        $params = [
-            'index' => 'necktie',
-            'type' => 'logName',
-            'body' => 'client',
-            'client' => ['future' => 'lazy'],
-        ];
-
-        $ESClient->expects($this->any())->method('index')->with($params)
-            ->will($this->returnValueMap(['_id' => $FutureArray]));
-
-        //$ELS->writeIntoAsync($this->logName, $this->object, $this->ttl);
-        $this->assertInstanceOf(FutureArray::class, $ELS->writeIntoAsync($this->logName, $this->object, $this->ttl));
-
-    }*/
-
-   /* public function testUpdate(){
-
-        $property = $this->getBase();
-
-
-        //$ELS = $this->getMockBuilder(ElasticLogService::class)->disableOriginalConstructor()->getMock();
-        $ELS = $property['ELS'];
-
         $types = ['green', 'red', 'yellow'];
         $values = ['avocado', 'apple', 'banana'];
 
+        $clientBuilder = $this->getMockBuilder(ClientBuilder::class)
+            ->disableOriginalConstructor()
+            ->getMock();
 
-        //$ESClient = $property['ESClient'];
+        $clientBuilder->expects($this->any())
+            ->method('setHosts')
+            ->with([0 => '111.222.33.4:9200'])
+            ->will(
+                $this->returnValue($clientBuilder)
+            );
 
+        $clientBuilder->expects($this->any())
+            ->method('setHandler')
+            ->will(
+                $this->returnValue($clientBuilder)
+            );
 
-        /*$ELS->expects($this->once())->method('update')->with($this->logName, 'necktie', $types, $values)
-            ->willReturn(true);*/
+        $indicesNamespaces = $this->getMockBuilder(IndicesNamespace::class)
+            ->disableOriginalConstructor()
+            ->getMock();
 
+        $esclient = $this->getMockBuilder(Client::class)
+            ->disableOriginalConstructor()
+            ->getMock();
 
-        //$ELS->update($this->logName, 'necktie', $types, $values);
+        $esclient->expects($this->any())
+            ->method('index')
+            ->will(
+                $this->returnValue(['_id' => 'testValue'])
+            );
 
-        //$this->assertEquals(true, );
+        $esclient->expects($this->any())
+            ->method('indices')
+            ->will(
+                $this->returnValue($indicesNamespaces)
+            );
 
-        //$this->assertInstanceOf(ElasticLogService::class, );
-        //update(string $typeName, string $id, array $types, array $values, int $ttl = 0)
-    //}
+        $esclient->expects($this->once())
+            ->method('update')
+            ->will(
+                $this->returnValue(true)
+            );
+
+        $clientBuilder->expects($this->once())
+            ->method('build')
+            ->will(
+                $this->returnValue($esclient)
+            );
+
+        $els  = new ElasticLogService('111.222.33.4:9200', 'necktie', 50, $clientBuilder);
+
+        $userInterface = $this->getMockBuilder(UserInterface::class)->disableOriginalConstructor()->getMock();
+
+        $entity = new EntityActionLog();
+        $entity->setUser($userInterface);
+
+        $this->assertEquals('testValue', $els->writeIntoAsync('testTypeName', $entity, 4));
+        $this->assertEquals('testValue', $els->writeInto('testTypeName', $entity, 4));
+
+        $els->update('tesTypeName',1, $types, $values, 4);
+
+        $this->assertInstanceOf(ElasticLogService::class, $els->setIndex('test'));
+
+        $this->assertTrue(
+            array_key_exists(
+                'system',
+                $this->invokeMethod($els, 'getElasticArray', [$entity])
+            )
+        );
+
+        $els  = new ElasticLogService('111.222.33.4:9200', 'necktie');
+
+        $this->assertInstanceOf(ElasticLogService::class, $els->setIndex('test'));
+    }
+
 
     /**
-     * @return array
+     * Call protected/private method of a class.
+     *
+     * @param object &$object    Instantiated object that we will run method on.
+     * @param string $methodName Method name to call
+     * @param array  $parameters Array of parameters to pass into method.
+     *
+     * @return mixed Method return.
      */
-    private function getBase()
+    public function invokeMethod(&$object, $methodName, array $parameters = [])
     {
+        $reflection = new \ReflectionClass(get_class($object));
+        $method = $reflection->getMethod($methodName);
+        $method->setAccessible(true);
 
-
-        $types = ['green', 'red', 'yellow'];
-        $values = ['avocado', 'apple', 'banana'];
-
-        $ESClient = $this->getMockBuilder(Client::class)->disableOriginalConstructor()->getMock();
-
-
-        /*$Closure = $this->getMockBuilder(Closure::class)->disableOriginalConstructor()->getMock();*/
-
-        $params = [
-            'index' => 'necktie',
-            'type' => $this->logName,
-            'id' => 'necktie',
-            'body' => [
-                'doc' => array_combine($types, $values)
-            ]
-        ];
-
-        $ESClient->expects($this->once())->method('update')->with($params)
-            ->willReturn(true);
-
-        /*$ESClient->expects($this->once())->method('setHandler')->with($params)
-            ->willReturn(true);*/
-
-        $default = $this->getMockBuilder(CurlMultiHandler::class)->disableOriginalConstructor()->getMock();
-        $clientBuilder = $this->getMockBuilder(ClientBuilder::class)->disableOriginalConstructor()->getMock();
-        //$abstractEndpoint->expects($this->any())->method('resultOrFuture')
-          //  ->will($this->returnValue(['_id' => $FutureArray]));
-
-        $clientBuilder->expects($this->any())->method('defaultHandler')->with($this->handlerParams)
-            ->will($this->returnValue($default));
-
-        $clientBuilder->expects($this->any())->method('setHosts')->with(["111.222.33.4:9200"])
-        ->will($this->returnValue($clientBuilder));
-        /*                  TODO: na mockovat konstruktor popripade predelat zjistit pocet referenci problem s Mockem na Callable
-        $clientBuilder->expects($this->any())->method('setHandler')->with(\Closure::fromCallable(Request)
-            ->will($this->returnValue());
-            */
-        $clientBuilder->expects($this->any())->method('build')->will($this->returnValue($ESClient));
-
-        $clientBuilder->expects($this->any())->method('create')->will($this->returnValue($clientBuilder));
-
-        $ELS  = new ElasticLogService('111.222.33.4:9200', 'necktie', 50, $clientBuilder);
-
-        return [
-            'ELS' => $ELS
-        ];
+        return $method->invokeArgs($object, $parameters);
     }
-
 }

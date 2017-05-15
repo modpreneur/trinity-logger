@@ -2,9 +2,12 @@
 
 namespace Trinity\Bundle\LoggerBundle\Tests\Entity;
 
-
 use Trinity\Component\Core\Interfaces\UserInterface;
 
+/**
+ * Class MockUser
+ * @package Trinity\Bundle\LoggerBundle\Tests\Entity
+ */
 class MockUser implements UserInterface
 {
     private $id;
@@ -26,9 +29,8 @@ class MockUser implements UserInterface
     private $settingIdentifier;
 
 
-
     /**
-     * Get id.
+     * @return int
      */
     public function getId(): int
     {
