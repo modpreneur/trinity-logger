@@ -121,7 +121,7 @@ class ExceptionLog extends BaseElasticLog implements EntityInterface
     /**
      * Get level.
      *
-     * @return string
+     * @return int
      */
     public function getLevel()
     {
@@ -131,7 +131,7 @@ class ExceptionLog extends BaseElasticLog implements EntityInterface
     /**
      * Set level.
      *
-     * @param string $level
+     * @param int $level
      *
      * @return ExceptionLog
      */
@@ -195,7 +195,7 @@ class ExceptionLog extends BaseElasticLog implements EntityInterface
      */
     public function __toString() : string
     {
-        return (string) $this->id;
+        return $this->id;
     }
 
     /**

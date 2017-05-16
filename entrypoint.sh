@@ -1,10 +1,8 @@
 #!/bin/sh sh
 
-composer install
+composer update
 
 phpunit
-
-sh -c 'php vendor/bin/coveralls -v'
 
 phpstan analyse Annotation/ DependencyInjection/ Entity/ Event/ EventListener/ Interfaces/ Services/ Tests/ --level=4
 

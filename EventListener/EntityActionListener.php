@@ -42,7 +42,8 @@ class EntityActionListener
 
     /** @var int */
     private $deletedId = 0;
-    /** @var null */
+
+    /** @var int|null */
     private $deleteEntity = 0;
 
     /**
@@ -56,7 +57,7 @@ class EntityActionListener
     protected $esLogger;
 
     /**
-     * @var EventDispatcher
+     * @var EventDispatcherInterface
      */
     protected $eventDispatcher;
 
@@ -86,7 +87,7 @@ class EntityActionListener
     /** @var  int */
     protected $notificationUser;
 
-    /** @var int */
+    /** @var int|string */
     protected $notificationClient = '';
 
     /** @var  UserProviderInterface */

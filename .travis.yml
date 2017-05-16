@@ -1,29 +1,15 @@
 language: php
 
-sudo: required
-
-env:
-  DOCKER_COMPOSE_VERSION: 1.8.0
-
 php:
   - '7.1'
-
-services:
-  - docker
-
-before_install:
-  - sudo rm /usr/local/bin/docker-compose
-  - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
-  - chmod +x docker-compose
-  - sudo mv docker-compose /usr/local/bin
 
 before_script:
   - phpenv config-add travis.ini
   - if [[ $TRAVIS_PHP_VERSION = 7.* ]] ; then pecl config-set preferred_state beta; echo yes | pecl install -f apcu; fi;
-  - docker-compose build
+  - composer install
 
 script:
-  - docker-compose up
+  - phpunit --coverage-clover build/logs/clover.xml
 
 notifications:
   hipchat:
@@ -32,6 +18,10 @@ notifications:
     on_success: never
     on_failure: always
 
+after_success:
+  - sh -c 'php vendor/bin/coveralls -v'
+
+after_success:
 cache:
     directories:
         - $HOME/.composer/cache

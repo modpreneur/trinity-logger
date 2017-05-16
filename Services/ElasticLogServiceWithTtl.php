@@ -34,7 +34,7 @@ class ElasticLogServiceWithTtl
      * @param string $typeName //log name
      * @param BaseElasticLog $entity   //entity
      *
-     * @return int //ID of the logged
+     * @return string //ID of the logged
      */
     public function writeInto(string $typeName, $entity)
     {
@@ -48,7 +48,7 @@ class ElasticLogServiceWithTtl
      * @param $typeName //log name
      * @param BaseElasticLog $entity //entity
      *
-     * @return string //ID of the logged
+     * @return int //ID of the logged
      */
     public function writeIntoAsync(string $typeName, $entity)
     {

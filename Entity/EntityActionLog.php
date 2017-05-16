@@ -41,7 +41,7 @@ class EntityActionLog extends BaseElasticLog implements EntityInterface
     private $actionType;
 
     /**
-     * @var string
+     * @var mixed[]
      *             Analyzed by elasticSearch
      */
     private $changeSet;

@@ -10,6 +10,7 @@ namespace Trinity\Bundle\LoggerBundle\Tests\Services;
 
 use Monolog\Logger;
 use PHPUnit\Framework\TestCase;
+use PHPUnit_Framework_MockObject_MockObject as Mock;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -31,41 +32,97 @@ class DatabaseHandlerTest extends TestCase
         $uri = 'http://some_uri.fn';
         $clientIp = '127.0.0.2';
 
-        $session = $this->getMockBuilder(Session::class)->disableOriginalConstructor()->getMock();
-        $tokenStorage = $this->getMockBuilder(TokenStorageInterface::class)->disableOriginalConstructor()->getMock();
-        $requestStack = $this->getMockBuilder(RequestStack::class)->disableOriginalConstructor()->getMock();
-        $esLogger = $this->getMockBuilder(ElasticLogServiceWithTtl::class)->disableOriginalConstructor()->getMock();
-        $user = $this->getMockBuilder(UserInterface::class)->disableOriginalConstructor()->getMock();
+        /** @var Session|Mock $session */
+        $session = $this->getMockBuilder(Session::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        /** @var TokenStorageInterface|Mock $tokenStorage */
+        $tokenStorage = $this->getMockBuilder(TokenStorageInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock();
 
-        $request = $this->getMockBuilder(Request::class)->disableOriginalConstructor()->getMock();
-        $requestStack->expects($this->once())->method('getCurrentRequest')->will($this->returnValue($request));
-        $request->expects($this->once())->method('getUri')->will($this->returnValue($uri));
-        $request->expects($this->once())->method('getClientIp')->will($this->returnValue($clientIp));
+        /** @var RequestStack|Mock $requestStack */
+        $requestStack = $this->getMockBuilder(RequestStack::class)
+            ->disableOriginalConstructor()
+            ->getMock();
 
-        $token = $this->getMockBuilder(TokenInterface::class)->disableOriginalConstructor()->getMock();
-        $tokenStorage->expects($this->once())->method('getToken')->will($this->returnValue($token));
+        /** @var ElasticLogServiceWithTtl|Mock $esLogger */
+        $esLogger = $this->getMockBuilder(ElasticLogServiceWithTtl::class)
+            ->disableOriginalConstructor()
+            ->getMock();
 
-        $session->expects($this->once())->method('set')->with('readable', 'TestErrorMessage');
-        $session->expects($this->once())->method('isStarted')->will($this->returnValue(true));
+        /** @var UserInterface|Mock $user */
+        $user = $this->getMockBuilder(UserInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock();
 
-        $token->expects($this->exactly(4))->method('getUser')->will($this->returnValue($user));
+        /** @var Request|Mock $request */
+        $request = $this->getMockBuilder(Request::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $requestStack->expects($this->once())
+            ->method('getCurrentRequest')
+            ->will(
+                $this->returnValue($request)
+            );
+
+        $request->expects($this->once())
+            ->method('getUri')
+            ->will(
+                $this->returnValue($uri)
+            );
+
+        $request->expects($this->once())
+            ->method('getClientIp')
+            ->will(
+                $this->returnValue($clientIp)
+            );
+
+        $token = $this->getMockBuilder(TokenInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $tokenStorage->expects($this->once())
+            ->method('getToken')
+            ->will(
+                $this->returnValue($token)
+            );
+
+        $session->expects($this->once())
+            ->method('set')
+            ->with('readable', 'TestErrorMessage');
+
+        $session->expects($this->once())
+            ->method('isStarted')
+            ->will(
+                $this->returnValue(true)
+            );
+
+        $token->expects($this->exactly(4))
+            ->method('getUser')
+            ->will(
+                $this->returnValue($user)
+            );
 
 
-        $esLogger->expects($this->once())->method('writeInto')->with(
-            ExceptionLog::NAME,
-            $this->callback(
-                function (ExceptionLog $log) use ($clientIp, $uri, $user) {
-                    $this->assertEquals('TestErrorMessage', $log->getReadable());
-                    $this->assertEquals(Logger::ERROR, $log->getLevel());
-                    $this->assertEquals('testServerData', $log->getServerData());
-                    $this->assertEquals($clientIp, $log->getIp());
-                    $this->assertEquals($uri, $log->getUrl());
-                    $this->assertEquals('PDOException:R:  testErrorMessage'.PHP_EOL, $log->getLog());
-                    $this->assertEquals($user, $log->getUser());
-                    return true;
-                }
-            )
-        );
+        $esLogger->expects($this->once())
+            ->method('writeInto')
+            ->with(
+                ExceptionLog::NAME,
+                $this->callback(
+                    function (ExceptionLog $log) use ($clientIp, $uri, $user) {
+                        $this->assertEquals('TestErrorMessage', $log->getReadable());
+                        $this->assertEquals(Logger::ERROR, $log->getLevel());
+                        $this->assertEquals('testServerData', $log->getServerData());
+                        $this->assertEquals($clientIp, $log->getIp());
+                        $this->assertEquals($uri, $log->getUrl());
+                        $this->assertEquals('PDOException:R:  testErrorMessage'.PHP_EOL, $log->getLog());
+                        $this->assertEquals($user, $log->getUser());
+                        return true;
+                    }
+                )
+            );
 
         $handler = new DatabaseHandler(
             $session,
@@ -91,27 +148,47 @@ class DatabaseHandlerTest extends TestCase
 
     public function testLogRecord2()
     {
-        $uri = 'http://some_uri.fn';
-        $clientIp = '127.0.0.2';
+        /** @var Session|Mock $session */
+        $session = $this->getMockBuilder(Session::class)
+            ->disableOriginalConstructor()
+            ->getMock();
 
-        $session = $this->getMockBuilder(Session::class)->disableOriginalConstructor()->getMock();
-        $tokenStorage = $this->getMockBuilder(TokenStorageInterface::class)->disableOriginalConstructor()->getMock();
-        $requestStack = $this->getMockBuilder(RequestStack::class)->disableOriginalConstructor()->getMock();
-        $esLogger = $this->getMockBuilder(ElasticLogServiceWithTtl::class)->disableOriginalConstructor()->getMock();
-        $user = $this->getMockBuilder(UserInterface::class)->disableOriginalConstructor()->getMock();
+        /** @var TokenStorageInterface|Mock $tokenStorage */
+        $tokenStorage = $this->getMockBuilder(TokenStorageInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock();
 
-        $request = $this->getMockBuilder(Request::class)->disableOriginalConstructor()->getMock();
-        $requestStack->expects($this->once())->method('getCurrentRequest')->will($this->returnValue(null));
-        //$request->expects($this->once())->method('getUri')->will($this->returnValue($uri));
-        //$request->expects($this->once())->method('getClientIp')->will($this->returnValue($clientIp));
+        /** @var RequestStack|Mock $requestStack */
+        $requestStack = $this->getMockBuilder(RequestStack::class)
+            ->disableOriginalConstructor()
+            ->getMock();
 
-        $token = $this->getMockBuilder(TokenInterface::class)->disableOriginalConstructor()->getMock();
-        //$tokenStorage->expects($this->once())->method('getToken')->will($this->returnValue($token));
+        /** @var ElasticLogServiceWithTtl|Mock $esLogger */
+        $esLogger = $this->getMockBuilder(ElasticLogServiceWithTtl::class)
+            ->disableOriginalConstructor()
+            ->getMock();
 
-        //$session->expects($this->once())->method('set')->with('readable', 'TestErrorMessage');
-        //$session->expects($this->once())->method('isStarted')->will($this->returnValue(true));
+        /** @var UserInterface|Mock $user */
+        $user = $this->getMockBuilder(UserInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock();
 
-        $token->expects($this->any(4))->method('getUser')->will($this->returnValue($user));
+        $requestStack->expects($this->once())
+            ->method('getCurrentRequest')
+            ->will(
+                $this->returnValue(null)
+            );
+
+        /** @var TokenInterface|Mock $token */
+        $token = $this->getMockBuilder(TokenInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $token->expects($this->any())
+            ->method('getUser')
+            ->will(
+                $this->returnValue($user)
+            );
 
         $databaseHandler = new DatabaseHandler($session, $tokenStorage, $requestStack, $esLogger);
 
@@ -158,27 +235,41 @@ class DatabaseHandlerTest extends TestCase
 
     public function testGetReadable()
     {
-        $uri = 'http://some_uri.fn';
-        $clientIp = '127.0.0.2';
+        /** @var Session|Mock $session */
+        $session = $this->getMockBuilder(Session::class)
+            ->disableOriginalConstructor()
+            ->getMock();
 
-        $session = $this->getMockBuilder(Session::class)->disableOriginalConstructor()->getMock();
-        $tokenStorage = $this->getMockBuilder(TokenStorageInterface::class)->disableOriginalConstructor()->getMock();
-        $requestStack = $this->getMockBuilder(RequestStack::class)->disableOriginalConstructor()->getMock();
-        $esLogger = $this->getMockBuilder(ElasticLogServiceWithTtl::class)->disableOriginalConstructor()->getMock();
-        $user = $this->getMockBuilder(UserInterface::class)->disableOriginalConstructor()->getMock();
+        /** @var TokenStorageInterface|Mock $tokenStorage */
+        $tokenStorage = $this->getMockBuilder(TokenStorageInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock();
 
-        $request = $this->getMockBuilder(Request::class)->disableOriginalConstructor()->getMock();
-      //  $requestStack->expects($this->once())->method('getCurrentRequest')->will($this->returnValue(null));
-        //$request->expects($this->once())->method('getUri')->will($this->returnValue($uri));
-        //$request->expects($this->once())->method('getClientIp')->will($this->returnValue($clientIp));
+        /** @var RequestStack|Mock $requestStack */
+        $requestStack = $this->getMockBuilder(RequestStack::class)
+            ->disableOriginalConstructor()
+            ->getMock();
 
-        $token = $this->getMockBuilder(TokenInterface::class)->disableOriginalConstructor()->getMock();
-        //$tokenStorage->expects($this->once())->method('getToken')->will($this->returnValue($token));
+        /** @var ElasticLogServiceWithTtl|Mock $esLogger */
+        $esLogger = $this->getMockBuilder(ElasticLogServiceWithTtl::class)
+            ->disableOriginalConstructor()
+            ->getMock();
 
-        //$session->expects($this->once())->method('set')->with('readable', 'TestErrorMessage');
-        //$session->expects($this->once())->method('isStarted')->will($this->returnValue(true));
+        /** @var UserInterface|Mock $user */
+        $user = $this->getMockBuilder(UserInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock();
 
-        $token->expects($this->any(4))->method('getUser')->will($this->returnValue($user));
+        /** @var TokenInterface|Mock $token */
+        $token = $this->getMockBuilder(TokenInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $token->expects($this->any())
+            ->method('getUser')
+            ->will(
+                $this->returnValue($user)
+            );
 
         $databaseHandler = new DatabaseHandler($session, $tokenStorage, $requestStack, $esLogger);
 

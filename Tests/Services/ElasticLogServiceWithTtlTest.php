@@ -29,7 +29,6 @@ class ElasticLogServiceWithTtlTest extends TestCase
     /** @var null  */
     protected $object = null;
 
-
     public function testWrite()
     {
         $base = $this->getBase();

@@ -451,7 +451,7 @@ class ElasticReadLogService
                     throw new \RuntimeException("Unexpected operator: {$condition->operator}");
             }
 
-            $value = $value ?? (\is_int($condition->value)? (int) $condition->value: $condition->value);
+            $value = $value ?? (\is_int($condition->value)? $condition->value: $condition->value);
             $this->query['bool'][$key][] = [$term => [$name => $value]];
         }
     }

@@ -73,6 +73,9 @@ class EntityActionListenerTest extends TestCase
     /** @var EntityActionLoggable|Mock $entityActionLoggable */
     private $entityActionLoggable;
 
+    /** @var $objectManager */
+    private $objectManager;
+
     public function testNoExceptions()
     {
         $this->mockProvider();
