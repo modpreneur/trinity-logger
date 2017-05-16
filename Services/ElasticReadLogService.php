@@ -585,7 +585,7 @@ class ElasticReadLogService
         $subEntity = \explode("\x00", $identification);
         $value = null;
 
-        if ($subEntity[1]) {
+        if (isset($subEntity[1])) {
             $value = $this->em->getRepository($subEntity[0])->find($subEntity[1]);
         }
 
