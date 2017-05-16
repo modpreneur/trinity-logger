@@ -26,17 +26,25 @@ class ConfigurationTest extends TestCase
         $loader->load($configs, $container);
 
         if ($container->hasParameter('trinity.logger.elastic_host')) {
-            $this->assertEquals(
-                $configs[0]['elastic_logs']['elastic_host'],
-                $container->getParameter('trinity.logger.elastic_host')
-            );
+            if (array_key_exists('elastic_logs', $configs[0]) &&
+                array_key_exists('elastic_host', $configs[0]['elastic_logs'])) {
+                $this->assertEquals(
+                    $configs[0]['elastic_logs']['elastic_host'],
+                    $container->getParameter('trinity.logger.elastic_host')
+                );
+            } else {
+                $this->assertNull($container->getParameter('trinity.logger.elastic_host'));
+            }
         }
 
         if ($container->hasParameter('trinity.logger.elastic_managed_index')) {
-            $this->assertEquals(
-                $configs[0]['elastic_logs']['managed_index'],
-                $container->getParameter('trinity.logger.elastic_managed_index')
-            );
+            if (array_key_exists('elastic_logs', $configs[0]) &&
+                array_key_exists('managed_index', $configs[0]['elastic_logs'])) {
+                $this->assertEquals(
+                    $configs[0]['elastic_logs']['managed_index'],
+                    $container->getParameter('trinity.logger.elastic_managed_index')
+                );
+            }
         }
         if ($container->hasParameter('trinity.logger.base.entities.path')) {
             $this->assertEquals(
@@ -47,9 +55,6 @@ class ConfigurationTest extends TestCase
     }
 
 
-    /**
-     * @return array
-     */
     public function configurationDataProvider()
     {
         return [
