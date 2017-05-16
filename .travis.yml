@@ -21,7 +21,6 @@ notifications:
 after_success:
   - sh -c 'php vendor/bin/coveralls -v'
 
-after_success:
 cache:
     directories:
         - $HOME/.composer/cache
