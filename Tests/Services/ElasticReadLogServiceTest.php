@@ -175,12 +175,14 @@ class ElasticReadLogServiceTest extends TestCase
                             ],
                             'SourceEntityClass' => $entity,
                             'System' => 'Trinity\Bundle\LoggerBundle\Entity\EntityActionLog',
-                            'ChangedEntityId' => 'Trinity\Bundle\LoggerBundle\Entity\EntityActionLog'
+                            'ChangedEntityId' => 'Trinity\Bundle\LoggerBundle\Entity\EntityActionLog',
+
                         ],
                         '_ttl' => 34,
                         '_id' => 'test',
                     ]
-                ]
+                ],
+                'max_score' => 43,
             ]
         ];
 
@@ -943,7 +945,7 @@ class ElasticReadLogServiceTest extends TestCase
                             'SourceEntityClass' => $entity,
                             'System' => 'Trinity\Bundle\LoggerBundle\Entity\EntityActionLog',
                             'ChangedEntityId' => 'Trinity\Bundle\LoggerBundle\Entity\EntityActionLog',
-                            'user' => 'user',
+                            'user' => 'Trinity\Bundle\LoggerBundle\Tests\Entity\MockUser',
                         ],
                         '_ttl' => 34,
                         '_id' => 'test',
@@ -965,7 +967,7 @@ class ElasticReadLogServiceTest extends TestCase
                             'SourceEntityClass' => $entity,
                             'System' => 'Trinity\Bundle\LoggerBundle\Entity\EntityActionLog',
                             'ChangedEntityId' => 'Trinity\Bundle\LoggerBundle\Entity\EntityActionLog',
-                            'user' => 'user',
+                            'user' => 'Trinity\Bundle\LoggerBundle\Tests\Entity\MockUser',
                         ],
                         '_ttl' => 34,
                         '_id' => 'test',
