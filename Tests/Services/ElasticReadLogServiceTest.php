@@ -269,8 +269,8 @@ class ElasticReadLogServiceTest extends TestCase
             $elasticReadLogService->getByQuery($nqlQuery, 'test', $configuration)[0][0]
         );
 
-        $this->assertNull($elasticReadLogService->getByQuery($nqlQuery, 'test', $configuration)[1]);
-        $this->assertEmpty($elasticReadLogService->getByQuery($nqlQuery, 'test', $configuration)[2]);
+        $this->assertEquals(34, $elasticReadLogService->getByQuery($nqlQuery, 'test', $configuration)[1]);
+        $this->assertEquals(0.7906976744186, $elasticReadLogService->getByQuery($nqlQuery, 'test', $configuration)[2][0]);
     }
 
 
