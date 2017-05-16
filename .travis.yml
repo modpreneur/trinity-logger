@@ -32,10 +32,6 @@ notifications:
     on_success: never
     on_failure: always
 
-
-after_success:
-  - sh -c 'php vendor/bin/coveralls -v'
-
 cache:
     directories:
         - $HOME/.composer/cache

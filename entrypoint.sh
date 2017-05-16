@@ -4,4 +4,5 @@ composer update
 
 phpunit
 
-tail -f /dev/null
+sh -c 'php vendor/bin/coveralls -v'
+#tail -f /dev/null
