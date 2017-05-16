@@ -715,8 +715,10 @@ class EntityActionListenerTest extends TestCase
 
 
         $assoc = [
-            'fieldName' => 58
+            'fieldName' => 58,
+            'inversedBy' => 'test',
         ];
+
         $persistentCollection3->setOwner($baseElasticLog, $assoc);
         $persistentCollection3->takeSnapshot();
 
