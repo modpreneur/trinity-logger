@@ -338,8 +338,9 @@ class EntityActionListener
                     dump('Add user to create/update/delete actions' .
                         'or use PROD environment to ignore following exception:');
                 }
+
                 $exception = new \UnexpectedValueException(
-                    'Could not identify user making this entity action.'
+                    'Could not identify user making this entity action on ' . $log->getChangedEntityClass() . '.'
                 );
                 $this->moLogger->addError($exception);
             }
