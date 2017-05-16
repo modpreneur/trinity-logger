@@ -43,7 +43,7 @@ class EntityActionListener
     /** @var int */
     private $deletedId = 0;
 
-    /** @var int|null */
+    /** @var mixed */
     private $deleteEntity = 0;
 
     /**

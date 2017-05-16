@@ -36,9 +36,9 @@ class EntityActionLogTest extends TestCase
 
         $this->assertEquals('{"test" => "test"}', $entityActionLog->getChangedEntity());
 
-        $entityActionLog->setChangedEntityId(99999999999999999999999999);
+        $entityActionLog->setChangedEntityId(99999999);
 
-        $this->assertEquals(99999999999999999999999999, $entityActionLog->getChangedEntityId());
+        $this->assertEquals(99999999, $entityActionLog->getChangedEntityId());
 
         $entityActionLog->setActionType('update');
 

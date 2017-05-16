@@ -4,6 +4,7 @@ namespace Trinity\Bundle\LoggerBundle\Services;
 
 use Trinity\Bundle\LoggerBundle\Entity\BaseElasticLog;
 use Trinity\Bundle\LoggerBundle\Interfaces\LoggerTtlProviderInterface;
+use Trinity\Component\Core\Interfaces\EntityInterface;
 
 /**
  * Class ElasticLogService.
@@ -46,7 +47,7 @@ class ElasticLogServiceWithTtl
      *
      *
      * @param $typeName //log name
-     * @param BaseElasticLog $entity //entity
+     * @param EntityInterface $entity //entity
      *
      * @return int //ID of the logged
      */

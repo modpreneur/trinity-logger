@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Persistence\Event\LifecycleEventArgs;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\PersistentCollection;
 use Doctrine\ORM\UnitOfWork;
 use Monolog\Logger;
@@ -162,10 +163,9 @@ class EntityActionListenerTest extends TestCase
 
         $this->mockProvider();
 
-        $setNotificationUserEvent = new SetNotificationUserEvent(34, 34);
+        $setNotificationUserEvent = new SetNotificationUserEvent('34', '34');
 
-        $removeNotificationUserEvent = new RemoveNotificationUserEvent(34, 34);
-
+        $removeNotificationUserEvent = new RemoveNotificationUserEvent('34', '34');
 
         $entityActionListener = new EntityActionListener(
             $this->tokenStorage,
@@ -196,7 +196,7 @@ class EntityActionListenerTest extends TestCase
 
         $this->assertInstanceOf(EntityActionListener::class, $dispatcherArray[0][0]);
 
-        $removeNotificationUserEvent = new RemoveNotificationUserEvent(34, 43);
+        $removeNotificationUserEvent = new RemoveNotificationUserEvent('34', '43');
 
         $entityActionListener = new EntityActionListener(
             $this->tokenStorage,
@@ -683,7 +683,10 @@ class EntityActionListenerTest extends TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $class = new BaseElasticLog();
+        /** @var ClassMetadata|Mock $class */
+        $class = $this->getMockBuilder(ClassMetadata::class)
+            ->disableOriginalConstructor()
+            ->getMock();
 
         /** @var Collection|Mock $collection */
         $collection = $this->getMockBuilder(Collection::class)
@@ -711,11 +714,9 @@ class EntityActionListenerTest extends TestCase
 
         $persistentCollection1 = new PersistentCollection($em, $class, $collection);
 
-
         $persistentCollection2 = new PersistentCollection($em, $class, $collection);
 
         $persistentCollection3 = new PersistentCollection($em, $class, $collection);
-
 
         $assoc = [
             'fieldName' => 58,
@@ -767,10 +768,10 @@ class EntityActionListenerTest extends TestCase
             ],
             58 => [
                 'inserted' => [
-                    0 => '',
+                    0 => 'second',
                 ],
                 'removed' => [
-                    0 => '',
+                    0 => 4242,
                     1 => '34fds',
                 ]
             ],

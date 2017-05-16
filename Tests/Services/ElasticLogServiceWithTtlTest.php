@@ -8,11 +8,13 @@
 
 namespace Trinity\Bundle\LoggerBundle\Tests\Services;
 
-
 use PHPUnit\Framework\TestCase;
+use PHPUnit_Framework_MockObject_MockObject as Mock;
+use Trinity\Bundle\LoggerBundle\Entity\BaseElasticLog;
 use Trinity\Bundle\LoggerBundle\Services\DefaultTtlProvider;
 use Trinity\Bundle\LoggerBundle\Services\ElasticLogService;
 use Trinity\Bundle\LoggerBundle\Services\ElasticLogServiceWithTtl;
+use Trinity\Component\Core\Interfaces\EntityInterface;
 
 /**
  * Class ElasticLogServiceWithTtlTest
@@ -26,16 +28,17 @@ class ElasticLogServiceWithTtlTest extends TestCase
     /** @var int  */
     protected $ttl = 0;
 
-    /** @var null  */
+    /** @var BaseElasticLog|EntityInterface|null  */
     protected $object = null;
 
     public function testWrite()
     {
         $base = $this->getBase();
+
         /** @var ElasticLogServiceWithTtl $ttlLogger */
         $ttlLogger = $base['ttlLogger'];
 
-        $base['logger']->expects($this->once())->method('writeInto')->with($this->logName, $this->object, $this->ttl);
+        $this->object = $base['baseElasticLog'];
 
         $ttlLogger->writeInto($this->logName, $this->object);
     }
@@ -47,8 +50,7 @@ class ElasticLogServiceWithTtlTest extends TestCase
         /** @var ElasticLogServiceWithTtl $ttlLogger */
         $ttlLogger = $base['ttlLogger'];
 
-        $base['logger']->expects($this->once())->method('writeIntoAsync')
-            ->with($this->logName, $this->object, $this->ttl);
+        $this->object = $base['entityInterface'];
 
         $ttlLogger->writeIntoAsync($this->logName, $this->object);
     }
@@ -76,11 +78,37 @@ class ElasticLogServiceWithTtlTest extends TestCase
      */
     private function getBase()
     {
-        $logger = $this->getMockBuilder(ElasticLogService::class)->disableOriginalConstructor()->getMock();
-        $ttlProvider = $this->getMockBuilder(DefaultTtlProvider::class)->disableOriginalConstructor()->getMock();
-        $ttlProvider->expects($this->once())->method('getTtlForType')->with($this->logName)
-            ->will($this->returnValue($this->ttl));
+        /** @var EntityInterface|Mock $entityInterface */
+        $entityInterface = $this->getMockBuilder(EntityInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock();
 
+        /** @var ElasticLogService|Mock $logger */
+        $logger = $this->getMockBuilder(ElasticLogService::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $logger->expects($this->any())
+            ->method('writeInto');
+
+        $logger->expects($this->any())
+            ->method('writeIntoAsync');
+
+        /** @var DefaultTtlProvider|Mock $ttlProvider */
+        $ttlProvider = $this->getMockBuilder(DefaultTtlProvider::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $ttlProvider->expects($this->once())
+            ->method('getTtlForType')
+            ->with($this->logName)
+            ->will(
+                $this->returnValue($this->ttl)
+            );
+        /** @var BaseElasticLog|Mock $baseElasticLog */
+        $baseElasticLog = $this->getMockBuilder(BaseElasticLog::class)
+            ->disableOriginalConstructor()
+            ->getMock();
 
         $ttlLogger = new ElasticLogServiceWithTtl(
             $ttlProvider,
@@ -91,6 +119,8 @@ class ElasticLogServiceWithTtlTest extends TestCase
             'logger' => $logger,
             'ttlProvider' => $ttlProvider,
             'ttlLogger' => $ttlLogger,
+            'baseElasticLog' => $baseElasticLog,
+            'entityInterface' => $entityInterface,
         ];
     }
 }

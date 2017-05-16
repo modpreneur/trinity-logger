@@ -27,16 +27,16 @@ class BaseElasticLogTest extends TestCase
 
         $this->assertEquals(25042017, $baseElasticLog->getCreatedAt());
 
-        $baseElasticLog->setCreatedAt(null);
+        $baseElasticLog->setCreatedAt(23);
 
-        $this->assertNull($baseElasticLog->getCreatedAt());
+        $this->assertEquals(23, $baseElasticLog->getCreatedAt());
 
         $baseElasticLog->setTtl(50);
 
         $this->assertEquals(50, $baseElasticLog->getTtl());
 
-        $baseElasticLog->setTtl(null);
+        $baseElasticLog->setTtl(34);
 
-        $this->assertEquals(null, $baseElasticLog->getTtl());
+        $this->assertEquals(34, $baseElasticLog->getTtl());
     }
 }

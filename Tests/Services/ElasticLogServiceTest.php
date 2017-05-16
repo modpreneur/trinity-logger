@@ -94,7 +94,7 @@ class ElasticLogServiceTest extends TestCase
         $this->assertEquals('testValue', $els->writeIntoAsync('testTypeName', $entity, 4));
         $this->assertEquals('testValue', $els->writeInto('testTypeName', $entity, 4));
 
-        $els->update('tesTypeName',1, $types, $values, 4);
+        $els->update('tesTypeName', '1', $types, $values, 4);
 
         $this->assertInstanceOf(ElasticLogService::class, $els->setIndex('test'));
 
