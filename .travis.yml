@@ -34,8 +34,7 @@ notifications:
 
 
 after_success:
-  - docker run --rm -e TRAVIS=$TRAVIS -e TRAVIS_JOB_ID=$TRAVIS_JOB_ID -v $(pwd):/var/www/html php vendor/bin/coveralls -v
-  #- sh -c 'php vendor/bin/coveralls -v'
+  - sh -c 'php vendor/bin/coveralls -v'
 
 cache:
     directories:
