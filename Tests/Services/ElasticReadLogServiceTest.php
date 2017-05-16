@@ -180,6 +180,7 @@ class ElasticReadLogServiceTest extends TestCase
                         ],
                         '_ttl' => 34,
                         '_id' => 'test',
+                        '_score' => 34,
                     ]
                 ],
                 'max_score' => 43,
@@ -429,6 +430,7 @@ class ElasticReadLogServiceTest extends TestCase
                         ],
                         '_ttl' => 34,
                         '_id' => '',
+                        '_score' => 34,
                     ]
                 ]
             ]
@@ -450,6 +452,7 @@ class ElasticReadLogServiceTest extends TestCase
                         ],
                         '_ttl' => 34,
                         '_id' => '',
+                        '_score' => 34,
                     ]
                 ]
             ],
@@ -810,7 +813,8 @@ class ElasticReadLogServiceTest extends TestCase
                             'System' => 'Trinity\Bundle\LoggerBundle\Entity\EntityActionLog',
                             'ChangedEntityId' => 'Trinity\Bundle\LoggerBundle\Entity\EntityActionLog'
                         ],
-                        '_ttl' => 34
+                        '_ttl' => 34,
+                        '_score' => 34,
                     ]
                 ],
                 'max_score' => 43
@@ -949,6 +953,7 @@ class ElasticReadLogServiceTest extends TestCase
                         ],
                         '_ttl' => 34,
                         '_id' => 'test',
+                        '_score' => 34,
                     ]
                 ]
             ]
@@ -959,6 +964,7 @@ class ElasticReadLogServiceTest extends TestCase
                 'hits' => [
                     'first' => [
                         '_source' => [
+                            'changeSet' => '{"info":1,"b":2,"c":3,"d":4,"e":5}',
                             'ttl' => 76,
                             'EntitiesToDecode' => [
                                 'System',
@@ -971,6 +977,7 @@ class ElasticReadLogServiceTest extends TestCase
                         ],
                         '_ttl' => 34,
                         '_id' => 'test',
+                        '_score' => 34,
                     ]
                 ]
             ]
