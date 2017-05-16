@@ -184,6 +184,7 @@ class ElasticReadLogServiceTest extends TestCase
                     ]
                 ],
                 'max_score' => 43,
+                'total' => 34,
             ]
         ];
 
@@ -817,7 +818,8 @@ class ElasticReadLogServiceTest extends TestCase
                         '_score' => 34,
                     ]
                 ],
-                'max_score' => 43
+                'max_score' => 43,
+                'total' => 34,
             ]
         ];
 
@@ -876,11 +878,6 @@ class ElasticReadLogServiceTest extends TestCase
                 ],
             ]
         ];
-
-        $this->assertInstanceOf(
-            EntityActionLog::class,
-            $elasticReadLogService->getByQuery($nqlQuery, 'test', $configuration)[0][0]
-        );
 
         $this->assertInstanceOf(
             EntityActionLog::class,
