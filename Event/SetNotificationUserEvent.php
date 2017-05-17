@@ -10,12 +10,11 @@ use Symfony\Component\EventDispatcher\Event;
 class SetNotificationUserEvent extends Event
 {
     const NAME = 'trinity.logger.setNotificationUser';
-
     /** @var  string Integer representing user's id or string representing system(e.g. client_3, necktie) */
     protected $userIdentification;
-
     /** @var  string Client id */
     protected $clientId;
+
 
     /**
      * BeforeNotificationBatchProcessEvent constructor.
@@ -29,34 +28,38 @@ class SetNotificationUserEvent extends Event
         $this->clientId = $clientId;
     }
 
+
     /**
      * @return string
      */
-    public function getUserIdentification()
+    public function getUserIdentification(): string
     {
         return $this->userIdentification;
     }
 
+
     /**
      * @param string $userIdentification
      */
-    public function setUserIdentification($userIdentification)
+    public function setUserIdentification($userIdentification): void
     {
         $this->userIdentification = $userIdentification;
     }
 
+
     /**
      * @return string
      */
-    public function getClientId()
+    public function getClientId(): string
     {
         return $this->clientId;
     }
 
+
     /**
      * @param string $clientId
      */
-    public function setClientId($clientId)
+    public function setClientId($clientId): void
     {
         $this->clientId = $clientId;
     }

@@ -11,5 +11,4 @@ use Doctrine\ORM\EntityManager;
  */
 class ObjectManagerChild extends EntityManager implements ObjectManager
 {
-
 }

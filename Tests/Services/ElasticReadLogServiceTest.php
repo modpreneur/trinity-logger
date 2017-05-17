@@ -27,9 +27,7 @@ use Trinity\Bundle\SearchBundle\NQL\WherePart;
  */
 class ElasticReadLogServiceTest extends TestCase
 {
-
-
-    public function testGetById()
+    public function testGetById(): void
     {
         /** @var Table|Mock $table */
         $table = $this->getMockBuilder(Table::class)
@@ -241,19 +239,19 @@ class ElasticReadLogServiceTest extends TestCase
 
         $query = [
             'key1' => 'value1',
-            'key2' => 'value2'
+            'key2' => 'value2',
         ];
 
         static::assertEquals(34, $elasticReadLogService->getCount('test', $query));
 
         $searchParams = [
             'ttl',
-            'test2'
+            'test2',
         ];
 
         $select = [
             'select1',
-            'select2'
+            'select2',
         ];
 
         static::assertInstanceOf(
@@ -262,7 +260,7 @@ class ElasticReadLogServiceTest extends TestCase
         );
 
         $configuration = [
-            'columns' => 'test'
+            'columns' => 'test',
         ];
 
         static::assertInstanceOf(
@@ -281,7 +279,7 @@ class ElasticReadLogServiceTest extends TestCase
     /**
      * @expectedException Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      */
-    public function testGeyByIdException()
+    public function testGeyByIdException(): void
     {
         /** @var EntityManager|Mock $entityManager */
         $entityManager = $this->getMockBuilder(EntityManager::class)
@@ -338,7 +336,7 @@ class ElasticReadLogServiceTest extends TestCase
     }
 
 
-    public function testGeyCountException()
+    public function testGeyCountException(): void
     {
         /** @var EntityManager|Mock $entityManager */
         $entityManager = $this->getMockBuilder(EntityManager::class)->disableOriginalConstructor()->getMock();
@@ -369,7 +367,7 @@ class ElasticReadLogServiceTest extends TestCase
     }
 
 
-    public function testGetMatchingEntities()
+    public function testGetMatchingEntities(): void
     {
         /** @var EntityManager|Mock $entityManager */
         $entityManager = $this->getMockBuilder(EntityManager::class)
@@ -529,7 +527,7 @@ class ElasticReadLogServiceTest extends TestCase
     }
 
 
-    public function testGetMatchingEntitiesException()
+    public function testGetMatchingEntitiesException(): void
     {
         /** @var EntityManager|Mock $entityManager */
         $entityManager = $this->getMockBuilder(EntityManager::class)
@@ -633,7 +631,7 @@ class ElasticReadLogServiceTest extends TestCase
     /**
      * @expectedException \RuntimeException
      */
-    public function testGetByQuery()
+    public function testGetByQuery(): void
     {
         /** @var Table|Mock $table */
         $table = $this->getMockBuilder(Table::class)
@@ -872,7 +870,7 @@ class ElasticReadLogServiceTest extends TestCase
     }
 
 
-    public function testGetStatusByEntity()
+    public function testGetStatusByEntity(): void
     {
         /** @var EntityManager|Mock $entityManager */
         $entityManager = $this->getMockBuilder(EntityManager::class)
@@ -1045,9 +1043,9 @@ class ElasticReadLogServiceTest extends TestCase
     /**
      * Call protected/private method of a class.
      *
-     * @param object &$object    Instantiated object that we will run method on.
+     * @param object &$object Instantiated object that we will run method on.
      * @param string $methodName Method name to call
-     * @param array  $parameters Array of parameters to pass into method.
+     * @param array $parameters Array of parameters to pass into method.
      *
      * @return mixed Method return.
      */

@@ -27,9 +27,7 @@ use Trinity\Component\Core\Interfaces\UserInterface;
  */
 class DatabaseHandlerTest extends TestCase
 {
-
-
-    public function testLogRecord()
+    public function testLogRecord(): void
     {
         $uri = 'http://some_uri.fn';
         $clientIp = '127.0.0.2';
@@ -120,7 +118,7 @@ class DatabaseHandlerTest extends TestCase
                         static::assertEquals('testServerData', $log->getServerData());
                         static::assertEquals($clientIp, $log->getIp());
                         static::assertEquals($uri, $log->getUrl());
-                        static::assertEquals('PDOException:R:  testErrorMessage'.PHP_EOL, $log->getLog());
+                        static::assertEquals('PDOException:R:  testErrorMessage' . PHP_EOL, $log->getLog());
                         static::assertEquals($user, $log->getUser());
                         return true;
                     }
@@ -135,12 +133,12 @@ class DatabaseHandlerTest extends TestCase
         );
 
         $record = [
-            'level'         => Logger::ERROR,
-            'channel'       => 'testChannel',
-            'message'       => 'PDOException:R:  testErrorMessage'.PHP_EOL,
-            'context'       => [],
-            'extra'         => [
-                'serverData'    => 'testServerData',
+            'level' => Logger::ERROR,
+            'channel' => 'testChannel',
+            'message' => 'PDOException:R:  testErrorMessage' . PHP_EOL,
+            'context' => [],
+            'extra' => [
+                'serverData' => 'testServerData',
             ],
 
         ];
@@ -149,7 +147,7 @@ class DatabaseHandlerTest extends TestCase
     }
 
 
-    public function testLogRecord2()
+    public function testLogRecord2(): void
     {
         /** @var Session|Mock $session */
         $session = $this->getMockBuilder(Session::class)
@@ -196,12 +194,12 @@ class DatabaseHandlerTest extends TestCase
         $databaseHandler = new DatabaseHandler($session, $tokenStorage, $requestStack, $esLogger);
 
         $record = [
-            'level'         => 900,
-            'channel'       => 'doctrine',
-            'message'       => 'testErrorMessage'.PHP_EOL,
-            'context'       => [],
-            'extra'         => [
-                'serverData'    => 'testServerData',
+            'level' => 900,
+            'channel' => 'doctrine',
+            'message' => 'testErrorMessage' . PHP_EOL,
+            'context' => [],
+            'extra' => [
+                'serverData' => 'testServerData',
             ],
 
         ];
@@ -209,12 +207,12 @@ class DatabaseHandlerTest extends TestCase
         static::assertEmpty($this->invokeMethod($databaseHandler, 'write', [$record]));
 
         $record = [
-            'level'         => 900,
-            'channel'       => 'testChannel',
-            'message'       => 'Uncaught'.PHP_EOL,
-            'context'       => [],
-            'extra'         => [
-                'serverData'    => 'testServerData',
+            'level' => 900,
+            'channel' => 'testChannel',
+            'message' => 'Uncaught' . PHP_EOL,
+            'context' => [],
+            'extra' => [
+                'serverData' => 'testServerData',
             ],
 
         ];
@@ -222,12 +220,12 @@ class DatabaseHandlerTest extends TestCase
         static::assertEmpty($this->invokeMethod($databaseHandler, 'write', [$record]));
 
         $record = [
-            'level'         => Logger::ERROR,
-            'channel'       => 'testChannel',
-            'message'       => 'PDOException:R:  testErrorMessage'.PHP_EOL,
-            'context'       => [],
-            'extra'         => [
-                'serverData'    => 'REQUEST_URI: testServerData',
+            'level' => Logger::ERROR,
+            'channel' => 'testChannel',
+            'message' => 'PDOException:R:  testErrorMessage' . PHP_EOL,
+            'context' => [],
+            'extra' => [
+                'serverData' => 'REQUEST_URI: testServerData',
             ],
 
         ];
@@ -236,7 +234,7 @@ class DatabaseHandlerTest extends TestCase
     }
 
 
-    public function testGetReadable()
+    public function testGetReadable(): void
     {
         /** @var Session|Mock $session */
         $session = $this->getMockBuilder(Session::class)
@@ -287,9 +285,9 @@ class DatabaseHandlerTest extends TestCase
     /**
      * Call protected/private method of a class.
      *
-     * @param object &$object    Instantiated object that we will run method on.
+     * @param object &$object Instantiated object that we will run method on.
      * @param string $methodName Method name to call
-     * @param array  $parameters Array of parameters to pass into method.
+     * @param array $parameters Array of parameters to pass into method.
      *
      * @return mixed Method return.
      */

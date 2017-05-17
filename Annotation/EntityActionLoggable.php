@@ -6,10 +6,10 @@ namespace Trinity\Bundle\LoggerBundle\Annotation;
  * Class EntityActionLoggable.
  *
  * when used :
- *      @EntityActionLoggable()
+ * @EntityActionLoggable()
  *          all attributes will be logged
  *
- *      @EntityActionLoggable('name','ip','price')
+ * @EntityActionLoggable('name','ip','price')
  *          only changes in name, ip or price attributes will be logged
  *
  *
@@ -17,11 +17,11 @@ namespace Trinity\Bundle\LoggerBundle\Annotation;
  */
 class EntityActionLoggable
 {
-    /** @var array  */
+    /** @var array */
     private $attributes = [];
-
-    /** @var array  */
+    /** @var array */
     private $emptyAttributes = [];
+
 
     /**
      * EntityActionLoggable constructor.
@@ -30,30 +30,32 @@ class EntityActionLoggable
      */
     public function __construct($options)
     {
-        if (array_key_exists('value', $options)) {
+        if (\array_key_exists('value', $options)) {
             $this->attributes = $options['value'];
         }
 
-        if (array_key_exists('empty', $options)) {
+        if (\array_key_exists('empty', $options)) {
             $this->emptyAttributes = $options['empty'];
             if ($this->attributes) {
-                $this->attributes = array_merge($this->attributes, $this->emptyAttributes);
+                $this->attributes = \array_merge($this->attributes, $this->emptyAttributes);
             }
         }
     }
 
-    /**
-     * @return array
-     */
-    public function getAttributeList() : array
-    {
-        return $this->attributes;
-    }
 
     /**
      * @return array
      */
-    public function getEmptyAttributes() : array
+    public function getAttributeList(): array
+    {
+        return $this->attributes;
+    }
+
+
+    /**
+     * @return array
+     */
+    public function getEmptyAttributes(): array
     {
         return $this->emptyAttributes;
     }

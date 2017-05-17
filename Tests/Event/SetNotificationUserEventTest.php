@@ -11,9 +11,7 @@ use Trinity\Bundle\LoggerBundle\Event\SetNotificationUserEvent;
  */
 class SetNotificationUserEventTest extends TestCase
 {
-
-
-    public function testConstructGetsAndSets()
+    public function testConstructGetsAndSets(): void
     {
         /** @var SetNotificationUserEvent $setNotificationUserEvent */
         $setNotificationUserEvent = new SetNotificationUserEvent('userIdentification', 'clientId');

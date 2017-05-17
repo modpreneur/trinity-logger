@@ -22,18 +22,15 @@ use Trinity\Component\Core\Interfaces\EntityInterface;
  */
 class ElasticLogServiceWithTtlTest extends TestCase
 {
-
-    /** @var string  */
+    /** @var string */
     protected $logName = 'logName';
-
-    /** @var int  */
+    /** @var int */
     protected $ttl = 0;
-
-    /** @var BaseElasticLog|EntityInterface|null  */
+    /** @var BaseElasticLog|EntityInterface|null */
     protected $object = null;
 
 
-    public function testWrite()
+    public function testWrite(): void
     {
         $base = $this->getBase();
 

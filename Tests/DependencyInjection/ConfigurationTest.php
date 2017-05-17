@@ -12,12 +12,10 @@ use Trinity\Bundle\LoggerBundle\DependencyInjection\TrinityLoggerExtension;
  */
 class ConfigurationTest extends TestCase
 {
-
-
     /**
      * @dataProvider configurationDataProvider
      */
-    public function testConfigurationStrictSetting($configs)
+    public function testConfigurationStrictSetting($configs): void
     {
         /** @var TrinityLoggerExtension $loader */
         $loader = new TrinityLoggerExtension();
@@ -28,8 +26,9 @@ class ConfigurationTest extends TestCase
         $loader->load($configs, $container);
 
         if ($container->hasParameter('trinity.logger.elastic_host')) {
-            if (array_key_exists('elastic_logs', $configs[0]) &&
-                array_key_exists('elastic_host', $configs[0]['elastic_logs'])) {
+            if (\array_key_exists('elastic_logs', $configs[0]) &&
+                \array_key_exists('elastic_host', $configs[0]['elastic_logs'])
+            ) {
                 static::assertEquals(
                     $configs[0]['elastic_logs']['elastic_host'],
                     $container->getParameter('trinity.logger.elastic_host')
@@ -40,8 +39,9 @@ class ConfigurationTest extends TestCase
         }
 
         if ($container->hasParameter('trinity.logger.elastic_managed_index')) {
-            if (array_key_exists('elastic_logs', $configs[0]) &&
-                array_key_exists('managed_index', $configs[0]['elastic_logs'])) {
+            if (\array_key_exists('elastic_logs', $configs[0]) &&
+                \array_key_exists('managed_index', $configs[0]['elastic_logs'])
+            ) {
                 static::assertEquals(
                     $configs[0]['elastic_logs']['managed_index'],
                     $container->getParameter('trinity.logger.elastic_managed_index')
@@ -49,8 +49,9 @@ class ConfigurationTest extends TestCase
             }
         }
         if ($container->hasParameter('trinity.logger.base.entities.path')) {
-            if (array_key_exists('elastic_logs', $configs[0]) &&
-                array_key_exists('entities_path', $configs[0]['elastic_logs'])) {
+            if (\array_key_exists('elastic_logs', $configs[0]) &&
+                \array_key_exists('entities_path', $configs[0]['elastic_logs'])
+            ) {
                 static::assertEquals(
                     $configs[0]['elastic_logs']['entities_path'],
                     $container->getParameter('trinity.logger.base.entities.path')
@@ -63,7 +64,7 @@ class ConfigurationTest extends TestCase
     /**
      * @return array
      */
-    public function configurationDataProvider()
+    public function configurationDataProvider(): array
     {
         return [
             [

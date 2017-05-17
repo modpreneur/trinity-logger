@@ -13,6 +13,7 @@ class ElasticLoggerListener
     /** @var ElasticLogServiceWithTtl */
     protected $logger;
 
+
     /**
      * ElasticLoggerListener constructor.
      *
@@ -23,10 +24,11 @@ class ElasticLoggerListener
         $this->logger = $logger;
     }
 
+
     /**
      * @param ElasticLoggerEvent $e
      */
-    public function onLog(ElasticLoggerEvent $e)
+    public function onLog(ElasticLoggerEvent $e): void
     {
         $this->logger->writeIntoAsync(
             $e->getLog(),

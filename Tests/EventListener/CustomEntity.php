@@ -8,13 +8,10 @@ namespace Trinity\Bundle\LoggerBundle\Tests\EventListener;
  */
 class CustomEntity
 {
-
     /** @var  string */
     private $updatedBy;
-
     /** @var  int */
     private $deletedBy;
-
     /** @var  int */
     private $createdBy;
 
@@ -31,7 +28,7 @@ class CustomEntity
     /**
      * @param string $updatedBy
      */
-    public function setUpdatedBy(string $updatedBy)
+    public function setUpdatedBy(string $updatedBy): void
     {
         $this->updatedBy = $updatedBy;
     }
@@ -58,7 +55,7 @@ class CustomEntity
     /**
      * @param int $deletedBy
      */
-    public function setDeletedBy(?int $deletedBy)
+    public function setDeletedBy(?int $deletedBy): void
     {
         $this->deletedBy = $deletedBy;
     }
@@ -76,7 +73,7 @@ class CustomEntity
     /**
      * @param int|null $createdBy
      */
-    public function setCreatedBy(?int $createdBy)
+    public function setCreatedBy(?int $createdBy): void
     {
         $this->createdBy = $createdBy;
     }

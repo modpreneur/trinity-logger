@@ -14,45 +14,41 @@ class EntityActionLog extends BaseElasticLog implements EntityInterface
      * @var UserInterface admin
      */
     private $user;
-
     /**
      * @var string
      */
     private $system;
-
     /**
      * @var string entity+namespace
      */
     private $changedEntityClass;
-
     /**
      * @var string JSON entity
      */
     private $changedEntity;
-
     /**
      * @var int id
      */
     private $changedEntityId;
-
     /**
      * @var string Created|Updated|Deleted
      */
     private $actionType;
-
     /**
-     * @var mixed[]
+     * @var array|string
      *             Analyzed by elasticSearch
      */
     private $changeSet;
 
+
     /**
-     * @return UserInterface
+     * @return UserInterface|null
      */
-    public function getUser()
+    public function getUser(): ?UserInterface
     {
         return $this->user;
     }
+
 
     /**
      * @return string
@@ -62,85 +58,96 @@ class EntityActionLog extends BaseElasticLog implements EntityInterface
         return $this->system ?? '';
     }
 
+
     /**
      * @param string $system
      */
-    public function setSystem(string $system)
+    public function setSystem(string $system): void
     {
         $this->system = $system;
     }
 
+
     /**
      * @return string
      */
-    public function getChangedEntityClass()
+    public function getChangedEntityClass(): string
     {
         return $this->changedEntityClass;
     }
 
+
     /**
      * @param string $changedEntityClass
      */
-    public function setChangedEntityClass($changedEntityClass)
+    public function setChangedEntityClass($changedEntityClass): void
     {
         $this->changedEntityClass = $changedEntityClass;
     }
 
+
     /**
      * @param UserInterface $user
      */
-    public function setUser($user)
+    public function setUser($user): void
     {
         $this->user = $user;
     }
 
+
     /**
      * @return string
      */
-    public function getChangedEntity()
+    public function getChangedEntity(): string
     {
         return $this->changedEntity;
     }
 
+
     /**
      * @param string $changedEntity
      */
-    public function setChangedEntity($changedEntity)
+    public function setChangedEntity($changedEntity): void
     {
         $this->changedEntity = $changedEntity;
     }
 
+
     /**
      * @return int
      */
-    public function getChangedEntityId()
+    public function getChangedEntityId(): int
     {
         return $this->changedEntityId;
     }
 
+
     /**
      * @param int $changedEntityId
      */
-    public function setChangedEntityId($changedEntityId)
+    public function setChangedEntityId($changedEntityId): void
     {
         $this->changedEntityId = $changedEntityId;
     }
 
+
     /**
      * @return string
      */
-    public function getActionType()
+    public function getActionType(): string
     {
         return $this->actionType;
     }
 
+
     /**
      * @param string $actionType
      */
-    public function setActionType($actionType)
+    public function setActionType($actionType): void
     {
         $this->actionType = $actionType;
     }
+
 
     /**
      * @return array|string
@@ -150,8 +157,9 @@ class EntityActionLog extends BaseElasticLog implements EntityInterface
         return $this->changeSet;
     }
 
+
     /**
-     * @param array|string  $changeSet
+     * @param array|string $changeSet
      * @param string $param
      *
      * $param can be 'read'/'write'
@@ -165,16 +173,17 @@ class EntityActionLog extends BaseElasticLog implements EntityInterface
     public function setChangeSet($changeSet, $param = 'read')
     {
         if ($param === 'read') {
-            $this->changeSet = (array) json_decode($changeSet);
+            $this->changeSet = (array)\json_decode($changeSet);
         } else {
-            $this->changeSet = json_encode($changeSet);
+            $this->changeSet = \json_encode($changeSet);
         }
     }
+
 
     /**
      * @return string
      */
-    public function __toString() : string
+    public function __toString(): string
     {
         return $this->id;
     }

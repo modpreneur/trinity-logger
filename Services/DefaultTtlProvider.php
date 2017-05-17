@@ -9,7 +9,6 @@ use Trinity\Bundle\LoggerBundle\Interfaces\LoggerTtlProviderInterface;
  */
 class DefaultTtlProvider implements LoggerTtlProviderInterface
 {
-
     /**
      * Get ttl in days for the given type.
      *
@@ -17,7 +16,7 @@ class DefaultTtlProvider implements LoggerTtlProviderInterface
      *
      * @return int Ttl in days. 0(zero) stands for no ttl.
      */
-    public function getTtlForType(string $typeName)
+    public function getTtlForType(string $typeName): int
     {
         return 0;
     }

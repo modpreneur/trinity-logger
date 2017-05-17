@@ -23,12 +23,12 @@ class TrinityLoggerExtension extends Extension
      * @throws \InvalidArgumentException When provided tag is not defined in this extension
      * @throws \Exception
      */
-    public function load(array $configs, ContainerBuilder $container)
+    public function load(array $configs, ContainerBuilder $container): void
     {
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
-        if (array_key_exists('elastic_logs', $config) && isset($config['elastic_logs'])) {
+        if (\array_key_exists('elastic_logs', $config) && isset($config['elastic_logs'])) {
             $container->setParameter('trinity.logger.elastic_logs', true);
             $container->setParameter('trinity.logger.elastic_host', $config['elastic_logs']['elastic_host']);
             $container->setParameter(
@@ -36,7 +36,7 @@ class TrinityLoggerExtension extends Extension
                 (int) $config['elastic_logs']['async_queue_length']
             );
 
-            if (array_key_exists('managed_index', $config['elastic_logs'])
+            if (\array_key_exists('managed_index', $config['elastic_logs'])
                 && isset($config['elastic_logs']['managed_index'])
             ) {
                 $container->setParameter(
@@ -47,7 +47,7 @@ class TrinityLoggerExtension extends Extension
                 $container->setParameter('trinity.logger.elastic_managed_index', null);
             }
 
-            if (array_key_exists('entities_path', $config['elastic_logs'])
+            if (\array_key_exists('entities_path', $config['elastic_logs'])
                 && isset($config['elastic_logs']['entities_path'])
             ) {
                 $container->setParameter('trinity.logger.base.entities.path', $config['elastic_logs']['entities_path']);
@@ -62,7 +62,7 @@ class TrinityLoggerExtension extends Extension
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
 
-        if (array_key_exists('logger_ttl_provider', $config) && $config['logger_ttl_provider'] !== null) {
+        if (\array_key_exists('logger_ttl_provider', $config) && $config['logger_ttl_provider'] !== null) {
             $container->setAlias('trinity.logger.ttl_provider', $config['logger_ttl_provider']);
         } else {
             $container->setAlias('trinity.logger.ttl_provider', 'trinity.logger.default_ttl_provider');

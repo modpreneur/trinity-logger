@@ -5,6 +5,7 @@
  * Date: 26.2.16
  * Time: 18:04.
  */
+
 namespace Trinity\Bundle\LoggerBundle\Services;
 
 use Elasticsearch\Client;
@@ -24,16 +25,15 @@ class ElasticLogService
      * @var Client;
      */
     private $ESClient;
-
     /**
      * @var string index
      */
     private $index = 'necktie';
-
     /**
      * @var string
      */
     protected $proxyFlag = 'Proxies\\__CG__\\';
+
 
     /**
      * ElasticLogService constructor.
@@ -49,16 +49,16 @@ class ElasticLogService
     {
         $this->index = $index ?: 'necktie';
 
-        $params = explode(':', $clientHost);
+        $params = \explode(':', $clientHost);
         $port = $params[1] ?? 9200;
 
         $handlerParams = [
-            'max_handles' => (int) $asyncQueLength,
+            'max_handles' => (int)$asyncQueLength,
         ];
 
         $defaultHandler = ClientBuilder::defaultHandler($handlerParams);
 
-        if($clientBuilder){
+        if ($clientBuilder) {
             $this->ESClient = $clientBuilder
                 ->setHosts(["${params[0]}:${port}"])// Set the hosts
 
@@ -69,17 +69,19 @@ class ElasticLogService
         }
     }
 
+
     /**
      * @param string $index
      *
-     * @return $this
+     * @return ElasticLogService
      */
-    public function setIndex($index)
+    public function setIndex($index): ElasticLogService
     {
         $this->index = $index;
 
         return $this;
     }
+
 
     /**
      * If the ttl is not set default mapping in elastic is used (if exist).
@@ -87,12 +89,12 @@ class ElasticLogService
      *
      *
      * @param string $typeName //log name
-     * @param $entity   //entity
+     * @param $entity //entity
      * @param int $ttl
      *
      * @return int //ID of the logged
      */
-    public function writeIntoAsync(string $typeName, $entity, int $ttl = 0)
+    public function writeIntoAsync(string $typeName, $entity, int $ttl = 0): int
     {
         /*
          * Transform entity into array. Elastic can do it for you, but result is not in your hands.
@@ -116,6 +118,7 @@ class ElasticLogService
         return $response['_id'];
     }
 
+
     /**
      * If the ttl is not set default mapping in elastic is used (if exist).
      * The type(log) has to have enabled ttl in its mapping.
@@ -126,7 +129,7 @@ class ElasticLogService
      *
      * @return string //ID of the logged
      */
-    public function writeInto(string $typeName, $entity, int $ttl = 0)
+    public function writeInto(string $typeName, $entity, int $ttl = 0): string
     {
         /*
          * Transform entity into array. Elastic can do it for you, but result is not in your hands.
@@ -151,6 +154,7 @@ class ElasticLogService
         return $response['_id'];
     }
 
+
     /**
      * Function transforms entity into array, the array stores type of entity
      * for recreation when obtain from elastic search and type and id of related
@@ -163,14 +167,14 @@ class ElasticLogService
      *
      * @return array
      */
-    private function getElasticArray($entity)
+    private function getElasticArray($entity): array
     {
         $entityArray['EntitiesToDecode'] = [];
         $entityArray['SourceEntityClass'] = get_class($entity);
 
-        foreach ((array) $entity as $key => $value) {
-            $keyParts = explode("\x00", $key);
-            $key = array_pop($keyParts);
+        foreach ((array)$entity as $key => $value) {
+            $keyParts = \explode("\x00", $key);
+            $key = \array_pop($keyParts);
 
             //ttl is elastic thing, we only need place to store it in entity, not send it
             if ($key === 'ttl') {
@@ -182,19 +186,19 @@ class ElasticLogService
              * so elastic doesn't have problems
              */
 
-            if (is_object($value)) {
+            if (\is_object($value)) {
                 //elastic can work with DateTime, not with ours entities
-                if (get_class($value) === 'DateTime') {
+                if (\get_class($value) === 'DateTime') {
                     continue;
                 }
-                if (get_class($value) === 'Symfony\Component\HttpFoundation\Request') {
-                    $entityArray[$key] = (string) $value;
+                if (\get_class($value) === 'Symfony\Component\HttpFoundation\Request') {
+                    $entityArray[$key] = (string)$value;
                 }
 
-                if (method_exists($value, 'getId')) {
-                    $class = get_class($value);
-                    if (strpos($class, $this->proxyFlag) === 0) {
-                        $class = substr($class, strlen($this->proxyFlag));
+                if (\method_exists($value, 'getId')) {
+                    $class = \get_class($value);
+                    if (\strpos($class, $this->proxyFlag) === 0) {
+                        $class = \substr($class, \strlen($this->proxyFlag));
                     }
                     $id = $value->getId();
                     if ($id) {
@@ -209,23 +213,24 @@ class ElasticLogService
             }
         }
 
-        if (array_key_exists('id', $entityArray) && !$entityArray['id']) {
+        if (\array_key_exists('id', $entityArray) && !$entityArray['id']) {
             unset($entityArray['id']);
         }
 
         return $entityArray;
     }
 
+
     /**
      * @param string $typeName
      * @param string $id
-     * @param array  $types
-     * @param array  $values
-     * @param int    $ttl
+     * @param array $types
+     * @param array $values
+     * @param int $ttl
      */
-    public function update(string $typeName, string $id, array $types, array $values, int $ttl = 0)
+    public function update(string $typeName, string $id, array $types, array $values, int $ttl = 0): void
     {
-        $body = array_combine($types, $values);
+        $body = \array_combine($types, $values);
         $params = [
             'index' => $this->index,
             'type' => $typeName,
@@ -240,17 +245,19 @@ class ElasticLogService
         $this->ESClient->update($params);
     }
 
+
     /**
      * @param $params
      * @param $port
      * @param $defaultHandler
+     *
      * @return Client
      */
-    private function createBuilder($params, $port, $defaultHandler)
+    private function createBuilder($params, $port, $defaultHandler): Client
     {
         $client = ClientBuilder::create()// Instantiate a new ClientBuilder
-            ->setHosts(["${params[0]}:${port}"])// Set the hosts
-            ->setHandler($defaultHandler)
+        ->setHosts(["${params[0]}:${port}"])// Set the hosts
+        ->setHandler($defaultHandler)
             ->build();
 
         return $client;

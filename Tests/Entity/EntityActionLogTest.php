@@ -12,9 +12,7 @@ use Trinity\Component\Core\Interfaces\UserInterface;
  */
 class EntityActionLogTest extends TestCase
 {
-
-
-    public function testEntity()
+    public function testEntity(): void
     {
         /** @var EntityActionLog $entityActionLog */
         $entityActionLog = new EntityActionLog();
@@ -40,10 +38,10 @@ class EntityActionLogTest extends TestCase
         $entityActionLog->setActionType('update');
         static::assertEquals('update', $entityActionLog->getActionType());
 
-        $changeSetJson= '{"name":"John","age":30,"cars":[ "Ford", "BMW", "Fiat" ]}';
+        $changeSetJson = '{"name":"John","age":30,"cars":[ "Ford", "BMW", "Fiat" ]}';
 
         $changeSetArray = [
-            "name" =>"John",
+            "name" => "John",
             "age" => 30,
             "cars" => [
                 "Ford",

@@ -17,22 +17,18 @@ use Trinity\Component\Core\Interfaces\UserInterface;
  */
 class ElasticLogServiceTest extends TestCase
 {
-
-    /** @var string  */
+    /** @var string */
     protected $logName = 'logName';
-
-    /** @var int  */
+    /** @var int */
     protected $ttl = 0;
-
-    /** @var null  */
+    /** @var null */
     protected $object = null;
-
     public $handlerParams = [
         'max_handles' => 50
     ];
 
 
-    public function testConstruct()
+    public function testConstruct(): void
     {
         $types = ['green', 'red', 'yellow'];
         $values = ['avocado', 'apple', 'banana'];
@@ -68,7 +64,7 @@ class ElasticLogServiceTest extends TestCase
         $esclient->expects(static::any())
             ->method('index')
             ->will(
-                static::returnValue(['_id' => 'testValue'])
+                static::returnValue(['_id' => 2])
             );
 
         $esclient->expects(static::any())
@@ -89,7 +85,7 @@ class ElasticLogServiceTest extends TestCase
                 static::returnValue($esclient)
             );
 
-        $els  = new ElasticLogService('111.222.33.4:9200', 'necktie', 50, $clientBuilder);
+        $els = new ElasticLogService('111.222.33.4:9200', 'necktie', 50, $clientBuilder);
 
         /** @var UserInterface|Mock $userInterface */
         $userInterface = $this->getMockBuilder(UserInterface::class)->disableOriginalConstructor()->getMock();
@@ -97,21 +93,21 @@ class ElasticLogServiceTest extends TestCase
         $entity = new EntityActionLog();
         $entity->setUser($userInterface);
 
-        static::assertEquals('testValue', $els->writeIntoAsync('testTypeName', $entity, 4));
-        static::assertEquals('testValue', $els->writeInto('testTypeName', $entity, 4));
+        static::assertEquals(2, $els->writeIntoAsync('testTypeName', $entity, 4));
+        static::assertEquals(2, $els->writeInto('testTypeName', $entity, 4));
 
         $els->update('tesTypeName', '1', $types, $values, 4);
 
         static::assertInstanceOf(ElasticLogService::class, $els->setIndex('test'));
 
         static::assertTrue(
-            array_key_exists(
+            \array_key_exists(
                 'system',
                 $this->invokeMethod($els, 'getElasticArray', [$entity])
             )
         );
 
-        $els  = new ElasticLogService('111.222.33.4:9200', 'necktie');
+        $els = new ElasticLogService('111.222.33.4:9200', 'necktie');
 
         static::assertInstanceOf(ElasticLogService::class, $els->setIndex('test'));
     }
@@ -120,9 +116,9 @@ class ElasticLogServiceTest extends TestCase
     /**
      * Call protected/private method of a class.
      *
-     * @param object &$object    Instantiated object that we will run method on.
+     * @param object &$object Instantiated object that we will run method on.
      * @param string $methodName Method name to call
-     * @param array  $parameters Array of parameters to pass into method.
+     * @param array $parameters Array of parameters to pass into method.
      *
      * @return mixed Method return.
      */

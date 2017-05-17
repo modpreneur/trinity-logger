@@ -10,31 +10,22 @@ use Trinity\Component\Core\Interfaces\UserInterface;
  */
 class MockUser implements UserInterface
 {
-
     /** @var  int */
     private $id;
-
     /** @var  string */
     private $firstName;
-
     /** @var  string */
     private $lastName;
-
     /** @var  string */
     private $fullName;
-
     /** @var  string */
     private $phoneNumber;
-
     /** @var  string */
     private $website;
-
     /** @var  string */
     private $avatar;
-
     /** @var  bool */
     private $public;
-
     /** @var  int */
     private $settingIdentifier;
 

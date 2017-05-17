@@ -11,9 +11,7 @@ use Trinity\Bundle\LoggerBundle\Annotation\EntityActionLoggable;
  */
 class EntityActionLoggableTest extends TestCase
 {
-
-
-    public function testAttributes()
+    public function testAttributes(): void
     {
         $option = [
             'value' => [
@@ -23,7 +21,7 @@ class EntityActionLoggableTest extends TestCase
             ],
         ];
 
-        /** @var EntityActionLoggable  $entityActionLoggable */
+        /** @var EntityActionLoggable $entityActionLoggable */
         $entityActionLoggable = new EntityActionLoggable($option);
 
         $excepted = [
@@ -38,7 +36,7 @@ class EntityActionLoggableTest extends TestCase
     }
 
 
-    public function testEmptyAttributes()
+    public function testEmptyAttributes(): void
     {
         $option = [
             'empty' => [
@@ -48,7 +46,7 @@ class EntityActionLoggableTest extends TestCase
             ],
         ];
 
-        /** @var EntityActionLoggable  $entityActionLoggable */
+        /** @var EntityActionLoggable $entityActionLoggable */
         $entityActionLoggable = new EntityActionLoggable($option);
 
         $excepted = [
@@ -63,7 +61,7 @@ class EntityActionLoggableTest extends TestCase
     }
 
 
-    public function testMergeEmptyAttributesToAtributes()
+    public function testMergeEmptyAttributesToAtributes(): void
     {
         $option = [
             'value' => [
@@ -76,7 +74,7 @@ class EntityActionLoggableTest extends TestCase
             ],
         ];
 
-        /** @var EntityActionLoggable  $entityActionLoggable */
+        /** @var EntityActionLoggable $entityActionLoggable */
         $entityActionLoggable = new EntityActionLoggable($option);
 
         $excepted = [

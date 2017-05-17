@@ -2,6 +2,8 @@
 
 namespace Trinity\Bundle\LoggerBundle\Interfaces;
 
+use Trinity\Component\Core\Interfaces\UserInterface;
+
 /**
  * Interface UserProviderInterface.
  */
@@ -14,5 +16,5 @@ interface UserProviderInterface
      *
      * @return \Trinity\Component\Core\Interfaces\UserInterface
      */
-    public function getUserById(int $userId);
+    public function getUserById(int $userId): UserInterface;
 }

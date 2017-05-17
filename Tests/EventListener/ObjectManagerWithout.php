@@ -10,8 +10,6 @@ use Doctrine\Common\Persistence\ObjectManager;
  */
 class ObjectManagerWithout implements ObjectManager
 {
-
-
     /**
      * {@inheritDoc}
      */

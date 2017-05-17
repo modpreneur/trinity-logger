@@ -19,7 +19,7 @@ class Configuration implements ConfigurationInterface
      *
      * @throws \RuntimeException
      */
-    public function getConfigTreeBuilder()
+    public function getConfigTreeBuilder(): TreeBuilder
     {
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('trinity_logger');
@@ -39,12 +39,12 @@ class Configuration implements ConfigurationInterface
             //if the string starts with @, e.g. @service.name
             ->ifTrue(
                 function ($v) {
-                    return is_string($v) && 0 === strpos($v, '@');
+                    return \is_string($v) && 0 === \strpos($v, '@');
                 }
             )
             //return it's name without '@', e.g. service.name
             ->then(function ($v) {
-                return substr($v, 1);
+                return \substr($v, 1);
             });
 
         //reference to a service - starting with '@'
@@ -52,12 +52,12 @@ class Configuration implements ConfigurationInterface
             //if the string starts with @, e.g. @service.name
             ->ifTrue(
                 function ($v) {
-                    return is_string($v) && 0 === strpos($v, '@');
+                    return \is_string($v) && 0 === \strpos($v, '@');
                 }
             )
             //return it's name without '@', e.g. service.name
             ->then(function ($v) {
-                return substr($v, 1);
+                return \substr($v, 1);
             });
 
         return $treeBuilder;

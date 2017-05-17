@@ -32,54 +32,39 @@ use Trinity\Component\Core\Interfaces\UserInterface;
  */
 class EntityActionListenerTest extends TestCase
 {
-
     /** @var TokenStorageInterface|Mock $tokenStorage */
     private $tokenStorage;
-
     /** @var EventDispatcherInterface|Mock $eventDispatcherInterface */
     private $eventDispatcherInterface;
-
     /** @var JMS|Mock $jms */
     private $jms;
-
     /** @var Reader|Mock $reader */
     private $reader;
-
     /** @var Logger|Mock $logger */
     private $logger;
-
     /** @var UserProviderInterface|Mock $userProviderInterface */
     private $userProviderInterface;
-
     /** @var LifecycleEventArgs|Mock $lifecycleEventArgs */
     private $lifecycleEventArgs;
-
     /** @var UnitOfWork|Mock $unitOfWork */
     private $unitOfWork;
-
     /** @var ObjectManagerChild|Mock $objectManagerChild */
     private $objectManagerChild;
-
     /** @var UserInterface|Mock $userInterface */
     private $userInterface;
-
     /** @var EntityActionLog|Mock $entityActionLog */
     private $entityActionLog;
-
     /** @var  EntityActionLog|Mock $object */
     private $object;
-
     /** @var  ObjectManagerWithout|Mock $objectManagerWithout */
     private $objectManagerWithout;
-
     /** @var EntityActionLoggable|Mock $entityActionLoggable */
     private $entityActionLoggable;
-
     /** @var $objectManager */
     private $objectManager;
 
 
-    public function testNoExceptions()
+    public function testNoExceptions(): void
     {
         $this->mockProvider();
 
@@ -141,10 +126,10 @@ class EntityActionListenerTest extends TestCase
 
         $dispatcher->addListener(
             'trinity.logger.entity_action_listener',
-                [
-                    $entityActionListener,
-                    'clearUserFromNotification'
-                ]
+            [
+                $entityActionListener,
+                'clearUserFromNotification'
+            ]
         );
 
         $entityActionListener->clearUserFromNotification($removeNotificationUserEvent);
@@ -160,7 +145,7 @@ class EntityActionListenerTest extends TestCase
     /**
      * @expectedException \InvalidArgumentException
      */
-    public function testClearUserFromNotification()
+    public function testClearUserFromNotification(): void
     {
 
         $this->mockProvider();
@@ -235,7 +220,7 @@ class EntityActionListenerTest extends TestCase
     /**
      * @expectedException \Exception
      */
-    public function testPostUpdate()
+    public function testPostUpdate(): void
     {
         $this->mockProvider();
 
@@ -249,7 +234,7 @@ class EntityActionListenerTest extends TestCase
             'test'
         );
 
-        static::assertNull($entityActionListener->postUpdate($this->lifecycleEventArgs));
+        $entityActionListener->postUpdate($this->lifecycleEventArgs);
 
         $entityActionListener = new EntityActionListener(
             $this->tokenStorage,
@@ -268,7 +253,7 @@ class EntityActionListenerTest extends TestCase
     /**
      * @expectedException \Exception
      */
-    public function testPostRemove()
+    public function testPostRemove(): void
     {
         $this->mockProvider(1);
 
@@ -282,7 +267,7 @@ class EntityActionListenerTest extends TestCase
             'test'
         );
 
-        static::assertNull($entityActionListener->postRemove($this->lifecycleEventArgs));
+        $entityActionListener->postRemove($this->lifecycleEventArgs);
 
         $entityActionListener = new EntityActionListener(
             $this->tokenStorage,
@@ -301,7 +286,7 @@ class EntityActionListenerTest extends TestCase
     /**
      * @expectedException \Exception
      */
-    public function testPostPersist()
+    public function testPostPersist(): void
     {
         $this->mockProvider(1);
 
@@ -315,7 +300,7 @@ class EntityActionListenerTest extends TestCase
             'test'
         );
 
-        static::assertNull($entityActionListener->postPersist($this->lifecycleEventArgs));
+        $entityActionListener->postPersist($this->lifecycleEventArgs);
 
         $entityActionListener = new EntityActionListener(
             $this->tokenStorage,
@@ -374,7 +359,7 @@ class EntityActionListenerTest extends TestCase
     }
 
 
-    public function testManageObjects()
+    public function testManageObjects(): void
     {
         $this->mockProvider();
 
@@ -420,7 +405,7 @@ class EntityActionListenerTest extends TestCase
     }
 
 
-    public function testCheckUser()
+    public function testCheckUser(): void
     {
         $this->mockProvider(3);
 
@@ -434,11 +419,11 @@ class EntityActionListenerTest extends TestCase
             'dev'
         );
 
-        $this->invokeMethod($entityActionListener, 'checkUser', [$this->object, $this->objectManagerChild]);
+        $this->invokeMethod($entityActionListener, 'checkUser', [$this->entityActionLog, $this->objectManagerChild]);
     }
 
 
-    public function testCheckUserNoUserInterface()
+    public function testCheckUserNoUserInterface(): void
     {
         $this->mockProvider(3);
 
@@ -452,14 +437,14 @@ class EntityActionListenerTest extends TestCase
             'dev'
         );
 
-        $this->invokeMethod($entityActionListener, 'checkUser', [$this->object, $this->objectManagerChild]);
+        $this->invokeMethod($entityActionListener, 'checkUser', [$this->entityActionLog, $this->objectManagerChild]);
     }
 
 
     /**
      * @expectedException \RuntimeException
      */
-    public function testCheckUserException()
+    public function testCheckUserException(): void
     {
         $this->mockProvider(4);
 
@@ -490,7 +475,7 @@ class EntityActionListenerTest extends TestCase
     /**
      * @expectedException \RuntimeException
      */
-    public function testSetUpdateLogRuntimeException()
+    public function testSetUpdateLogRuntimeException(): void
     {
         $this->mockProvider(4);
 
@@ -515,12 +500,14 @@ class EntityActionListenerTest extends TestCase
             [
                 $this->object,
                 $this->entityActionLoggable,
-                $this->objectManagerWithout, $entity]
+                $this->objectManagerWithout,
+                $entity
+            ]
         );
     }
 
 
-    public function testSetUpdateLogChangedWithUpdatedBy()
+    public function testSetUpdateLogChangedWithUpdatedBy(): void
     {
         $this->mockProvider(5);
 
@@ -552,7 +539,7 @@ class EntityActionListenerTest extends TestCase
     }
 
 
-    public function testSetUpdateLogChangedWithoutUpdatedBy()
+    public function testSetUpdateLogChangedWithoutUpdatedBy(): void
     {
         $this->mockProvider(6);
 
@@ -585,7 +572,7 @@ class EntityActionListenerTest extends TestCase
     }
 
 
-    public function testSetFilterIgnored()
+    public function testSetFilterIgnored(): void
     {
         $this->mockProvider(7);
 
@@ -655,7 +642,7 @@ class EntityActionListenerTest extends TestCase
     }
 
 
-    public function testSetRelationChanges()
+    public function testSetRelationChanges(): void
     {
         $this->mockProvider(8);
 
@@ -792,7 +779,8 @@ class EntityActionListenerTest extends TestCase
                 [
                     $changeSet,
                     $updates,
-                    $loggedFields]
+                    $loggedFields
+                ]
             )[2][0]
         );
 
@@ -811,7 +799,7 @@ class EntityActionListenerTest extends TestCase
     }
 
 
-    public function testSetDeleteLog()
+    public function testSetDeleteLog(): void
     {
         $this->mockProvider(9);
 
@@ -832,7 +820,7 @@ class EntityActionListenerTest extends TestCase
     }
 
 
-    public function testSetCreateLog()
+    public function testSetCreateLog(): void
     {
         $this->mockProvider(10);
 
@@ -856,9 +844,9 @@ class EntityActionListenerTest extends TestCase
     /**
      * Call protected/private method of a class.
      *
-     * @param object &$object    Instantiated object that we will run method on.
+     * @param object &$object Instantiated object that we will run method on.
      * @param string $methodName Method name to call
-     * @param array  $parameters Array of parameters to pass into method.
+     * @param array $parameters Array of parameters to pass into method.
      *
      * @return mixed Method return.
      */
@@ -875,7 +863,7 @@ class EntityActionListenerTest extends TestCase
     /**
      * @param int|null $settings
      */
-    private function mockProvider(int $settings = null)
+    private function mockProvider(int $settings = null): void
     {
         $this->tokenStorage = $this->getMockBuilder(TokenStorageInterface::class)
             ->disableOriginalConstructor()
@@ -961,41 +949,31 @@ class EntityActionListenerTest extends TestCase
                     );
                 break;
             case 3:
-                $this->userInterface  = $this->getMockBuilder(UserInterface::class)
+                $this->userInterface = $this->getMockBuilder(UserInterface::class)
                     ->disableOriginalConstructor()
                     ->getMock();
 
-                $this->entityActionLog =  $this->getMockBuilder(EntityActionLog::class)
+                $this->entityActionLog = $this->getMockBuilder(EntityActionLog::class)
                     ->disableOriginalConstructor()
                     ->getMock();
 
-                $this->entityActionLog->expects(static::any())
+                $this->entityActionLog->expects(static::once())
                     ->method('getUser')
                     ->will(
-                        static::returnValue($this->userInterface)
+                        static::returnValue(null)
                     );
 
                 $this->objectManagerChild = $this->getMockBuilder(ObjectManagerChild::class)
                     ->disableOriginalConstructor()
                     ->getMock();
 
-                $this->object = $this->getMockBuilder(EntityActionLog::class)
-                    ->disableOriginalConstructor()
-                    ->getMock();
-
-                $this->object->expects(static::once())
-                    ->method('getUser')
-                    ->will(
-                        static::returnValue(false)
-                    );
-
                 break;
             case 4:
-                $this->userInterface  = $this->getMockBuilder(UserInterface::class)
+                $this->userInterface = $this->getMockBuilder(UserInterface::class)
                     ->disableOriginalConstructor()
                     ->getMock();
 
-                $this->entityActionLog =  $this->getMockBuilder(EntityActionLog::class)
+                $this->entityActionLog = $this->getMockBuilder(EntityActionLog::class)
                     ->disableOriginalConstructor()
                     ->getMock();
 
@@ -1023,7 +1001,7 @@ class EntityActionListenerTest extends TestCase
                     ->getMock();
                 break;
             case 5:
-                $this->entityActionLog =  $this->getMockBuilder(EntityActionLog::class)
+                $this->entityActionLog = $this->getMockBuilder(EntityActionLog::class)
                     ->disableOriginalConstructor()
                     ->getMock();
 
@@ -1077,7 +1055,7 @@ class EntityActionListenerTest extends TestCase
 
                 break;
             case 6:
-                $this->entityActionLog =  $this->getMockBuilder(EntityActionLog::class)
+                $this->entityActionLog = $this->getMockBuilder(EntityActionLog::class)
                     ->disableOriginalConstructor()
                     ->getMock();
 
@@ -1147,7 +1125,7 @@ class EntityActionListenerTest extends TestCase
 
                 break;
             case 7:
-                $this->entityActionLog =  $this->getMockBuilder(EntityActionLog::class)
+                $this->entityActionLog = $this->getMockBuilder(EntityActionLog::class)
                     ->disableOriginalConstructor()
                     ->getMock();
 
@@ -1201,7 +1179,7 @@ class EntityActionListenerTest extends TestCase
 
                 break;
             case 8:
-                $this->entityActionLog =  $this->getMockBuilder(EntityActionLog::class)
+                $this->entityActionLog = $this->getMockBuilder(EntityActionLog::class)
                     ->disableOriginalConstructor()
                     ->getMock();
 
@@ -1213,7 +1191,7 @@ class EntityActionListenerTest extends TestCase
 
                 break;
             case 9:
-                $this->entityActionLog =  $this->getMockBuilder(EntityActionLog::class)
+                $this->entityActionLog = $this->getMockBuilder(EntityActionLog::class)
                     ->disableOriginalConstructor()
                     ->getMock();
 
@@ -1240,7 +1218,7 @@ class EntityActionListenerTest extends TestCase
 
                 break;
             case 10:
-                $this->entityActionLog =  $this->getMockBuilder(EntityActionLog::class)
+                $this->entityActionLog = $this->getMockBuilder(EntityActionLog::class)
                     ->disableOriginalConstructor()
                     ->getMock();
 

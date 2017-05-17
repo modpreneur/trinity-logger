@@ -12,9 +12,7 @@ use Trinity\Component\Core\Interfaces\UserInterface;
  */
 class ExceptionLogTest extends TestCase
 {
-
-
-    public function testEntity()
+    public function testEntity(): void
     {
         /** @var ExceptionLog $exceptionLog */
         $exceptionLog = new ExceptionLog();

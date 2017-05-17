@@ -22,17 +22,13 @@ class DatabaseHandler extends AbstractProcessingHandler
 {
     /** @var  TokenStorageInterface */
     private $tokenStorage;
-
     /** @var  Session */
     protected $session;
-
     /** @var RequestStack */
     private $requestStack;
-
     /** @var  ElasticLogServiceWithTtl */
     private $esLogger;
-
-    /** @var string  */
+    /** @var string */
     private $system;
 
 
@@ -68,17 +64,17 @@ class DatabaseHandler extends AbstractProcessingHandler
     /**
      * @param array $record
      */
-    protected function write(array $record)
+    protected function write(array $record): void
     {
         if ('doctrine' === $record['channel']) {
-            if ((int) $record['level'] >= Logger::WARNING) {
+            if ((int)$record['level'] >= Logger::WARNING) {
                 /* not forgotten debug statement */
                 error_log($record['message']);
             }
 
             return;
         }
-        if ((int) $record['level'] >= Logger::ERROR) {
+        if ((int)$record['level'] >= Logger::ERROR) {
             //exception is logged twice, get rid of 'Uncaught...' version
             if (strpos($record['message'], 'Uncaught') === 0) {
                 return;
@@ -137,7 +133,7 @@ class DatabaseHandler extends AbstractProcessingHandler
      *
      * @return string
      */
-    private function getReadable($e)
+    private function getReadable($e): string
     {
         /*
          * Known SQL codes:
@@ -155,9 +151,10 @@ class DatabaseHandler extends AbstractProcessingHandler
 
     /**
      * @param string $errorMessage
+     *
      * @return string
      */
-    private function processPDO(string $errorMessage) :string
+    private function processPDO(string $errorMessage): string
     {
         $line = strstr($errorMessage, PHP_EOL, true);
         $short = substr($line, strpos($line, 'R: ') + 4);

@@ -16,5 +16,5 @@ interface LoggerTtlProviderInterface
      *
      * @return int Ttl in days. 0(zero) stands for no ttl.
      */
-    public function getTtlForType(string $typeName);
+    public function getTtlForType(string $typeName): int;
 }

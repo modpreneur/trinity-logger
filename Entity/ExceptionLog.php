@@ -15,54 +15,48 @@ use Trinity\Component\Core\Interfaces\UserInterface;
 class ExceptionLog extends BaseElasticLog implements EntityInterface
 {
     const NAME = 'ExceptionLog';
-
     /**
      * @var string Analyzed by elasticSearch
      */
     private $log;
-
     /**
      * @var string Analyzed by elasticSearch
      */
     private $readable;
-
     /**
      * @var string Analyzed by elasticSearch
      */
     private $serverData;
-
     /**
      * @var int This is mono-log exception level used in mono-log bundle, not http response!
      */
     private $level;
-
     /**
      * @var string
      */
     private $url;
-
     /**
      * @var string
      */
     private $ip;
-
     /** @var  string */
     private $system;
-
     /**
      * @var UserInterface
      */
     private $user;
+
 
     /**
      * Get log.
      *
      * @return string
      */
-    public function getLog()
+    public function getLog(): string
     {
         return $this->log;
     }
+
 
     /**
      * Set log.
@@ -71,38 +65,42 @@ class ExceptionLog extends BaseElasticLog implements EntityInterface
      *
      * @return ExceptionLog
      */
-    public function setLog($log)
+    public function setLog($log): ExceptionLog
     {
         $this->log = $log;
 
         return $this;
     }
 
+
     /**
      * @return string
      */
-    public function getReadable()
+    public function getReadable(): string
     {
         return $this->readable;
     }
 
+
     /**
      * @param string $readable
      */
-    public function setReadable($readable)
+    public function setReadable($readable): void
     {
         $this->readable = $readable;
     }
+
 
     /**
      * Get serverData.
      *
      * @return string
      */
-    public function getServerData()
+    public function getServerData(): string
     {
         return $this->serverData;
     }
+
 
     /**
      * Set serverData.
@@ -111,22 +109,24 @@ class ExceptionLog extends BaseElasticLog implements EntityInterface
      *
      * @return ExceptionLog
      */
-    public function setServerData($serverData)
+    public function setServerData($serverData): ExceptionLog
     {
         $this->serverData = $serverData;
 
         return $this;
     }
 
+
     /**
      * Get level.
      *
      * @return int
      */
-    public function getLevel()
+    public function getLevel(): int
     {
         return $this->level;
     }
+
 
     /**
      * Set level.
@@ -135,68 +135,76 @@ class ExceptionLog extends BaseElasticLog implements EntityInterface
      *
      * @return ExceptionLog
      */
-    public function setLevel($level)
+    public function setLevel($level): ExceptionLog
     {
         $this->level = $level;
 
         return $this;
     }
 
+
     /**
      * @return string
      */
-    public function getUrl()
+    public function getUrl(): string
     {
         return $this->url;
     }
 
+
     /**
      * @param string $url
      */
-    public function setUrl($url)
+    public function setUrl($url): void
     {
         $this->url = $url;
     }
 
+
     /**
      * @return string
      */
-    public function getIp()
+    public function getIp(): string
     {
         return $this->ip;
     }
 
+
     /**
      * @param string $ip
      */
-    public function setIp($ip)
+    public function setIp($ip): void
     {
         $this->ip = $ip;
     }
 
+
     /**
      * @return UserInterface
      */
-    public function getUser()
+    public function getUser(): UserInterface
     {
         return $this->user;
     }
 
+
     /**
      * @param UserInterface $user
      */
-    public function setUser(UserInterface $user)
+    public function setUser(UserInterface $user): void
     {
         $this->user = $user;
     }
 
+
     /**
      * @return string
      */
-    public function __toString() : string
+    public function __toString(): string
     {
         return $this->id;
     }
+
 
     /**
      * @return array
@@ -207,7 +215,7 @@ class ExceptionLog extends BaseElasticLog implements EntityInterface
      *      This should trigger the SMS alerts and wake you up.
      * 600: System is unusable
      */
-    public static function getPossibleLevels() :array
+    public static function getPossibleLevels(): array
     {
         return [
             400 => 'Error',
@@ -230,7 +238,7 @@ class ExceptionLog extends BaseElasticLog implements EntityInterface
     /**
      * @param string $system
      */
-    public function setSystem(string $system)
+    public function setSystem(string $system): void
     {
         $this->system = $system;
     }
