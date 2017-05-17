@@ -21,6 +21,6 @@ class DefaultTtlProviderTest extends TestCase
     {
         $provider = new DefaultTtlProvider();
 
-        $this->assertEquals(0, $provider->getTtlForType('anyName'));
+        static::assertEquals(0, $provider->getTtlForType('anyName'));
     }
 }

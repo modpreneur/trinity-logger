@@ -16,27 +16,27 @@ class BaseElasticLogTest extends TestCase
         /** @var BaseElasticLog $baseElasticLogWithoutParameters */
         $baseElasticLogWithoutParameters = new BaseElasticLog();
 
-        $this->assertEquals('', $baseElasticLogWithoutParameters->getId());
+        static::assertEquals('', $baseElasticLogWithoutParameters->getId());
 
         /** @var BaseElasticLog $baseElasticLog */
         $baseElasticLog = new BaseElasticLog('necktie');
 
-        $this->assertEquals('necktie', $baseElasticLog->getId());
+        static::assertEquals('necktie', $baseElasticLog->getId());
 
         $baseElasticLog->setCreatedAt(25042017);
 
-        $this->assertEquals(25042017, $baseElasticLog->getCreatedAt());
+        static::assertEquals(25042017, $baseElasticLog->getCreatedAt());
 
         $baseElasticLog->setCreatedAt(23);
 
-        $this->assertEquals(23, $baseElasticLog->getCreatedAt());
+        static::assertEquals(23, $baseElasticLog->getCreatedAt());
 
         $baseElasticLog->setTtl(50);
 
-        $this->assertEquals(50, $baseElasticLog->getTtl());
+        static::assertEquals(50, $baseElasticLog->getTtl());
 
         $baseElasticLog->setTtl(34);
 
-        $this->assertEquals(34, $baseElasticLog->getTtl());
+        static::assertEquals(34, $baseElasticLog->getTtl());
     }
 }

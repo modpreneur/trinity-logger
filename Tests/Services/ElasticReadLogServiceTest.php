@@ -35,10 +35,10 @@ class ElasticReadLogServiceTest extends TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $table->expects($this->any())
+        $table->expects(static::any())
             ->method('getName')
             ->will(
-                $this->returnValue('NotificationLog')
+                static::returnValue('NotificationLog')
             );
 
         /** @var From|Mock $from */
@@ -46,10 +46,10 @@ class ElasticReadLogServiceTest extends TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $from->expects($this->any())
+        $from->expects(static::any())
             ->method('getTables')
             ->will(
-                $this->returnValue([0 => $table])
+                static::returnValue([0 => $table])
             );
 
         $column1 = new Column('test1');
@@ -63,10 +63,10 @@ class ElasticReadLogServiceTest extends TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $select->expects($this->any())
+        $select->expects(static::any())
             ->method('getColumns')
             ->will(
-                $this->returnValue([$column1, $column2])
+                static::returnValue([$column1, $column2])
             );
 
         /** @var Where|Mock $where */
@@ -79,10 +79,10 @@ class ElasticReadLogServiceTest extends TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $orderBy->expects($this->any())
+        $orderBy->expects(static::any())
             ->method('getColumns')
             ->will(
-                $this->returnValue([$orderingColumn1, $orderingColumn2])
+                static::returnValue([$orderingColumn1, $orderingColumn2])
             );
 
         /** @var NQLQuery|Mock $nqlQuery */
@@ -90,28 +90,28 @@ class ElasticReadLogServiceTest extends TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $nqlQuery->expects($this->any())
+        $nqlQuery->expects(static::any())
             ->method('getFrom')
             ->will(
-                $this->returnValue($from)
+                static::returnValue($from)
             );
 
-        $nqlQuery->expects($this->any())
+        $nqlQuery->expects(static::any())
             ->method('getSelect')
             ->will(
-                $this->returnValue($select)
+                static::returnValue($select)
             );
 
-        $nqlQuery->expects($this->any())
+        $nqlQuery->expects(static::any())
             ->method('getWhere')
             ->will(
-                $this->returnValue($where)
+                static::returnValue($where)
             );
 
-        $nqlQuery->expects($this->any())
+        $nqlQuery->expects(static::any())
             ->method('getOrderBy')
             ->will(
-                $this->returnValue($orderBy)
+                static::returnValue($orderBy)
             );
 
         /** @var EntityManager|Mock $entityManager */
@@ -146,16 +146,16 @@ class ElasticReadLogServiceTest extends TestCase
             ]
         ];
 
-        $client->expects($this->any())
+        $client->expects(static::any())
             ->method('get')
             ->will(
-                $this->returnValue($response)
+                static::returnValue($response)
             );
 
-        $client->expects($this->any())
+        $client->expects(static::any())
             ->method('count')
             ->will(
-                $this->returnValue(['count' => 34])
+                static::returnValue(['count' => 34])
             );
 
         /** @var IndicesNamespace|Mock $indicesNamespace */
@@ -188,34 +188,34 @@ class ElasticReadLogServiceTest extends TestCase
             ]
         ];
 
-        $indicesNamespace->expects($this->any())
+        $indicesNamespace->expects(static::any())
             ->method('refresh')
             ->will(
-                $this->returnValue(true)
+                static::returnValue(true)
             );
 
-        $client->expects($this->any())
+        $client->expects(static::any())
             ->method('indices')
             ->will(
-                $this->returnValue($indicesNamespace)
+                static::returnValue($indicesNamespace)
             );
 
-        $client->expects($this->any())
+        $client->expects(static::any())
             ->method('search')
             ->will(
-                $this->returnValue($result)
+                static::returnValue($result)
             );
 
-        $clientBuilder->expects($this->any())
+        $clientBuilder->expects(static::any())
             ->method('setHosts')
             ->will(
-                $this->returnValue($clientBuilder)
+                static::returnValue($clientBuilder)
             );
 
-        $clientBuilder->expects($this->any())
+        $clientBuilder->expects(static::any())
             ->method('build')
             ->will(
-                $this->returnValue($client)
+                static::returnValue($client)
             );
 
         $elasticReadLogServiceNoBuilder = new ElasticReadLogService(
@@ -224,7 +224,7 @@ class ElasticReadLogServiceTest extends TestCase
             'necktie'
         );
 
-        $this->assertInstanceOf(ElasticReadLogService::class, $elasticReadLogServiceNoBuilder);
+        static::assertInstanceOf(ElasticReadLogService::class, $elasticReadLogServiceNoBuilder);
 
         $elasticReadLogService = new ElasticReadLogService(
             '111.222.33.4:9200',
@@ -233,7 +233,7 @@ class ElasticReadLogServiceTest extends TestCase
             $clientBuilder
         );
 
-        $this->assertInstanceOf(
+        static::assertInstanceOf(
             EntityActionLog::class,
             $elasticReadLogService->setIndex('test123')->getById('test', 'necktie')
         );
@@ -243,7 +243,7 @@ class ElasticReadLogServiceTest extends TestCase
             'key2' => 'value2'
         ];
 
-        $this->assertEquals(34, $elasticReadLogService->getCount('test', $query));
+        static::assertEquals(34, $elasticReadLogService->getCount('test', $query));
 
         $searchParams = [
             'ttl',
@@ -255,7 +255,7 @@ class ElasticReadLogServiceTest extends TestCase
             'select2'
         ];
 
-        $this->assertInstanceOf(
+        static::assertInstanceOf(
             EntityActionLog::class,
             $elasticReadLogService->getMatchingEntities('test', $searchParams, 4, $select)[0]
         );
@@ -264,13 +264,13 @@ class ElasticReadLogServiceTest extends TestCase
             'columns' => 'test'
         ];
 
-        $this->assertInstanceOf(
+        static::assertInstanceOf(
             EntityActionLog::class,
             $elasticReadLogService->getByQuery($nqlQuery, 'test', $configuration)[0][0]
         );
 
-        $this->assertEquals(34, $elasticReadLogService->getByQuery($nqlQuery, 'test', $configuration)[1]);
-        $this->assertEquals(
+        static::assertEquals(34, $elasticReadLogService->getByQuery($nqlQuery, 'test', $configuration)[1]);
+        static::assertEquals(
             0.7906976744186,
             $elasticReadLogService->getByQuery($nqlQuery, 'test', $configuration)[2][0]
         );
@@ -297,22 +297,22 @@ class ElasticReadLogServiceTest extends TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $client->expects($this->any())
+        $client->expects(static::any())
             ->method('get')
             ->will(
-                $this->throwException(new NFException())
+                static::throwException(new NFException())
             );
 
-        $clientBuilder->expects($this->any())
+        $clientBuilder->expects(static::any())
             ->method('setHosts')
             ->will(
-                $this->returnValue($clientBuilder)
+                static::returnValue($clientBuilder)
             );
 
-        $clientBuilder->expects($this->any())
+        $clientBuilder->expects(static::any())
             ->method('build')
             ->will(
-                $this->returnValue($client)
+                static::returnValue($client)
             );
 
         $elasticReadLogServiceNoBuilder = new ElasticReadLogService(
@@ -321,7 +321,7 @@ class ElasticReadLogServiceTest extends TestCase
             'necktie'
         );
 
-        $this->assertInstanceOf(ElasticReadLogService::class, $elasticReadLogServiceNoBuilder);
+        static::assertInstanceOf(ElasticReadLogService::class, $elasticReadLogServiceNoBuilder);
 
         $elasticReadLogService = new ElasticReadLogService(
             '111.222.33.4:9200',
@@ -330,7 +330,7 @@ class ElasticReadLogServiceTest extends TestCase
             $clientBuilder
         );
 
-        $this->assertInstanceOf(
+        static::assertInstanceOf(
             EntityActionLog::class,
             $elasticReadLogService->setIndex('test123')->getById('test', 'necktie')
         );
@@ -347,10 +347,10 @@ class ElasticReadLogServiceTest extends TestCase
 
         /** @var Client|Mock $client */
         $client = $this->getMockBuilder(Client::class)->disableOriginalConstructor()->getMock();
-        $client->expects($this->any())->method('count')->will($this->throwException(new NFException()));
+        $client->expects(static::any())->method('count')->will($this->throwException(new NFException()));
 
-        $clientBuilder->expects($this->any())->method('setHosts')->will($this->returnValue($clientBuilder));
-        $clientBuilder->expects($this->any())->method('build')->will($this->returnValue($client));
+        $clientBuilder->expects(static::any())->method('setHosts')->will(static::returnValue($clientBuilder));
+        $clientBuilder->expects(static::any())->method('build')->will(static::returnValue($client));
 
         $query = [
             'key1' => 'value1',
@@ -364,7 +364,7 @@ class ElasticReadLogServiceTest extends TestCase
             $clientBuilder
         );
 
-        $this->assertEquals(0, $elasticReadLogService->getCount('test', $query));
+        static::assertEquals(0, $elasticReadLogService->getCount('test', $query));
     }
 
 
@@ -398,19 +398,19 @@ class ElasticReadLogServiceTest extends TestCase
                 ],
                 'SourceEntityClass' => $entity,
                 'System' => 'Trinity\Bundle\LoggerBundle\Entity\EntityActionLog',
-                'ChangedEntityId' => 'Trinity\Bundle\LoggerBundle\Entity\EntityActionLog'
+                'ChangedEntityId' => 'Trinity\Bundle\LoggerBundle\Entity\EntityActionLog',
             ]
         ];
-        $client->expects($this->any())
+        $client->expects(static::any())
             ->method('get')
             ->will(
-                $this->returnValue($response)
+                static::returnValue($response)
             );
 
-        $client->expects($this->any())
+        $client->expects(static::any())
             ->method('count')
             ->will(
-                $this->returnValue(['count' => 34])
+                static::returnValue(['count' => 34])
             );
 
         /** @var IndicesNamespace|Mock $indicesNamespace */
@@ -463,40 +463,40 @@ class ElasticReadLogServiceTest extends TestCase
             'aggregations' => 'test',
         ];
 
-        $indicesNamespace->expects($this->any())
+        $indicesNamespace->expects(static::any())
             ->method('refresh')
             ->will(
-                $this->returnValue(true)
+                static::returnValue(true)
             );
 
-        $client->expects($this->any())
+        $client->expects(static::any())
             ->method('indices')
             ->will(
-                $this->returnValue($indicesNamespace)
+                static::returnValue($indicesNamespace)
             );
 
         $client->expects($this->at(1))
             ->method('search')
             ->will(
-                $this->returnValue($result1)
+                static::returnValue($result1)
             );
 
-        $client->expects($this->any())
+        $client->expects(static::any())
             ->method('search')
             ->will(
-                $this->returnValue($result2)
+                static::returnValue($result2)
             );
 
-        $clientBuilder->expects($this->any())
+        $clientBuilder->expects(static::any())
             ->method('setHosts')
             ->will(
-                $this->returnValue($clientBuilder)
+                static::returnValue($clientBuilder)
             );
 
-        $clientBuilder->expects($this->any())
+        $clientBuilder->expects(static::any())
             ->method('build')
             ->will(
-                $this->returnValue($client)
+                static::returnValue($client)
             );
 
         $elasticReadLogService = new ElasticReadLogService(
@@ -516,12 +516,12 @@ class ElasticReadLogServiceTest extends TestCase
             'select2'
         ];
 
-        $this->assertInstanceOf(
+        static::assertInstanceOf(
             EntityActionLog::class,
             $elasticReadLogService->getMatchingEntities('test', $searchParams, 4, $select)[0]
         );
 
-        $this->assertEquals(
+        static::assertEquals(
             'test',
             $elasticReadLogService->getMatchingEntities('test', $searchParams, 4, $select)['aggregations']
         );
@@ -558,19 +558,19 @@ class ElasticReadLogServiceTest extends TestCase
                 ],
                 'SourceEntityClass' => $entity,
                 'System' => 'Trinity\Bundle\LoggerBundle\Entity\EntityActionLog',
-                'ChangedEntityId' => 'Trinity\Bundle\LoggerBundle\Entity\EntityActionLog'
+                'ChangedEntityId' => 'Trinity\Bundle\LoggerBundle\Entity\EntityActionLog',
             ]
         ];
-        $client->expects($this->any())
+        $client->expects(static::any())
             ->method('get')
             ->will(
-                $this->returnValue($response)
+                static::returnValue($response)
             );
 
-        $client->expects($this->any())
+        $client->expects(static::any())
             ->method('count')
             ->will(
-                $this->returnValue(['count' => 34])
+                static::returnValue(['count' => 34])
             );
 
         /** @var IndicesNamespace|Mock $indicesNamespace */
@@ -578,34 +578,34 @@ class ElasticReadLogServiceTest extends TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $indicesNamespace->expects($this->any())
+        $indicesNamespace->expects(static::any())
             ->method('refresh')
             ->will(
-                $this->returnValue(true)
+                static::returnValue(true)
             );
 
-        $client->expects($this->any())
+        $client->expects(static::any())
             ->method('indices')
             ->will(
-                $this->returnValue($indicesNamespace)
+                static::returnValue($indicesNamespace)
             );
 
-        $client->expects($this->any())
+        $client->expects(static::any())
             ->method('search')
             ->will(
-                $this->throwException(new NFException())
+                static::throwException(new NFException())
             );
 
-        $clientBuilder->expects($this->any())
+        $clientBuilder->expects(static::any())
             ->method('setHosts')
             ->will(
-                $this->returnValue($clientBuilder)
+                static::returnValue($clientBuilder)
             );
 
-        $clientBuilder->expects($this->any())
+        $clientBuilder->expects(static::any())
             ->method('build')
             ->will(
-                $this->returnValue($client)
+                static::returnValue($client)
             );
 
         $elasticReadLogService = new ElasticReadLogService(
@@ -625,7 +625,7 @@ class ElasticReadLogServiceTest extends TestCase
             'select2'
         ];
 
-        $this->assertEmpty($elasticReadLogService->getMatchingEntities('test', $searchParams, 4, $select));
+        static::assertEmpty($elasticReadLogService->getMatchingEntities('test', $searchParams, 4, $select));
     }
 
 
@@ -639,10 +639,10 @@ class ElasticReadLogServiceTest extends TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $table->expects($this->any())
+        $table->expects(static::any())
             ->method('getName')
             ->will(
-                $this->returnValue('NotificationLog')
+                static::returnValue('NotificationLog')
             );
 
         /** @var From|Mock $from */
@@ -650,10 +650,10 @@ class ElasticReadLogServiceTest extends TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $from->expects($this->any())
+        $from->expects(static::any())
             ->method('getTables')
             ->will(
-                $this->returnValue([0 => $table])
+                static::returnValue([0 => $table])
             );
 
         $column1 = new Column('test1');
@@ -669,10 +669,10 @@ class ElasticReadLogServiceTest extends TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $select->expects($this->any())
+        $select->expects(static::any())
             ->method('getColumns')
             ->will(
-                $this->returnValue([$column1, $column2])
+                static::returnValue([$column1, $column2])
             );
 
         $wherePart1 = new WherePart();
@@ -696,10 +696,10 @@ class ElasticReadLogServiceTest extends TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $where->expects($this->any())
+        $where->expects(static::any())
             ->method('getConditions')
             ->will(
-                $this->returnValue([$wherePart1, $wherePart2, $wherePart3])
+                static::returnValue([$wherePart1, $wherePart2, $wherePart3])
             );
 
         /** @var OrderBy|Mock $orderBy */
@@ -707,10 +707,10 @@ class ElasticReadLogServiceTest extends TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $orderBy->expects($this->any())
+        $orderBy->expects(static::any())
             ->method('getColumns')
             ->will(
-                $this->returnValue([$orderingColumn1, $orderingColumn2, $orderingColumn3, $orderingColumn4])
+                static::returnValue([$orderingColumn1, $orderingColumn2, $orderingColumn3, $orderingColumn4])
             );
 
         /** @var NQLQuery|Mock $nqlQuery */
@@ -718,40 +718,40 @@ class ElasticReadLogServiceTest extends TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $nqlQuery->expects($this->any())
+        $nqlQuery->expects(static::any())
             ->method('getFrom')
             ->will(
-                $this->returnValue($from)
+                static::returnValue($from)
             );
 
-        $nqlQuery->expects($this->any())
+        $nqlQuery->expects(static::any())
             ->method('getSelect')
             ->will(
-                $this->returnValue($select)
+                static::returnValue($select)
             );
 
-        $nqlQuery->expects($this->any())
+        $nqlQuery->expects(static::any())
             ->method('getOffset')
             ->will(
-                $this->returnValue(3)
+                static::returnValue(3)
             );
 
-        $nqlQuery->expects($this->any())
+        $nqlQuery->expects(static::any())
             ->method('getLimit')
             ->will(
-                $this->returnValue(4)
+                static::returnValue(4)
             );
 
-        $nqlQuery->expects($this->any())
+        $nqlQuery->expects(static::any())
             ->method('getWhere')
             ->will(
-                $this->returnValue($where)
+                static::returnValue($where)
             );
 
-        $nqlQuery->expects($this->any())
+        $nqlQuery->expects(static::any())
             ->method('getOrderBy')
             ->will(
-                $this->returnValue($orderBy)
+                static::returnValue($orderBy)
             );
 
         /** @var EntityManager|Mock $entityManager */
@@ -782,20 +782,20 @@ class ElasticReadLogServiceTest extends TestCase
                 ],
                 'SourceEntityClass' => $entity,
                 'System' => 'Trinity\Bundle\LoggerBundle\Entity\EntityActionLog',
-                'ChangedEntityId' => 'Trinity\Bundle\LoggerBundle\Entity\EntityActionLog'
+                'ChangedEntityId' => 'Trinity\Bundle\LoggerBundle\Entity\EntityActionLog',
             ]
         ];
 
-        $client->expects($this->any())
+        $client->expects(static::any())
             ->method('get')
             ->will(
-                $this->returnValue($response)
+                static::returnValue($response)
             );
 
-        $client->expects($this->any())
+        $client->expects(static::any())
             ->method('count')
             ->will(
-                $this->returnValue(['count' => 34])
+                static::returnValue(['count' => 34])
             );
 
         /** @var IndicesNamespace|Mock $indicesNamespace */
@@ -815,7 +815,7 @@ class ElasticReadLogServiceTest extends TestCase
                             ],
                             'SourceEntityClass' => $entity,
                             'System' => 'Trinity\Bundle\LoggerBundle\Entity\EntityActionLog',
-                            'ChangedEntityId' => 'Trinity\Bundle\LoggerBundle\Entity\EntityActionLog'
+                            'ChangedEntityId' => 'Trinity\Bundle\LoggerBundle\Entity\EntityActionLog',
                         ],
                         '_ttl' => 34,
                         '_score' => 34,
@@ -826,34 +826,34 @@ class ElasticReadLogServiceTest extends TestCase
             ]
         ];
 
-        $indicesNamespace->expects($this->any())
+        $indicesNamespace->expects(static::any())
             ->method('refresh')
             ->will(
-                $this->returnValue(true)
+                static::returnValue(true)
             );
 
-        $client->expects($this->any())
+        $client->expects(static::any())
             ->method('indices')
             ->will(
-                $this->returnValue($indicesNamespace)
+                static::returnValue($indicesNamespace)
             );
 
-        $client->expects($this->any())
+        $client->expects(static::any())
             ->method('search')
             ->will(
-                $this->returnValue($result)
+                static::returnValue($result)
             );
 
-        $clientBuilder->expects($this->any())
+        $clientBuilder->expects(static::any())
             ->method('setHosts')
             ->will(
-                $this->returnValue($clientBuilder)
+                static::returnValue($clientBuilder)
             );
 
-        $clientBuilder->expects($this->any())
+        $clientBuilder->expects(static::any())
             ->method('build')
             ->will(
-                $this->returnValue($client)
+                static::returnValue($client)
             );
 
 
@@ -864,25 +864,7 @@ class ElasticReadLogServiceTest extends TestCase
             $clientBuilder
         );
 
-        $configuration = [
-            'columns' => [
-                0 => [
-                    'id' => 'int',
-                    'name' => 'string'
-                ],
-                1 => [
-                    'id' => 'int',
-                    'name' => 'string'
-                ],
-                2 => [
-                    'id' => 'int',
-                    'name' => 'string',
-                    'type' => 'enum',
-                ],
-            ]
-        ];
-
-        $this->assertInstanceOf(
+        static::assertInstanceOf(
             EntityActionLog::class,
             $elasticReadLogService->getByQuery($nqlQuery, 'test')[0][0]
         );
@@ -919,20 +901,20 @@ class ElasticReadLogServiceTest extends TestCase
                 ],
                 'SourceEntityClass' => $entity,
                 'System' => 'Trinity\Bundle\LoggerBundle\Entity\EntityActionLog',
-                'ChangedEntityId' => 'Trinity\Bundle\LoggerBundle\Entity\EntityActionLog'
+                'ChangedEntityId' => 'Trinity\Bundle\LoggerBundle\Entity\EntityActionLog',
             ]
         ];
 
-        $client->expects($this->any())
+        $client->expects(static::any())
             ->method('get')
             ->will(
-                $this->returnValue($response)
+                static::returnValue($response)
             );
 
-        $client->expects($this->any())
+        $client->expects(static::any())
             ->method('count')
             ->will(
-                $this->returnValue(['count' => 34])
+                static::returnValue(['count' => 34])
             );
 
         $result1 = [
@@ -988,58 +970,58 @@ class ElasticReadLogServiceTest extends TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $indicesNamespace->expects($this->any())
+        $indicesNamespace->expects(static::any())
             ->method('refresh')
             ->will(
-                $this->returnValue(true)
+                static::returnValue(true)
             );
 
-        $client->expects($this->any())
+        $client->expects(static::any())
             ->method('indices')
             ->will(
-                $this->returnValue($indicesNamespace)
+                static::returnValue($indicesNamespace)
             );
 
-        $client->expects($this->at(1))
+        $client->expects(static::at(1))
             ->method('search')
             ->will(
-                $this->returnValue($result1)
+                static::returnValue($result1)
             );
 
-        $client->expects($this->at(2))
+        $client->expects(static::at(2))
             ->method('search')
             ->will(
-                $this->returnValue($result2)
+                static::returnValue($result2)
             );
 
-        $client->expects($this->at(3))
+        $client->expects(static::at(3))
             ->method('search')
             ->will(
-                $this->returnValue($result2)
+                static::returnValue($result2)
             );
 
-        $client->expects($this->at(4))
+        $client->expects(static::at(4))
             ->method('search')
             ->will(
-                $this->returnValue($result2)
+                static::returnValue($result2)
             );
 
-        $client->expects($this->at(5))
+        $client->expects(static::at(5))
             ->method('search')
             ->will(
-                $this->throwException(new NFException())
+                static::throwException(new NFException())
             );
 
-        $clientBuilder->expects($this->any())
+        $clientBuilder->expects(static::any())
             ->method('setHosts')
             ->will(
-                $this->returnValue($clientBuilder)
+                static::returnValue($clientBuilder)
             );
 
-        $clientBuilder->expects($this->any())
+        $clientBuilder->expects(static::any())
             ->method('build')
             ->will(
-                $this->returnValue($client)
+                static::returnValue($client)
             );
 
         $elasticReadLogService = new ElasticReadLogService(
@@ -1051,11 +1033,11 @@ class ElasticReadLogServiceTest extends TestCase
 
         $entity = new EntityActionLog();
 
-        $this->assertEquals(76, $elasticReadLogService->getStatusByEntity($entity)[0]['ttl']);
+        static::assertEquals(76, $elasticReadLogService->getStatusByEntity($entity)[0]['ttl']);
 
-        $this->assertEquals(76, $elasticReadLogService->getStatusByEntity($entity)[0]['ttl']);
+        static::assertEquals(76, $elasticReadLogService->getStatusByEntity($entity)[0]['ttl']);
 
-        $this->assertEmpty($elasticReadLogService->getStatusByEntity($entity));
+        static::assertEmpty($elasticReadLogService->getStatusByEntity($entity));
     }
 
 

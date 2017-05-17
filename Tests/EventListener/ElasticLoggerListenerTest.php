@@ -30,9 +30,9 @@ class ElasticLoggerListenerTest extends TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $elasticLoggerEvent->expects($this->once())->method('getLog')->willReturn('log');
+        $elasticLoggerEvent->expects(static::once())->method('getLog')->willReturn('log');
 
-        $elasticLoggerEvent->expects($this->once())->method('getEntity')->willReturn($entity);
+        $elasticLoggerEvent->expects(static::once())->method('getEntity')->willReturn($entity);
 
         /** @var ElasticLoggerListener $elasticLoggerListener */
         $elasticLoggerListener = new ElasticLoggerListener($elasticLogServiceWithTtl);

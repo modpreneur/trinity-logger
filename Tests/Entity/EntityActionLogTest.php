@@ -21,28 +21,22 @@ class EntityActionLogTest extends TestCase
         $mockUser = new MockUser();
 
         $entityActionLog->setUser($mockUser);
-
-        $this->assertInstanceOf(UserInterface::class, $entityActionLog->getUser());
+        static::assertInstanceOf(UserInterface::class, $entityActionLog->getUser());
 
         $entityActionLog->setSystem('test123');
-
-        $this->assertEquals('test123', $entityActionLog->getSystem());
+        static::assertEquals('test123', $entityActionLog->getSystem());
 
         $entityActionLog->setChangedEntityClass('entity + namespace');
-
-        $this->assertEquals('entity + namespace', $entityActionLog->getChangedEntityClass());
+        static::assertEquals('entity + namespace', $entityActionLog->getChangedEntityClass());
 
         $entityActionLog->setChangedEntity('{"test" => "test"}');
-
-        $this->assertEquals('{"test" => "test"}', $entityActionLog->getChangedEntity());
+        static::assertEquals('{"test" => "test"}', $entityActionLog->getChangedEntity());
 
         $entityActionLog->setChangedEntityId(99999999);
-
-        $this->assertEquals(99999999, $entityActionLog->getChangedEntityId());
+        static::assertEquals(99999999, $entityActionLog->getChangedEntityId());
 
         $entityActionLog->setActionType('update');
-
-        $this->assertEquals('update', $entityActionLog->getActionType());
+        static::assertEquals('update', $entityActionLog->getActionType());
 
         $changeSetJson= '{"name":"John","age":30,"cars":[ "Ford", "BMW", "Fiat" ]}';
 
@@ -58,14 +52,14 @@ class EntityActionLogTest extends TestCase
 
         $entityActionLog->setChangeSet($changeSetJson, 'read');
 
-        $this->assertArrayHasKey('name', $entityActionLog->getChangeSet());
+        static::assertArrayHasKey('name', $entityActionLog->getChangeSet());
 
-        $this->assertEquals($changeSetArray, $entityActionLog->getChangeSet());
+        static::assertEquals($changeSetArray, $entityActionLog->getChangeSet());
 
         $entityActionLog->setChangeSet($changeSetArray, 'write');
 
-        $this->assertJsonStringEqualsJsonString($changeSetJson, $entityActionLog->getChangeSet());
+        static::assertJsonStringEqualsJsonString($changeSetJson, $entityActionLog->getChangeSet());
 
-        $this->assertEquals($entityActionLog->getId(), $entityActionLog->__toString());
+        static::assertEquals($entityActionLog->getId(), $entityActionLog->__toString());
     }
 }

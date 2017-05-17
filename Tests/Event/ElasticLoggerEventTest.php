@@ -21,8 +21,8 @@ class ElasticLoggerEventTest extends TestCase
         /** @var ElasticLoggerEvent $elasticLoggerEvent */
         $elasticLoggerEvent = new ElasticLoggerEvent('log', $entity);
 
-        $this->assertEquals('log', $elasticLoggerEvent->getLog());
+        static::assertEquals('log', $elasticLoggerEvent->getLog());
 
-        $this->assertInstanceOf(EntityActionLog::class, $elasticLoggerEvent->getEntity());
+        static::assertInstanceOf(EntityActionLog::class, $elasticLoggerEvent->getEntity());
     }
 }

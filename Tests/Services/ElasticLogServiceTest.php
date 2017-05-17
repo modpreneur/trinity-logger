@@ -5,6 +5,7 @@ namespace Trinity\Bundle\LoggerBundle\Tests\Services;
 use Elasticsearch\Client;
 use Elasticsearch\ClientBuilder;
 use PHPUnit\Framework\TestCase;
+use PHPUnit_Framework_MockObject_MockObject as Mock;
 use Trinity\Bundle\LoggerBundle\Entity\EntityActionLog;
 use Trinity\Bundle\LoggerBundle\Services\ElasticLogService;
 use Elasticsearch\Namespaces\IndicesNamespace;
@@ -35,70 +36,74 @@ class ElasticLogServiceTest extends TestCase
         $types = ['green', 'red', 'yellow'];
         $values = ['avocado', 'apple', 'banana'];
 
+        /** @var ClientBuilder|Mock $clientBuilder */
         $clientBuilder = $this->getMockBuilder(ClientBuilder::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $clientBuilder->expects($this->any())
+        $clientBuilder->expects(static::any())
             ->method('setHosts')
             ->with([0 => '111.222.33.4:9200'])
             ->will(
-                $this->returnValue($clientBuilder)
+                static::returnValue($clientBuilder)
             );
 
-        $clientBuilder->expects($this->any())
+        $clientBuilder->expects(static::any())
             ->method('setHandler')
             ->will(
-                $this->returnValue($clientBuilder)
+                static::returnValue($clientBuilder)
             );
 
+        /** @var IndicesNamespace|Mock $indicesNamespaces */
         $indicesNamespaces = $this->getMockBuilder(IndicesNamespace::class)
             ->disableOriginalConstructor()
             ->getMock();
 
+        /** @var Client|Mock $esclient */
         $esclient = $this->getMockBuilder(Client::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $esclient->expects($this->any())
+        $esclient->expects(static::any())
             ->method('index')
             ->will(
-                $this->returnValue(['_id' => 'testValue'])
+                static::returnValue(['_id' => 'testValue'])
             );
 
-        $esclient->expects($this->any())
+        $esclient->expects(static::any())
             ->method('indices')
             ->will(
-                $this->returnValue($indicesNamespaces)
+                static::returnValue($indicesNamespaces)
             );
 
-        $esclient->expects($this->once())
+        $esclient->expects(static::once())
             ->method('update')
             ->will(
-                $this->returnValue(true)
+                static::returnValue(true)
             );
 
-        $clientBuilder->expects($this->once())
+        $clientBuilder->expects(static::once())
             ->method('build')
             ->will(
-                $this->returnValue($esclient)
+                static::returnValue($esclient)
             );
 
         $els  = new ElasticLogService('111.222.33.4:9200', 'necktie', 50, $clientBuilder);
 
+        /** @var UserInterface|Mock $userInterface */
         $userInterface = $this->getMockBuilder(UserInterface::class)->disableOriginalConstructor()->getMock();
 
         $entity = new EntityActionLog();
         $entity->setUser($userInterface);
 
-        $this->assertEquals('testValue', $els->writeIntoAsync('testTypeName', $entity, 4));
-        $this->assertEquals('testValue', $els->writeInto('testTypeName', $entity, 4));
+        static::assertEquals('testValue', $els->writeIntoAsync('testTypeName', $entity, 4));
+        static::assertEquals('testValue', $els->writeInto('testTypeName', $entity, 4));
 
         $els->update('tesTypeName', '1', $types, $values, 4);
 
-        $this->assertInstanceOf(ElasticLogService::class, $els->setIndex('test'));
+        static::assertInstanceOf(ElasticLogService::class, $els->setIndex('test'));
 
-        $this->assertTrue(
+        static::assertTrue(
             array_key_exists(
                 'system',
                 $this->invokeMethod($els, 'getElasticArray', [$entity])
@@ -107,7 +112,7 @@ class ElasticLogServiceTest extends TestCase
 
         $els  = new ElasticLogService('111.222.33.4:9200', 'necktie');
 
-        $this->assertInstanceOf(ElasticLogService::class, $els->setIndex('test'));
+        static::assertInstanceOf(ElasticLogService::class, $els->setIndex('test'));
     }
 
 

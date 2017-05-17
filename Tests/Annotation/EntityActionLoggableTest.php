@@ -30,9 +30,9 @@ class EntityActionLoggableTest extends TestCase
             'price' => '25.99',
         ];
 
-        $this->assertEquals($excepted, $entityActionLoggable->getAttributeList());
+        static::assertEquals($excepted, $entityActionLoggable->getAttributeList());
 
-        $this->assertEmpty($entityActionLoggable->getEmptyAttributes());
+        static::assertEmpty($entityActionLoggable->getEmptyAttributes());
     }
 
     public function testEmptyAttributes()
@@ -54,9 +54,9 @@ class EntityActionLoggableTest extends TestCase
             'price' => '25.99',
         ];
 
-        $this->assertEquals($excepted, $entityActionLoggable->getEmptyAttributes());
+        static::assertEquals($excepted, $entityActionLoggable->getEmptyAttributes());
 
-        $this->assertEmpty($entityActionLoggable->getAttributeList());
+        static::assertEmpty($entityActionLoggable->getAttributeList());
     }
 
     public function testMergeEmptyAttributesToAtributes()
@@ -82,7 +82,7 @@ class EntityActionLoggableTest extends TestCase
             'price' => '25.99',
         ];
 
-        $this->assertEquals($excepted, $entityActionLoggable->getAttributeList());
+        static::assertEquals($excepted, $entityActionLoggable->getAttributeList());
 
         $exceptedEmpty = [
             'name' => 'foo',
@@ -90,6 +90,6 @@ class EntityActionLoggableTest extends TestCase
             'price' => '25.99',
         ];
 
-        $this->assertEquals($exceptedEmpty, $entityActionLoggable->getEmptyAttributes());
+        static::assertEquals($exceptedEmpty, $entityActionLoggable->getEmptyAttributes());
     }
 }

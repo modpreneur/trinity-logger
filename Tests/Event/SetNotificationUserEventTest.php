@@ -16,15 +16,15 @@ class SetNotificationUserEventTest extends TestCase
         /** @var SetNotificationUserEvent $setNotificationUserEvent */
         $setNotificationUserEvent = new SetNotificationUserEvent('userIdentification', 'clientId');
 
-        $this->assertEquals('userIdentification', $setNotificationUserEvent->getUserIdentification());
+        static::assertEquals('userIdentification', $setNotificationUserEvent->getUserIdentification());
 
-        $this->assertEquals('clientId', $setNotificationUserEvent->getClientId());
+        static::assertEquals('clientId', $setNotificationUserEvent->getClientId());
 
         $setNotificationUserEvent->setUserIdentification('identificationTest');
         $setNotificationUserEvent->setClientId('clientIdTest');
 
-        $this->assertEquals('identificationTest', $setNotificationUserEvent->getUserIdentification());
+        static::assertEquals('identificationTest', $setNotificationUserEvent->getUserIdentification());
 
-        $this->assertEquals('clientIdTest', $setNotificationUserEvent->getClientId());
+        static::assertEquals('clientIdTest', $setNotificationUserEvent->getClientId());
     }
 }

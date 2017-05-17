@@ -61,64 +61,64 @@ class DatabaseHandlerTest extends TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $requestStack->expects($this->once())
+        $requestStack->expects(static::once())
             ->method('getCurrentRequest')
             ->will(
-                $this->returnValue($request)
+                static::returnValue($request)
             );
 
-        $request->expects($this->once())
+        $request->expects(static::once())
             ->method('getUri')
             ->will(
-                $this->returnValue($uri)
+                static::returnValue($uri)
             );
 
-        $request->expects($this->once())
+        $request->expects(static::once())
             ->method('getClientIp')
             ->will(
-                $this->returnValue($clientIp)
+                static::returnValue($clientIp)
             );
 
         $token = $this->getMockBuilder(TokenInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $tokenStorage->expects($this->once())
+        $tokenStorage->expects(static::once())
             ->method('getToken')
             ->will(
-                $this->returnValue($token)
+                static::returnValue($token)
             );
 
-        $session->expects($this->once())
+        $session->expects(static::once())
             ->method('set')
             ->with('readable', 'TestErrorMessage');
 
-        $session->expects($this->once())
+        $session->expects(static::once())
             ->method('isStarted')
             ->will(
-                $this->returnValue(true)
+                static::returnValue(true)
             );
 
-        $token->expects($this->exactly(4))
+        $token->expects(static::exactly(4))
             ->method('getUser')
             ->will(
-                $this->returnValue($user)
+                static::returnValue($user)
             );
 
 
-        $esLogger->expects($this->once())
+        $esLogger->expects(static::once())
             ->method('writeInto')
             ->with(
                 ExceptionLog::NAME,
-                $this->callback(
+                static::callback(
                     function (ExceptionLog $log) use ($clientIp, $uri, $user) {
-                        $this->assertEquals('TestErrorMessage', $log->getReadable());
-                        $this->assertEquals(Logger::ERROR, $log->getLevel());
-                        $this->assertEquals('testServerData', $log->getServerData());
-                        $this->assertEquals($clientIp, $log->getIp());
-                        $this->assertEquals($uri, $log->getUrl());
-                        $this->assertEquals('PDOException:R:  testErrorMessage'.PHP_EOL, $log->getLog());
-                        $this->assertEquals($user, $log->getUser());
+                        static::assertEquals('TestErrorMessage', $log->getReadable());
+                        static::assertEquals(Logger::ERROR, $log->getLevel());
+                        static::assertEquals('testServerData', $log->getServerData());
+                        static::assertEquals($clientIp, $log->getIp());
+                        static::assertEquals($uri, $log->getUrl());
+                        static::assertEquals('PDOException:R:  testErrorMessage'.PHP_EOL, $log->getLog());
+                        static::assertEquals($user, $log->getUser());
                         return true;
                     }
                 )
@@ -173,10 +173,10 @@ class DatabaseHandlerTest extends TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $requestStack->expects($this->once())
+        $requestStack->expects(static::once())
             ->method('getCurrentRequest')
             ->will(
-                $this->returnValue(null)
+                static::returnValue(null)
             );
 
         /** @var TokenInterface|Mock $token */
@@ -184,10 +184,10 @@ class DatabaseHandlerTest extends TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $token->expects($this->any())
+        $token->expects(static::any())
             ->method('getUser')
             ->will(
-                $this->returnValue($user)
+                static::returnValue($user)
             );
 
         $databaseHandler = new DatabaseHandler($session, $tokenStorage, $requestStack, $esLogger);
@@ -203,7 +203,7 @@ class DatabaseHandlerTest extends TestCase
 
         ];
 
-        $this->assertEmpty($this->invokeMethod($databaseHandler, 'write', [$record]));
+        static::assertEmpty($this->invokeMethod($databaseHandler, 'write', [$record]));
 
         $record = [
             'level'         => 900,
@@ -216,7 +216,7 @@ class DatabaseHandlerTest extends TestCase
 
         ];
 
-        $this->assertEmpty($this->invokeMethod($databaseHandler, 'write', [$record]));
+        static::assertEmpty($this->invokeMethod($databaseHandler, 'write', [$record]));
 
         $record = [
             'level'         => Logger::ERROR,
@@ -229,7 +229,7 @@ class DatabaseHandlerTest extends TestCase
 
         ];
 
-        $this->assertEmpty($this->invokeMethod($databaseHandler, 'write', [$record]));
+        static::assertEmpty($this->invokeMethod($databaseHandler, 'write', [$record]));
     }
 
 
@@ -265,10 +265,10 @@ class DatabaseHandlerTest extends TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $token->expects($this->any())
+        $token->expects(static::any())
             ->method('getUser')
             ->will(
-                $this->returnValue($user)
+                static::returnValue($user)
             );
 
         $databaseHandler = new DatabaseHandler($session, $tokenStorage, $requestStack, $esLogger);
@@ -277,7 +277,7 @@ class DatabaseHandlerTest extends TestCase
             'message' => 'testMessage'
         ];
 
-        $this->assertEquals('', $this->invokeMethod($databaseHandler, 'getReadable', [$e]));
+        static::assertEquals('', $this->invokeMethod($databaseHandler, 'getReadable', [$e]));
     }
 
 

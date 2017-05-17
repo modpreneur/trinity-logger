@@ -26,8 +26,8 @@ class TrinityLoggerExtensionTest extends TestCase
         /** @var ExtensionInterface[] $extensions */
         $extensions = $container->getExtensions();
 
-        $this->assertEmpty($extensions);
+        static::assertEmpty($extensions);
 
-        $this->assertInstanceOf(TrinityLoggerExtension::class, $settingBundle->getContainerExtension());
+        static::assertInstanceOf(TrinityLoggerExtension::class, $settingBundle->getContainerExtension());
     }
 }

@@ -110,32 +110,32 @@ class EntityActionListenerTest extends TestCase
 
         $entityActionListener->setUserFromNotification($setNotificationUserEvent);
 
-        $this->assertTrue($dispatcher->hasListeners('trinity.logger.entity_action_listener'));
+        static::assertTrue($dispatcher->hasListeners('trinity.logger.entity_action_listener'));
 
         $dispatcher->addListener('trinity.logger.entity_action_listener', [$entityActionListener, 'postUpdate']);
 
         $entityActionListener->postUpdate($lifecycleEventArgs);
 
-        $this->assertTrue($dispatcher->hasListeners('trinity.logger.entity_action_listener'));
+        static::assertTrue($dispatcher->hasListeners('trinity.logger.entity_action_listener'));
 
 
         $dispatcher->addListener('trinity.logger.entity_action_listener', [$entityActionListener, 'postRemove']);
 
         $entityActionListener->postRemove($lifecycleEventArgs);
 
-        $this->assertTrue($dispatcher->hasListeners('trinity.logger.entity_action_listener'));
+        static::assertTrue($dispatcher->hasListeners('trinity.logger.entity_action_listener'));
 
         $dispatcher->addListener('trinity.logger.entity_action_listener', [$entityActionListener, 'preRemove']);
 
         $entityActionListener->preRemove($lifecycleEventArgs);
 
-        $this->assertTrue($dispatcher->hasListeners('trinity.logger.entity_action_listener'));
+        static::assertTrue($dispatcher->hasListeners('trinity.logger.entity_action_listener'));
 
         $dispatcher->addListener('trinity.logger.entity_action_listener', [$entityActionListener, 'postPersist']);
 
         $entityActionListener->postPersist($lifecycleEventArgs);
 
-        $this->assertTrue($dispatcher->hasListeners('trinity.logger.entity_action_listener'));
+        static::assertTrue($dispatcher->hasListeners('trinity.logger.entity_action_listener'));
 
         $dispatcher->addListener(
             'trinity.logger.entity_action_listener',
@@ -147,11 +147,11 @@ class EntityActionListenerTest extends TestCase
 
         $entityActionListener->clearUserFromNotification($removeNotificationUserEvent);
 
-        $this->assertTrue($dispatcher->hasListeners('trinity.logger.entity_action_listener'));
+        static::assertTrue($dispatcher->hasListeners('trinity.logger.entity_action_listener'));
 
         $dispatcherArray = $dispatcher->getListeners('trinity.logger.entity_action_listener');
 
-        $this->assertInstanceOf(EntityActionListener::class, $dispatcherArray[0][0]);
+        static::assertInstanceOf(EntityActionListener::class, $dispatcherArray[0][0]);
     }
 
 
@@ -190,11 +190,11 @@ class EntityActionListenerTest extends TestCase
 
         $entityActionListener->clearUserFromNotification($removeNotificationUserEvent);
 
-        $this->assertTrue($dispatcher->hasListeners('trinity.logger.entity_action_listener'));
+        static::assertTrue($dispatcher->hasListeners('trinity.logger.entity_action_listener'));
 
         $dispatcherArray = $dispatcher->getListeners('trinity.logger.entity_action_listener');
 
-        $this->assertInstanceOf(EntityActionListener::class, $dispatcherArray[0][0]);
+        static::assertInstanceOf(EntityActionListener::class, $dispatcherArray[0][0]);
 
         $removeNotificationUserEvent = new RemoveNotificationUserEvent('34', '43');
 
@@ -222,11 +222,11 @@ class EntityActionListenerTest extends TestCase
 
         $entityActionListener->clearUserFromNotification($removeNotificationUserEvent);
 
-        $this->assertTrue($dispatcher->hasListeners('trinity.logger.entity_action_listener'));
+        static::assertTrue($dispatcher->hasListeners('trinity.logger.entity_action_listener'));
 
         $dispatcherArray = $dispatcher->getListeners('trinity.logger.entity_action_listener');
 
-        $this->assertInstanceOf(EntityActionListener::class, $dispatcherArray[0][0]);
+        static::assertInstanceOf(EntityActionListener::class, $dispatcherArray[0][0]);
     }
 
 
@@ -247,7 +247,7 @@ class EntityActionListenerTest extends TestCase
             'test'
         );
 
-        $this->assertNull($entityActionListener->postUpdate($this->lifecycleEventArgs));
+        static::assertNull($entityActionListener->postUpdate($this->lifecycleEventArgs));
 
         $entityActionListener = new EntityActionListener(
             $this->tokenStorage,
@@ -280,7 +280,7 @@ class EntityActionListenerTest extends TestCase
             'test'
         );
 
-        $this->assertNull($entityActionListener->postRemove($this->lifecycleEventArgs));
+        static::assertNull($entityActionListener->postRemove($this->lifecycleEventArgs));
 
         $entityActionListener = new EntityActionListener(
             $this->tokenStorage,
@@ -313,7 +313,7 @@ class EntityActionListenerTest extends TestCase
             'test'
         );
 
-        $this->assertNull($entityActionListener->postPersist($this->lifecycleEventArgs));
+        static::assertNull($entityActionListener->postPersist($this->lifecycleEventArgs));
 
         $entityActionListener = new EntityActionListener(
             $this->tokenStorage,
@@ -356,19 +356,19 @@ class EntityActionListenerTest extends TestCase
 
         $entityActionListener->postUpdate($lifecycleEventArgs);
 
-        $this->assertTrue($dispatcher->hasListeners('trinity.logger.entity_action_listener'));
+        static::assertTrue($dispatcher->hasListeners('trinity.logger.entity_action_listener'));
 
         $dispatcher->addListener('trinity.logger.entity_action_listener', [$entityActionListener, 'postRemove']);
 
         $entityActionListener->postRemove($lifecycleEventArgs);
 
-        $this->assertTrue($dispatcher->hasListeners('trinity.logger.entity_action_listener'));
+        static::assertTrue($dispatcher->hasListeners('trinity.logger.entity_action_listener'));
 
         $dispatcher->addListener('trinity.logger.entity_action_listener', [$entityActionListener, 'postPersist']);
 
         $entityActionListener->postPersist($lifecycleEventArgs);
 
-        $this->assertTrue($dispatcher->hasListeners('trinity.logger.entity_action_listener'));
+        static::assertTrue($dispatcher->hasListeners('trinity.logger.entity_action_listener'));
     }
 
 
@@ -414,7 +414,7 @@ class EntityActionListenerTest extends TestCase
             ]
         ];
 
-        $this->assertEquals($expected, $this->invokeMethod($entityActionListener, 'manageObjects', [$changeSet]));
+        static::assertEquals($expected, $this->invokeMethod($entityActionListener, 'manageObjects', [$changeSet]));
     }
 
 
@@ -633,7 +633,7 @@ class EntityActionListenerTest extends TestCase
             0 => ''
         ];
 
-        $this->assertEquals(
+        static::assertEquals(
             $expected,
             $this->invokeMethod(
                 $entityActionListener,
@@ -645,7 +645,6 @@ class EntityActionListenerTest extends TestCase
                 ]
             )
         );
-
     }
 
     public function testSetRelationChanges()
@@ -693,9 +692,9 @@ class EntityActionListenerTest extends TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $collection->expects($this->at(0))
+        $collection->expects(static::at(0))
             ->method('toArray')
-            ->will($this->returnValue(
+            ->will(static::returnValue(
                 [
                     'first' => $class,
                     'third' => 'text',
@@ -703,9 +702,9 @@ class EntityActionListenerTest extends TestCase
                     '34fds' => 'fddsfsdfsdf'
                 ]));
 
-        $collection->expects($this->any())
+        $collection->expects(static::any())
             ->method('toArray')
-            ->will($this->returnValue(
+            ->will(static::returnValue(
                 [
                     'first' => $class,
                     'second' => $class,
@@ -777,7 +776,7 @@ class EntityActionListenerTest extends TestCase
             ],
         ];
 
-        $this->assertInstanceOf(
+        static::assertInstanceOf(
             BaseElasticLog::class,
             $this->invokeMethod(
                 $entityActionListener,
@@ -789,7 +788,7 @@ class EntityActionListenerTest extends TestCase
             )[2][0]
         );
 
-        $this->assertEquals(
+        static::assertEquals(
             $expected,
             $this->invokeMethod(
                 $entityActionListener,
@@ -901,19 +900,18 @@ class EntityActionListenerTest extends TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->lifecycleEventArgs->expects(
-            $this->any())
+        $this->lifecycleEventArgs->expects(static::any())
             ->method('getObject')
             ->will(
-                $this->throwException(new \Exception)
+                static::throwException(new \Exception)
             );
 
         switch ($settings) {
             case 1:
-                $this->lifecycleEventArgs->expects($this->exactly(2))
+                $this->lifecycleEventArgs->expects(static::exactly(2))
                     ->method('getObject')
                     ->will(
-                        $this->throwException(new \Exception)
+                        static::throwException(new \Exception)
                     );
                 break;
             case 2:
@@ -921,36 +919,36 @@ class EntityActionListenerTest extends TestCase
                     ->disableOriginalConstructor()
                     ->getMock();
 
-                $this->reader->expects($this->any())
+                $this->reader->expects(static::any())
                     ->method('getClassAnnotation')
                     ->will(
-                        $this->returnValue($entityActionLoggable)
+                        static::returnValue($entityActionLoggable)
                     );
 
                 $this->unitOfWork = $this->getMockBuilder(UnitOfWork::class)
                     ->disableOriginalConstructor()
                     ->getMock();
 
-                $this->unitOfWork->expects($this->any())
+                $this->unitOfWork->expects(static::any())
                     ->method('getEntityChangeSet')
                     ->will(
-                        $this->returnValue([])
+                        static::returnValue([])
                     );
 
-                $this->unitOfWork->expects($this->any())
+                $this->unitOfWork->expects(static::any())
                     ->method('getScheduledCollectionUpdates')
                     ->will(
-                        $this->returnValue([])
+                        static::returnValue([])
                     );
 
                 $this->objectManagerChild = $this->getMockBuilder(ObjectManagerChild::class)
                     ->disableOriginalConstructor()
                     ->getMock();
 
-                $this->objectManagerChild->expects($this->any())
+                $this->objectManagerChild->expects(static::any())
                     ->method('getUnitOfWork')
                     ->will(
-                        $this->returnValue($this->unitOfWork)
+                        static::returnValue($this->unitOfWork)
                     );
                 break;
             case 3:
@@ -962,10 +960,10 @@ class EntityActionListenerTest extends TestCase
                     ->disableOriginalConstructor()
                     ->getMock();
 
-                $this->entityActionLog->expects($this->any())
+                $this->entityActionLog->expects(static::any())
                     ->method('getUser')
                     ->will(
-                        $this->returnValue($this->userInterface)
+                        static::returnValue($this->userInterface)
                     );
 
                 $this->objectManagerChild = $this->getMockBuilder(ObjectManagerChild::class)
@@ -976,10 +974,10 @@ class EntityActionListenerTest extends TestCase
                     ->disableOriginalConstructor()
                     ->getMock();
 
-                $this->object->expects($this->once())
+                $this->object->expects(static::once())
                     ->method('getUser')
                     ->will(
-                        $this->returnValue(false)
+                        static::returnValue(false)
                     );
 
                 break;
@@ -992,10 +990,10 @@ class EntityActionListenerTest extends TestCase
                     ->disableOriginalConstructor()
                     ->getMock();
 
-                $this->entityActionLog->expects($this->any())
+                $this->entityActionLog->expects(static::any())
                     ->method('getUser')
                     ->will(
-                        $this->returnValue($this->userInterface)
+                        static::returnValue($this->userInterface)
                     );
 
                 $this->objectManagerWithout = $this->getMockBuilder(ObjectManagerWithout::class)
@@ -1006,10 +1004,10 @@ class EntityActionListenerTest extends TestCase
                     ->disableOriginalConstructor()
                     ->getMock();
 
-                $this->object->expects($this->any())
+                $this->object->expects(static::any())
                     ->method('getUser')
                     ->will(
-                        $this->returnValue(false)
+                        static::returnValue(false)
                     );
                 $this->entityActionLoggable = $this->getMockBuilder(EntityActionLoggable::class)
                     ->disableOriginalConstructor()
@@ -1020,16 +1018,16 @@ class EntityActionListenerTest extends TestCase
                     ->disableOriginalConstructor()
                     ->getMock();
 
-                $this->entityActionLog->expects($this->any())
+                $this->entityActionLog->expects(static::any())
                     ->method('getUser')
                     ->will(
-                        $this->returnValue('foo')
+                        static::returnValue('foo')
                     );
 
-                $this->tokenStorage->expects($this->any())
+                $this->tokenStorage->expects(static::any())
                     ->method('getToken')
                     ->will(
-                        $this->returnValue($this->entityActionLog)
+                        static::returnValue($this->entityActionLog)
                     );
 
                 $this->objectManagerChild = $this->getMockBuilder(ObjectManagerChild::class)
@@ -1042,22 +1040,22 @@ class EntityActionListenerTest extends TestCase
 
                 $entity = new EntityActionLog();
 
-                $this->unitOfWork->expects($this->any())->method('getEntityChangeSet')
+                $this->unitOfWork->expects(static::any())->method('getEntityChangeSet')
                     ->with($entity)
                     ->will(
-                        $this->returnValue(['updatedBy' => true])
+                        static::returnValue(['updatedBy' => true])
                     );
 
-                $this->unitOfWork->expects($this->once())
+                $this->unitOfWork->expects(static::once())
                     ->method('getScheduledCollectionUpdates')
                     ->will(
-                        $this->returnValue([])
+                        static::returnValue([])
                     );
 
-                $this->objectManagerChild->expects($this->any())
+                $this->objectManagerChild->expects(static::any())
                     ->method('getUnitOfWork')
                     ->will(
-                        $this->returnValue($this->unitOfWork)
+                        static::returnValue($this->unitOfWork)
                     );
 
                 $this->object = $this->getMockBuilder(EntityActionLog::class)
@@ -1074,16 +1072,16 @@ class EntityActionListenerTest extends TestCase
                     ->disableOriginalConstructor()
                     ->getMock();
 
-                $this->entityActionLog->expects($this->any())
+                $this->entityActionLog->expects(static::any())
                     ->method('getUser')
                     ->will(
-                        $this->returnValue('foo')
+                        static::returnValue('foo')
                     );
 
-                $this->tokenStorage->expects($this->any())
+                $this->tokenStorage->expects(static::any())
                     ->method('getToken')
                     ->will(
-                        $this->returnValue($this->entityActionLog)
+                        static::returnValue($this->entityActionLog)
                     );
 
 
@@ -1115,19 +1113,19 @@ class EntityActionListenerTest extends TestCase
                     ]
                 ];
 
-                $this->unitOfWork->expects($this->any())->method('getEntityChangeSet')->with($entity)
-                    ->will($this->returnValue($changeSet));
+                $this->unitOfWork->expects(static::any())->method('getEntityChangeSet')->with($entity)
+                    ->will(static::returnValue($changeSet));
 
-                $this->unitOfWork->expects($this->once())
+                $this->unitOfWork->expects(static::once())
                     ->method('getScheduledCollectionUpdates')
                     ->will(
-                        $this->returnValue([])
+                        static::returnValue([])
                     );
 
-                $this->objectManagerChild->expects($this->any())
+                $this->objectManagerChild->expects(static::any())
                     ->method('getUnitOfWork')
                     ->will(
-                        $this->returnValue($this->unitOfWork)
+                        static::returnValue($this->unitOfWork)
                     );
 
                 $this->object = $this->getMockBuilder(EntityActionLog::class)
@@ -1144,16 +1142,16 @@ class EntityActionListenerTest extends TestCase
                     ->disableOriginalConstructor()
                     ->getMock();
 
-                $this->entityActionLog->expects($this->any())
+                $this->entityActionLog->expects(static::any())
                     ->method('getUser')
                     ->will(
-                        $this->returnValue('foo')
+                        static::returnValue('foo')
                     );
 
-                $this->tokenStorage->expects($this->any())
+                $this->tokenStorage->expects(static::any())
                     ->method('getToken')
                     ->will(
-                        $this->returnValue($this->entityActionLog)
+                        static::returnValue($this->entityActionLog)
                     );
 
                 $this->objectManagerChild = $this->getMockBuilder(ObjectManagerChild::class)
@@ -1166,22 +1164,22 @@ class EntityActionListenerTest extends TestCase
 
                 $entity = new EntityActionLog();
 
-                $this->unitOfWork->expects($this->any())->method('getEntityChangeSet')
+                $this->unitOfWork->expects(static::any())->method('getEntityChangeSet')
                     ->with($entity)
                     ->will(
-                        $this->returnValue(['updatedBy' => true])
+                        static::returnValue(['updatedBy' => true])
                     );
 
-                $this->unitOfWork->expects($this->any())
+                $this->unitOfWork->expects(static::any())
                     ->method('getScheduledCollectionUpdates')
                     ->will(
-                        $this->returnValue([])
+                        static::returnValue([])
                     );
 
-                $this->objectManagerChild->expects($this->any())
+                $this->objectManagerChild->expects(static::any())
                     ->method('getUnitOfWork')
                     ->will(
-                        $this->returnValue($this->unitOfWork)
+                        static::returnValue($this->unitOfWork)
                     );
 
                 $this->object = $this->getMockBuilder(EntityActionLog::class)
@@ -1198,10 +1196,10 @@ class EntityActionListenerTest extends TestCase
                     ->disableOriginalConstructor()
                     ->getMock();
 
-                $this->entityActionLog->expects($this->any())
+                $this->entityActionLog->expects(static::any())
                     ->method('getUser')
                     ->will(
-                        $this->returnValue('foo')
+                        static::returnValue('foo')
                     );
 
                 break;
@@ -1210,25 +1208,25 @@ class EntityActionListenerTest extends TestCase
                     ->disableOriginalConstructor()
                     ->getMock();
 
-                $this->entityActionLog->expects($this->any())
+                $this->entityActionLog->expects(static::any())
                     ->method('getUser')
                     ->will(
-                        $this->returnValue('foo')
+                        static::returnValue('foo')
                     );
 
-                $this->entityActionLog->expects($this->once())
+                $this->entityActionLog->expects(static::once())
                     ->method('setUser');
 
-                $this->entityActionLog->expects($this->once())
+                $this->entityActionLog->expects(static::once())
                     ->method('setChangedEntityId');
 
-                $this->entityActionLog->expects($this->once())
+                $this->entityActionLog->expects(static::once())
                     ->method('setChangedEntity');
 
-                $this->tokenStorage->expects($this->any())
+                $this->tokenStorage->expects(static::any())
                     ->method('getToken')
                     ->will(
-                        $this->returnValue($this->entityActionLog)
+                        static::returnValue($this->entityActionLog)
                     );
 
                 break;
@@ -1237,19 +1235,19 @@ class EntityActionListenerTest extends TestCase
                     ->disableOriginalConstructor()
                     ->getMock();
 
-                $this->entityActionLog->expects($this->any())
+                $this->entityActionLog->expects(static::any())
                     ->method('getUser')
                     ->will(
-                        $this->returnValue('foo')
+                        static::returnValue('foo')
                     );
 
-                $this->entityActionLog->expects($this->once())
+                $this->entityActionLog->expects(static::once())
                     ->method('setChangedEntity');
 
-                $this->tokenStorage->expects($this->any())
+                $this->tokenStorage->expects(static::any())
                     ->method('getToken')
                     ->will(
-                        $this->returnValue($this->entityActionLog)
+                        static::returnValue($this->entityActionLog)
                     );
 
                 break;

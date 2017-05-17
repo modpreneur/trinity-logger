@@ -66,7 +66,7 @@ class ElasticLogServiceWithTtlTest extends TestCase
         $updateValues = ['firstValue', 'secondValue'];
         $logId = 'logId';
 
-        $base['logger']->expects($this->once())->method('update')
+        $base['logger']->expects(static::once())->method('update')
             ->with($this->logName, $logId, $updateKeys, $updateValues, $this->ttl);
 
         $ttlLogger->update($this->logName, $logId, $updateKeys, $updateValues, true);
@@ -88,10 +88,10 @@ class ElasticLogServiceWithTtlTest extends TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $logger->expects($this->any())
+        $logger->expects(static::any())
             ->method('writeInto');
 
-        $logger->expects($this->any())
+        $logger->expects(static::any())
             ->method('writeIntoAsync');
 
         /** @var DefaultTtlProvider|Mock $ttlProvider */
@@ -99,11 +99,11 @@ class ElasticLogServiceWithTtlTest extends TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $ttlProvider->expects($this->once())
+        $ttlProvider->expects(static::once())
             ->method('getTtlForType')
             ->with($this->logName)
             ->will(
-                $this->returnValue($this->ttl)
+                static::returnValue($this->ttl)
             );
         /** @var BaseElasticLog|Mock $baseElasticLog */
         $baseElasticLog = $this->getMockBuilder(BaseElasticLog::class)
