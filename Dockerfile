@@ -1,4 +1,4 @@
-FROM modpreneur/trinity-test:0.3- sh -c 'php vendor/bin/coveralls -v'
+FROM modpreneur/trinity-test:0.3
 
 MAINTAINER Martin Kolek <kolek@modpreneur.com>
 
