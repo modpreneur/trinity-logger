@@ -15,6 +15,8 @@ use Trinity\Bundle\LoggerBundle\Services\ElasticLogServiceWithTtl;
  */
 class ElasticLoggerListenerTest extends TestCase
 {
+
+
     public function testConstructGetsAndSets()
     {
         /** @var ElasticLogServiceWithTtl|MockObject $elasticLogServiceWithTtl */

@@ -11,6 +11,8 @@ use Trinity\Bundle\LoggerBundle\Annotation\EntityActionLoggable;
  */
 class EntityActionLoggableTest extends TestCase
 {
+
+
     public function testAttributes()
     {
         $option = [
@@ -35,6 +37,7 @@ class EntityActionLoggableTest extends TestCase
         static::assertEmpty($entityActionLoggable->getEmptyAttributes());
     }
 
+
     public function testEmptyAttributes()
     {
         $option = [
@@ -58,6 +61,7 @@ class EntityActionLoggableTest extends TestCase
 
         static::assertEmpty($entityActionLoggable->getAttributeList());
     }
+
 
     public function testMergeEmptyAttributesToAtributes()
     {

@@ -14,6 +14,8 @@ use Trinity\Bundle\LoggerBundle\LoggerBundle;
  */
 class TrinityLoggerExtensionTest extends TestCase
 {
+
+
     public function testLoggerBundle()
     {
         /** @var ContainerBuilder $container */

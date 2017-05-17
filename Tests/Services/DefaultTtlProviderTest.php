@@ -17,6 +17,8 @@ use Trinity\Bundle\LoggerBundle\Services\DefaultTtlProvider;
  */
 class DefaultTtlProviderTest extends TestCase
 {
+
+
     public function testDefaultTtl()
     {
         $provider = new DefaultTtlProvider();

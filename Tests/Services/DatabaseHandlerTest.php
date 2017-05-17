@@ -27,6 +27,8 @@ use Trinity\Component\Core\Interfaces\UserInterface;
  */
 class DatabaseHandlerTest extends TestCase
 {
+
+
     public function testLogRecord()
     {
         $uri = 'http://some_uri.fn';
@@ -36,6 +38,7 @@ class DatabaseHandlerTest extends TestCase
         $session = $this->getMockBuilder(Session::class)
             ->disableOriginalConstructor()
             ->getMock();
+
         /** @var TokenStorageInterface|Mock $tokenStorage */
         $tokenStorage = $this->getMockBuilder(TokenStorageInterface::class)
             ->disableOriginalConstructor()

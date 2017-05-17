@@ -12,6 +12,8 @@ use Trinity\Component\Core\Interfaces\UserInterface;
  */
 class ExceptionLogTest extends TestCase
 {
+
+
     public function testEntity()
     {
         /** @var ExceptionLog $exceptionLog */

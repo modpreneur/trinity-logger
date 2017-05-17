@@ -32,6 +32,7 @@ use Trinity\Component\Core\Interfaces\UserInterface;
  */
 class EntityActionListenerTest extends TestCase
 {
+
     /** @var TokenStorageInterface|Mock $tokenStorage */
     private $tokenStorage;
 
@@ -76,6 +77,7 @@ class EntityActionListenerTest extends TestCase
 
     /** @var $objectManager */
     private $objectManager;
+
 
     public function testNoExceptions()
     {
@@ -453,6 +455,7 @@ class EntityActionListenerTest extends TestCase
         $this->invokeMethod($entityActionListener, 'checkUser', [$this->object, $this->objectManagerChild]);
     }
 
+
     /**
      * @expectedException \RuntimeException
      */
@@ -482,6 +485,7 @@ class EntityActionListenerTest extends TestCase
             ]
         );
     }
+
 
     /**
      * @expectedException \RuntimeException
@@ -515,6 +519,7 @@ class EntityActionListenerTest extends TestCase
         );
     }
 
+
     public function testSetUpdateLogChangedWithUpdatedBy()
     {
         $this->mockProvider(5);
@@ -545,6 +550,7 @@ class EntityActionListenerTest extends TestCase
             ]
         );
     }
+
 
     public function testSetUpdateLogChangedWithoutUpdatedBy()
     {
@@ -577,6 +583,7 @@ class EntityActionListenerTest extends TestCase
             ]
         );
     }
+
 
     public function testSetFilterIgnored()
     {
@@ -646,6 +653,7 @@ class EntityActionListenerTest extends TestCase
             )
         );
     }
+
 
     public function testSetRelationChanges()
     {
@@ -862,6 +870,7 @@ class EntityActionListenerTest extends TestCase
 
         return $method->invokeArgs($object, $parameters);
     }
+
 
     /**
      * @param int|null $settings

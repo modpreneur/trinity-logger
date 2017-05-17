@@ -28,6 +28,7 @@ use Trinity\Bundle\SearchBundle\NQL\WherePart;
 class ElasticReadLogServiceTest extends TestCase
 {
 
+
     public function testGetById()
     {
         /** @var Table|Mock $table */

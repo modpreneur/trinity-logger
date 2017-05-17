@@ -10,90 +10,108 @@ use Doctrine\Common\Persistence\ObjectManager;
  */
 class ObjectManagerWithout implements ObjectManager
 {
-    /**
-     * @param string $className
-     * @param mixed $id
-     */
-    public function find($className, $id)
-    {
-    }
+
 
     /**
-     * @param object $object
+     * {@inheritDoc}
      */
-    public function persist($object)
+    public function find($className, $id): void
     {
     }
+
 
     /**
-     * @param object $object
+     * {@inheritDoc}
      */
-    public function remove($object)
+    public function persist($object): void
     {
     }
+
 
     /**
-     * @param object $object
+     * {@inheritDoc}
      */
-    public function merge($object)
+    public function remove($object): void
     {
     }
+
 
     /**
-     * @param null $objectName
+     * {@inheritDoc}
      */
-    public function clear($objectName = null)
+    public function merge($object): void
     {
     }
+
 
     /**
-     * @param object $object
+     * {@inheritDoc}
      */
-    public function detach($object)
+    public function clear($objectName = null): void
     {
     }
+
 
     /**
-     * @param object $object
+     * {@inheritDoc}
      */
-    public function refresh($object)
+    public function detach($object): void
     {
     }
 
-    public function flush()
-    {
-    }
 
     /**
-     * @param string $className
+     * {@inheritDoc}
      */
-    public function getRepository($className)
+    public function refresh($object): void
     {
     }
+
 
     /**
-     * @param string $className
+     * {@inheritDoc}
      */
-    public function getClassMetadata($className)
+    public function flush(): void
     {
     }
 
-
-    public function getMetadataFactory()
-    {
-    }
 
     /**
-     * @param object $obj
+     * {@inheritDoc}
      */
-    public function initializeObject($obj)
+    public function getRepository($className): void
     {
     }
 
+
     /**
-     * @param object $object
+     * {@inheritDoc}
      */
-    public function contains($object)
+    public function getClassMetadata($className): void
+    {
+    }
+
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getMetadataFactory(): void
+    {
+    }
+
+
+    /**
+     * {@inheritDoc}
+     */
+    public function initializeObject($obj): void
+    {
+    }
+
+
+    /**
+     * {@inheritDoc}
+     */
+    public function contains($object): void
     {
     }
 }

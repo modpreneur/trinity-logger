@@ -17,6 +17,7 @@ use Trinity\Component\Core\Interfaces\UserInterface;
  */
 class ElasticLogServiceTest extends TestCase
 {
+
     /** @var string  */
     protected $logName = 'logName';
 

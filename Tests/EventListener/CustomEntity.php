@@ -8,6 +8,7 @@ namespace Trinity\Bundle\LoggerBundle\Tests\EventListener;
  */
 class CustomEntity
 {
+
     /** @var  string */
     private $updatedBy;
 
@@ -70,6 +71,7 @@ class CustomEntity
     {
         return $this->createdBy;
     }
+
 
     /**
      * @param int|null $createdBy

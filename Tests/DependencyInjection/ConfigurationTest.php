@@ -12,6 +12,8 @@ use Trinity\Bundle\LoggerBundle\DependencyInjection\TrinityLoggerExtension;
  */
 class ConfigurationTest extends TestCase
 {
+
+
     /**
      * @dataProvider configurationDataProvider
      */
@@ -56,6 +58,7 @@ class ConfigurationTest extends TestCase
             }
         }
     }
+
 
     /**
      * @return array

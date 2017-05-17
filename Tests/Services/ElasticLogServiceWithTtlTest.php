@@ -22,6 +22,7 @@ use Trinity\Component\Core\Interfaces\EntityInterface;
  */
 class ElasticLogServiceWithTtlTest extends TestCase
 {
+
     /** @var string  */
     protected $logName = 'logName';
 
@@ -30,6 +31,7 @@ class ElasticLogServiceWithTtlTest extends TestCase
 
     /** @var BaseElasticLog|EntityInterface|null  */
     protected $object = null;
+
 
     public function testWrite()
     {

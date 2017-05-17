@@ -13,6 +13,8 @@ use Trinity\Component\Core\Interfaces\EntityInterface;
  */
 class ElasticLoggerEventTest extends TestCase
 {
+
+
     public function testConstructAndGets()
     {
         /** @var EntityInterface $entity */

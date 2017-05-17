@@ -11,6 +11,8 @@ use Trinity\Bundle\LoggerBundle\Entity\BaseElasticLog;
  */
 class BaseElasticLogTest extends TestCase
 {
+
+
     public function testEntity()
     {
         /** @var BaseElasticLog $baseElasticLogWithoutParameters */
