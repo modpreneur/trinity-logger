@@ -6,6 +6,8 @@
  * Time: 16:01
  */
 
+declare(strict_types=1);
+
 namespace Trinity\Bundle\LoggerBundle\Tests\Services;
 
 use Monolog\Logger;

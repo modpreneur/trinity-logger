@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Trinity\Bundle\LoggerBundle\Tests\Services;
 
 use Doctrine\ORM\EntityManager;
@@ -136,11 +138,11 @@ class ElasticReadLogServiceTest extends TestCase
             '_source' => [
                 'ttl' => 76,
                 'EntitiesToDecode' => [
-                    'System',
-                    'ChangedEntityId'
+                  //  'System',
+                    'ChangedEntityId',
                 ],
                 'SourceEntityClass' => $entity,
-                'System' => 'Trinity\Bundle\LoggerBundle\Entity\EntityActionLog',
+               // 'System' => 'Trinity\Bundle\LoggerBundle\Entity\EntityActionLog',
                 'ChangedEntityId' => 'Trinity\Bundle\LoggerBundle\Entity\EntityActionLog'
             ]
         ];
@@ -169,11 +171,11 @@ class ElasticReadLogServiceTest extends TestCase
                         '_source' => [
                             'ttl' => 76,
                             'EntitiesToDecode' => [
-                                'System',
+                                //'System',
                                 'ChangedEntityId'
                             ],
                             'SourceEntityClass' => $entity,
-                            'System' => 'Trinity\Bundle\LoggerBundle\Entity\EntityActionLog',
+                           // 'System' => 'Trinity\Bundle\LoggerBundle\Entity\EntityActionLog',
                             'ChangedEntityId' => 'Trinity\Bundle\LoggerBundle\Entity\EntityActionLog',
 
                         ],
@@ -424,11 +426,9 @@ class ElasticReadLogServiceTest extends TestCase
                         '_source' => [
                             'ttl' => 76,
                             'EntitiesToDecode' => [
-                                'System',
                                 'ChangedEntityId'
                             ],
                             'SourceEntityClass' => $entity,
-                            'System' => 'Trinity\Bundle\LoggerBundle\Entity\EntityActionLog',
                             'ChangedEntityId' => 'Trinity\Bundle\LoggerBundle\Entity\EntityActionLog'
                         ],
                         '_ttl' => 34,
@@ -446,11 +446,9 @@ class ElasticReadLogServiceTest extends TestCase
                         '_source' => [
                             'ttl' => 76,
                             'EntitiesToDecode' => [
-                                'System',
                                 'ChangedEntityId'
                             ],
                             'SourceEntityClass' => $entity,
-                            'System' => 'Trinity\Bundle\LoggerBundle\Entity\EntityActionLog',
                             'ChangedEntityId' => 'Trinity\Bundle\LoggerBundle\Entity\EntityActionLog'
                         ],
                         '_ttl' => 34,

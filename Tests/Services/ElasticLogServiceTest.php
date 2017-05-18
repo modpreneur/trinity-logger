@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Trinity\Bundle\LoggerBundle\Tests\Services;
 
 use Elasticsearch\Client;
@@ -61,10 +63,16 @@ class ElasticLogServiceTest extends TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $esclient->expects(static::any())
+        $esclient->expects(static::at(0))
             ->method('index')
             ->will(
                 static::returnValue(['_id' => 2])
+            );
+
+        $esclient->expects(static::at(1))
+            ->method('index')
+            ->will(
+                static::returnValue(['_id' => '3'])
             );
 
         $esclient->expects(static::any())
@@ -94,7 +102,7 @@ class ElasticLogServiceTest extends TestCase
         $entity->setUser($userInterface);
 
         static::assertEquals(2, $els->writeIntoAsync('testTypeName', $entity, 4));
-        static::assertEquals(2, $els->writeInto('testTypeName', $entity, 4));
+        static::assertEquals('3', $els->writeInto('testTypeName', $entity, 4));
 
         $els->update('tesTypeName', '1', $types, $values, 4);
 

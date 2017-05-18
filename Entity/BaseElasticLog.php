@@ -6,6 +6,8 @@
  * Time: 11:29
  */
 
+declare(strict_types=1);
+
 namespace Trinity\Bundle\LoggerBundle\Entity;
 
 /**

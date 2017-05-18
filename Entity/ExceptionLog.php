@@ -4,6 +4,8 @@
  * This file is part of the Trinity project.
  */
 
+declare(strict_types=1);
+
 namespace Trinity\Bundle\LoggerBundle\Entity;
 
 use Trinity\Component\Core\Interfaces\EntityInterface;

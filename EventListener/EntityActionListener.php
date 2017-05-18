@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Trinity\Bundle\LoggerBundle\EventListener;
 
 use Doctrine\Common\Persistence\Event\LifecycleEventArgs;
@@ -433,7 +435,7 @@ class EntityActionListener
     private function filterIgnored(array $changeSet, array $loggedFields, array $ignoreValue): array
     {
         foreach ($changeSet as $key => $value) {
-            if ($loggedFields && !\in_array($key, $loggedFields, null)) {
+            if ($loggedFields && !\in_array($key, $loggedFields, false)) {
                 unset($changeSet[$key]);
                 continue;
             }
@@ -463,7 +465,7 @@ class EntityActionListener
          */
         foreach ($updates as $update) {
             $fieldName = $update->getMapping()['fieldName'];
-            if (null !== $loggedFields && !\in_array($fieldName, $loggedFields, null)) {
+            if (null !== $loggedFields && !\in_array($fieldName, $loggedFields, false)) {
                 continue;
             }
 

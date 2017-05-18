@@ -2,6 +2,9 @@
 /**
  * This file is part of Trinity package.
  */
+
+declare(strict_types=1);
+
 namespace Trinity\Bundle\LoggerBundle\DependencyInjection;
 
 use Symfony\Component\Config\FileLocator;

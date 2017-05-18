@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Trinity\Bundle\LoggerBundle\Tests\Entity;
 
 use PHPUnit\Framework\TestCase;

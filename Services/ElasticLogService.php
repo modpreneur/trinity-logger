@@ -6,6 +6,8 @@
  * Time: 18:04.
  */
 
+declare(strict_types=1);
+
 namespace Trinity\Bundle\LoggerBundle\Services;
 
 use Elasticsearch\Client;

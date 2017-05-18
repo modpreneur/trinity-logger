@@ -6,6 +6,8 @@
  * Time: 12:26
  */
 
+declare(strict_types=1);
+
 namespace Trinity\Bundle\LoggerBundle\Tests\Services;
 
 use PHPUnit\Framework\TestCase;
