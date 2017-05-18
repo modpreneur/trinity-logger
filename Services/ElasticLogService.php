@@ -92,7 +92,7 @@ class ElasticLogService
      *
      * @param string $typeName //log name
      * @param $entity //entity
-     * @param int $ttl
+     * @param string $ttl
      *
      * @return int //ID of the logged
      */
