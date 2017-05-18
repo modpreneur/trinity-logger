@@ -18,17 +18,14 @@ class BaseElasticLog
 {
     /** change when class name and log name are different */
     const LOG_NAME = self::class;
-    /**
-     * @var string
-     */
+
+    /** @var string $id*/
     protected $id;
-    /**
-     * @var int
-     */
+
+    /** @var int $createdAt*/
     protected $createdAt;
-    /**
-     * @var int
-     */
+
+    /** @var int|null $ttl*/
     protected $ttl;
 
 
@@ -72,9 +69,9 @@ class BaseElasticLog
 
 
     /**
-     * @return int
+     * @return int|null
      */
-    public function getTtl(): int
+    public function getTtl(): ?int
     {
         return $this->ttl;
     }

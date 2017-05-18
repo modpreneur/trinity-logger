@@ -12,33 +12,27 @@ use Trinity\Component\Core\Interfaces\UserInterface;
  */
 class EntityActionLog extends BaseElasticLog implements EntityInterface
 {
-    /**
-     * @var UserInterface admin
-     */
+    /** @var UserInterface admin */
     private $user;
-    /**
-     * @var string
-     */
+
+    /** @var string */
     private $system;
-    /**
-     * @var string entity+namespace
-     */
+
+    /** @var string entity+namespace */
     private $changedEntityClass;
-    /**
-     * @var string JSON entity
-     */
+
+    /** @var string|null JSON entity */
     private $changedEntity;
-    /**
-     * @var int id
-     */
+
+    /** @var int|null id */
     private $changedEntityId;
-    /**
-     * @var string Created|Updated|Deleted
-     */
+
+    /** @var string Created|Updated|Deleted */
     private $actionType;
+
     /**
      * @var array|string
-     *             Analyzed by elasticSearch
+     * Analyzed by elasticSearch
      */
     private $changeSet;
 
@@ -98,9 +92,9 @@ class EntityActionLog extends BaseElasticLog implements EntityInterface
 
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getChangedEntity(): string
+    public function getChangedEntity(): ?string
     {
         return $this->changedEntity;
     }
@@ -116,9 +110,9 @@ class EntityActionLog extends BaseElasticLog implements EntityInterface
 
 
     /**
-     * @return int
+     * @return int|null
      */
-    public function getChangedEntityId(): int
+    public function getChangedEntityId(): ?int
     {
         return $this->changedEntityId;
     }
