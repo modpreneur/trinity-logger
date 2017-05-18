@@ -96,7 +96,7 @@ class ElasticLogService
      *
      * @return int //ID of the logged
      */
-    public function writeIntoAsync(string $typeName, $entity, int $ttl = 0): int
+    public function writeIntoAsync(string $typeName, $entity, int $ttl = 0): string
     {
         /*
          * Transform entity into array. Elastic can do it for you, but result is not in your hands.
