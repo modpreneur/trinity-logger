@@ -17,35 +17,30 @@ use Trinity\Component\Core\Interfaces\UserInterface;
 class ExceptionLog extends BaseElasticLog implements EntityInterface
 {
     const NAME = 'ExceptionLog';
-    /**
-     * @var string Analyzed by elasticSearch
-     */
+
+    /** @var string Analyzed by elasticSearch */
     private $log;
-    /**
-     * @var string Analyzed by elasticSearch
-     */
+
+    /** @var string Analyzed by elasticSearch */
+
     private $readable;
-    /**
-     * @var string Analyzed by elasticSearch
-     */
+    /** @var string Analyzed by elasticSearch */
+
     private $serverData;
-    /**
-     * @var int This is mono-log exception level used in mono-log bundle, not http response!
-     */
+
+    /** @var int This is mono-log exception level used in mono-log bundle, not http response! */
     private $level;
-    /**
-     * @var string
-     */
+
+    /** @var string */
     private $url;
-    /**
-     * @var string
-     */
+
+    /** @var string */
     private $ip;
+
     /** @var  string */
     private $system;
-    /**
-     * @var UserInterface
-     */
+
+    /** @var UserInterface|null */
     private $user;
 
 
@@ -182,9 +177,9 @@ class ExceptionLog extends BaseElasticLog implements EntityInterface
 
 
     /**
-     * @return UserInterface
+     * @return UserInterface|null
      */
-    public function getUser(): UserInterface
+    public function getUser(): ?UserInterface
     {
         return $this->user;
     }
