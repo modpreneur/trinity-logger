@@ -117,7 +117,7 @@ class ElasticLogService
 
         $response = $this->ESClient->index($params);
 
-        return $response['_id'];
+        return strval($response['_id']);
     }
 
 
