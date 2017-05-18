@@ -53,11 +53,13 @@ class ElasticLogServiceWithTtl
      * @param $typeName //log name
      * @param EntityInterface $entity //entity
      *
-     * @return int //ID of the logged
+     * @return string //ID of the logged
      */
-    public function writeIntoAsync(string $typeName, $entity): int
+    public function writeIntoAsync(string $typeName, $entity): string
     {
-        return $this->elasticLogger->writeIntoAsync($typeName, $entity, $this->ttlProvider->getTtlForType($typeName));
+        return $this
+            ->elasticLogger
+            ->writeIntoAsync($typeName, $entity, $this->ttlProvider->getTtlForType($typeName));
     }
 
 
