@@ -16,7 +16,7 @@ interface UserProviderInterface
      *
      * @param int $userId
      *
-     * @return \Trinity\Component\Core\Interfaces\UserInterface
+     * @return UserInterface
      */
     public function getUserById(int $userId): UserInterface;
 }
