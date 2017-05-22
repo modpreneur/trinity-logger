@@ -22,10 +22,9 @@ class ExceptionLog extends BaseElasticLog implements EntityInterface
     private $log;
 
     /** @var string Analyzed by elasticSearch */
-
     private $readable;
-    /** @var string Analyzed by elasticSearch */
 
+    /** @var string Analyzed by elasticSearch */
     private $serverData;
 
     /** @var int This is mono-log exception level used in mono-log bundle, not http response! */
@@ -34,7 +33,7 @@ class ExceptionLog extends BaseElasticLog implements EntityInterface
     /** @var string | null */
     private $url;
 
-    /** @var string */
+    /** @var string | null */
     private $ip;
 
     /** @var  string */
@@ -159,9 +158,9 @@ class ExceptionLog extends BaseElasticLog implements EntityInterface
 
 
     /**
-     * @return string
+     * @return string | null
      */
-    public function getIp(): string
+    public function getIp(): ?string
     {
         return $this->ip;
     }
