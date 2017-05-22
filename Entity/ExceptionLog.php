@@ -31,7 +31,7 @@ class ExceptionLog extends BaseElasticLog implements EntityInterface
     /** @var int This is mono-log exception level used in mono-log bundle, not http response! */
     private $level;
 
-    /** @var string */
+    /** @var string | null */
     private $url;
 
     /** @var string */
@@ -141,9 +141,9 @@ class ExceptionLog extends BaseElasticLog implements EntityInterface
 
 
     /**
-     * @return string
+     * @return string | null
      */
-    public function getUrl(): string
+    public function getUrl(): ?string
     {
         return $this->url;
     }
