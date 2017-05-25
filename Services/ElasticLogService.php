@@ -122,6 +122,14 @@ class ElasticLogService
 
 
     /**
+     * Should flush the async queue.
+     */
+    public function flush()
+    {
+        $this->ESClient->indices()->refresh(['index' => $this->index]);
+    }
+
+    /**
      * If the ttl is not set default mapping in elastic is used (if exist).
      * The type(log) has to have enabled ttl in its mapping.
      *
