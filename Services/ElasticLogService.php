@@ -101,9 +101,7 @@ class ElasticLogService
         /*
          * Transform entity into array. Elastic can do it for you, but result is not in your hands.
          */
-
         $entityArray = $this->getElasticArray($entity);
-
         $params = [
             'index' => $this->index,
             'type' => $typeName,

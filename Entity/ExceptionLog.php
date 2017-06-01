@@ -16,7 +16,12 @@ use Trinity\Component\Core\Interfaces\UserInterface;
  */
 class ExceptionLog extends BaseElasticLog implements EntityInterface
 {
+    /**
+     * @deprecated use LOG_NAME instead. Will be removed soon.
+     */
     const NAME = 'ExceptionLog';
+
+    const LOG_NAME = 'ExceptionLog';
 
     /** @var string Analyzed by elasticSearch */
     private $log;
