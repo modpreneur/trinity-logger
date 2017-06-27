@@ -12,6 +12,7 @@ namespace Trinity\Bundle\LoggerBundle\Services;
 
 use Elasticsearch\Client;
 use Elasticsearch\ClientBuilder;
+use Trinity\Bundle\LoggerBundle\Entity\BaseElasticLog;
 
 /**
  * Class ElasticLogService.
@@ -94,9 +95,9 @@ class ElasticLogService
      * @param $entity //entity
      * @param int $ttl
      *
-     * @return string //ID of the logged
+     * @return void
      */
-    public function writeIntoAsync(string $typeName, $entity, int $ttl = 0): string
+    public function writeIntoAsync(string $typeName, $entity, int $ttl = 0): void
     {
         /*
          * Transform entity into array. Elastic can do it for you, but result is not in your hands.
@@ -113,9 +114,8 @@ class ElasticLogService
             $params['ttl'] = "{$ttl}d";
         }
 
-        $response = $this->ESClient->index($params);
-
-        return strval($response['_id']);
+        $this->ESClient->index($params);
+        //does not return anything to full use the lazy(async) feature
     }
 
 
@@ -158,6 +158,10 @@ class ElasticLogService
         $response = $this->ESClient->index($params);
 
         $this->ESClient->indices()->refresh(['index' => $this->index]);
+
+        if ($entity instanceof BaseElasticLog) {
+            $entity->setId($response['_id']);
+        }
 
         return $response['_id'];
     }

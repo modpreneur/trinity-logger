@@ -40,6 +40,19 @@ class BaseElasticLog
         $this->createdAt = \time();
     }
 
+    /**
+     * @internal DO NOT use this to set the id before the entity is stored. The id will be ignored.
+     * The setter is used ONLY INTERNALLY.
+     * It is used for your convenience to set the id to the entity after it is persisted.
+     *
+     *
+     * @param string|null $id
+     */
+    public function setId(?string $id)
+    {
+        $this->id = $id;
+    }
+
 
     /**
      * @return string

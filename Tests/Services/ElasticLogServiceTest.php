@@ -101,8 +101,10 @@ class ElasticLogServiceTest extends TestCase
         $entity = new EntityActionLog();
         $entity->setUser($userInterface);
 
-        static::assertEquals(2, $els->writeIntoAsync('testTypeName', $entity, 4));
-        static::assertEquals('3', $els->writeInto('testTypeName', $entity, 4));
+        $els->writeIntoAsync('testTypeName', $entity, 4);
+
+        $els->writeInto('testTypeName', $entity, 4);
+        static::assertEquals('3', $entity->getId());
 
         $els->update('tesTypeName', '1', $types, $values, 4);
 
