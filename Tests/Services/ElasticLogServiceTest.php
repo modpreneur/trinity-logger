@@ -93,7 +93,7 @@ class ElasticLogServiceTest extends TestCase
                 static::returnValue($esclient)
             );
 
-        $els = new ElasticLogService('111.222.33.4:9200', 'necktie', 50, $clientBuilder);
+        $els = new ElasticLogService('111.222.33.4:9200', 'necktie', true, 50, $clientBuilder);
 
         /** @var UserInterface|Mock $userInterface */
         $userInterface = $this->getMockBuilder(UserInterface::class)->disableOriginalConstructor()->getMock();
@@ -117,7 +117,7 @@ class ElasticLogServiceTest extends TestCase
             )
         );
 
-        $els = new ElasticLogService('111.222.33.4:9200', 'necktie');
+        $els = new ElasticLogService('111.222.33.4:9200', 'necktie', true);
 
         static::assertInstanceOf(ElasticLogService::class, $els->setIndex('test'));
     }

@@ -60,6 +60,8 @@ class ConfigurationTest extends TestCase
                 );
             }
         }
+
+        static::assertFalse($configs[0]['use_async']);
     }
 
 
@@ -79,6 +81,7 @@ class ConfigurationTest extends TestCase
                         ],
                         'logger_user_provider' => '@test1',
                         'logger_ttl_provider' => '@test2',
+                        'use_async' => false
                     ]
                 ]
             ],
@@ -86,6 +89,7 @@ class ConfigurationTest extends TestCase
                 [
                     [
                         'logger_user_provider' => '@test3',
+                        'use_async' => false
                     ]
                 ]
             ],
@@ -97,6 +101,7 @@ class ConfigurationTest extends TestCase
                         ],
                         'logger_user_provider' => '@test1',
                         'logger_ttl_provider' => '@test2',
+                        'use_async' => false
                     ]
                 ]
             ]

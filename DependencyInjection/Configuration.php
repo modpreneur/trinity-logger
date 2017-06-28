@@ -29,7 +29,8 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->children()
-                ->arrayNode('elastic_logs')
+            ->scalarNode('use_async')->defaultValue(true)->end()
+            ->arrayNode('elastic_logs')
                     ->children()
                         ->scalarNode('elastic_host')->isRequired()->cannotBeEmpty()->end()
                         ->scalarNode('managed_index')->cannotBeEmpty()->end()

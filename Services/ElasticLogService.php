@@ -37,19 +37,26 @@ class ElasticLogService
      */
     protected $proxyFlag = 'Proxies\\__CG__\\';
 
+    /** @var bool */
+    protected $useAsync;
 
     /**
      * ElasticLogService constructor.
      *
      * @param string $clientHost IP:port, default port is 9200
      * @param string $index name of DB
-     * @param $asyncQueLength
+     * @param bool $useAsync
+     * @param int $asyncQueLength
      * @param ClientBuilder $clientBuilder
-     *
-     * @throws \RuntimeException
      */
-    public function __construct(string $clientHost, $index, $asyncQueLength = 50, ClientBuilder $clientBuilder = null)
-    {
+    public function __construct(
+        string $clientHost,
+        $index,
+        bool $useAsync,
+        $asyncQueLength = 50,
+        ClientBuilder $clientBuilder = null
+    ) {
+        $this->useAsync = $useAsync;
         $this->index = $index ?: 'necktie';
 
         $params = \explode(':', $clientHost);
@@ -99,6 +106,12 @@ class ElasticLogService
      */
     public function writeIntoAsync(string $typeName, $entity, int $ttl = 0): void
     {
+        if (!$this->useAsync) {
+            $this->writeInto($typeName, $entity, $ttl);
+            return;
+        }
+
+
         /*
          * Transform entity into array. Elastic can do it for you, but result is not in your hands.
          */
