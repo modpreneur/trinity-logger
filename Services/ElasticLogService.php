@@ -31,7 +31,7 @@ class ElasticLogService
     /**
      * @var string index
      */
-    private $index = 'necktie';
+    private $index;
     /**
      * @var string
      */
@@ -48,6 +48,7 @@ class ElasticLogService
      * @param bool $useAsync
      * @param int $asyncQueLength
      * @param ClientBuilder $clientBuilder
+     * @throws \RuntimeException
      */
     public function __construct(
         string $clientHost,
@@ -135,7 +136,7 @@ class ElasticLogService
     /**
      * Should flush the async queue.
      */
-    public function flush()
+    public function flush(): void
     {
         $this->ESClient->indices()->refresh(['index' => $this->index]);
     }
