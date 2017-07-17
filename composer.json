@@ -18,7 +18,7 @@
     "symfony/monolog-bundle": "~2.8 | ~3.0",
     "symfony/security-core": "~2.8|~3.0",
     "doctrine/orm": "~2.5",
-    "elasticsearch/elasticsearch": "~2.0",
+    "elasticsearch/elasticsearch": "~5.0",
     "trinity/search": "dev-master",
     "trinity/utils": "dev-master",
     "trinity/core-interfaces": "dev-master"
