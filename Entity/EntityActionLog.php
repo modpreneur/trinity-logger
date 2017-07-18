@@ -205,6 +205,6 @@ class EntityActionLog extends BaseElasticLog implements EntityInterface
      */
     public static function getDefaultTtl(): int
     {
-        // TODO: Implement getDefaultTtl() method.
+        return self::DEFAULT_TTL;
     }
 }
