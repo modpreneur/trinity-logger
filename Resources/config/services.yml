@@ -64,6 +64,7 @@ services:
 
     trinity.logger.elastic_entity_processor:
         class: Trinity\Bundle\LoggerBundle\Services\ElasticEntityProcessor
-            - '@?doctrine.orm.default_entity_manager'
+        arguments:
+            - "@?doctrine.orm.default_entity_manager"
 
 
