@@ -5,8 +5,8 @@ services:
         arguments:
             - "@trinity.logger.elastic_entity_processor"
             - "%trinity.logger.elastic_host%"
-            - "%kernel.environment%"
             - "%trinity.logger.use_async%"
+            - "%kernel.environment%"
             - "%trinity.logger.async_queue_length%"
 
     trinity.logger.elastic_log_service_with_ttl:

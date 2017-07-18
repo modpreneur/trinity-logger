@@ -71,7 +71,7 @@ class ElasticMappingCommand extends ContainerAwareCommand
 
             $index = '_all';
             if ($input->getOption('test-only')) {
-                $index = 'test_*';
+                $index = 'test*';
             }
 
             $client = new Client();

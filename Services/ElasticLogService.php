@@ -149,9 +149,9 @@ class ElasticLogService
             'body' => $entityArray,
         ];
 
-        if ($ttl) {
-            $params['ttl'] = "{$ttl}d";
-        }
+//        if ($ttl) {
+//            $params['ttl'] = "{$ttl}d";
+//        }
 
         $response = $this->ESClient->index($params);
 
@@ -213,7 +213,7 @@ class ElasticLogService
     private function getIndex(): string
     {
         $time = new \DateTime();
-        $format = $time->format('YYYY-MM-DD');
+        $format = $time->format('Y-m-d');
         if ($this->environment === 'test') {
             return 'test-'. $format;
         }
