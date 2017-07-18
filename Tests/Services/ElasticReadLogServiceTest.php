@@ -8,11 +8,13 @@ use Doctrine\ORM\EntityManager;
 use Elasticsearch\Client;
 use Elasticsearch\ClientBuilder;
 use Elasticsearch\Namespaces\IndicesNamespace;
-use PHPUnit\Framework\TestCase;
 use PHPUnit_Framework_MockObject_MockObject as Mock;
 use Trinity\Bundle\LoggerBundle\Entity\EntityActionLog;
+use Trinity\Bundle\LoggerBundle\Services\ElasticEntityProcessor;
 use Trinity\Bundle\LoggerBundle\Services\ElasticReadLogService;
 use Elasticsearch\Common\Exceptions\Missing404Exception as NFException;
+use Trinity\Bundle\LoggerBundle\Tests\Entity\MockUser;
+use Trinity\Bundle\LoggerBundle\Tests\UnitTestBase;
 use Trinity\Bundle\SearchBundle\NQL\Column;
 use Trinity\Bundle\SearchBundle\NQL\From;
 use Trinity\Bundle\SearchBundle\NQL\NQLQuery;
@@ -27,7 +29,7 @@ use Trinity\Bundle\SearchBundle\NQL\WherePart;
  * Class ElasticLogServiceTest
  * @package Trinity\Bundle\LoggerBundle\Tests\Services
  */
-class ElasticReadLogServiceTest extends TestCase
+class ElasticReadLogServiceTest extends UnitTestBase
 {
     public function testGetById(): void
     {
@@ -137,13 +139,14 @@ class ElasticReadLogServiceTest extends TestCase
             '_ttl' => 50,
             '_source' => [
                 'ttl' => 76,
-                'EntitiesToDecode' => [
+                ElasticEntityProcessor::METADATA_DATETIME_FIELDS => [],
+                ElasticEntityProcessor::METADATA_ENTITIES_TO_DECODE_FIELDS => [
                   //  'System',
                     'ChangedEntityId',
                 ],
-                'SourceEntityClass' => $entity,
-               // 'System' => 'Trinity\Bundle\LoggerBundle\Entity\EntityActionLog',
-                'ChangedEntityId' => 'Trinity\Bundle\LoggerBundle\Entity\EntityActionLog'
+                ElasticEntityProcessor::METADATA_SOURCE_ENTITY_CLASS_FIELD => $entity,
+               // 'System' => EntityActionLog::class,
+                'ChangedEntityId' => EntityActionLog::class
             ]
         ];
 
@@ -170,13 +173,14 @@ class ElasticReadLogServiceTest extends TestCase
                     'first' => [
                         '_source' => [
                             'ttl' => 76,
-                            'EntitiesToDecode' => [
+                            ElasticEntityProcessor::METADATA_DATETIME_FIELDS => [],
+                            ElasticEntityProcessor::METADATA_ENTITIES_TO_DECODE_FIELDS => [
                                 //'System',
                                 'ChangedEntityId'
                             ],
-                            'SourceEntityClass' => $entity,
-                           // 'System' => 'Trinity\Bundle\LoggerBundle\Entity\EntityActionLog',
-                            'ChangedEntityId' => 'Trinity\Bundle\LoggerBundle\Entity\EntityActionLog',
+                            ElasticEntityProcessor::METADATA_SOURCE_ENTITY_CLASS_FIELD => $entity,
+                           // 'System' => EntityActionLog::class,
+                            'ChangedEntityId' => EntityActionLog::class,
 
                         ],
                         '_ttl' => 34,
@@ -219,15 +223,14 @@ class ElasticReadLogServiceTest extends TestCase
                 static::returnValue($client)
             );
 
-        $elasticReadLogServiceNoBuilder = new ElasticReadLogService(
-            '111.222.33.4:9200',
-            $entityManager,
-            'necktie'
-        );
-
-        static::assertInstanceOf(ElasticReadLogService::class, $elasticReadLogServiceNoBuilder);
+        $processor = $this->getMockBuilder(ElasticEntityProcessor::class)->getMock();
+        $processor
+            ->expects($this->exactly(5))
+            ->method('decodeArrayFormat')
+            ->willReturn(new EntityActionLog());
 
         $elasticReadLogService = new ElasticReadLogService(
+            $processor,
             '111.222.33.4:9200',
             $entityManager,
             'necktie',
@@ -316,7 +319,10 @@ class ElasticReadLogServiceTest extends TestCase
                 static::returnValue($client)
             );
 
+        $processor = $this->getMockBuilder(ElasticEntityProcessor::class)->getMock();
+
         $elasticReadLogServiceNoBuilder = new ElasticReadLogService(
+            $processor,
             '111.222.33.4:9200',
             $entityManager,
             'necktie'
@@ -325,6 +331,7 @@ class ElasticReadLogServiceTest extends TestCase
         static::assertInstanceOf(ElasticReadLogService::class, $elasticReadLogServiceNoBuilder);
 
         $elasticReadLogService = new ElasticReadLogService(
+            $processor,
             '111.222.33.4:9200',
             $entityManager,
             'necktie',
@@ -358,7 +365,10 @@ class ElasticReadLogServiceTest extends TestCase
             'key2' => 'value2'
         ];
 
+        $processor = $this->getMockBuilder(ElasticEntityProcessor::class)->getMock();
+
         $elasticReadLogService = new ElasticReadLogService(
+            $processor,
             '111.222.33.4:9200',
             $entityManager,
             'necktie',
@@ -393,13 +403,13 @@ class ElasticReadLogServiceTest extends TestCase
             '_ttl' => 50,
             '_source' => [
                 'ttl' => 76,
-                'EntitiesToDecode' => [
+                ElasticEntityProcessor::METADATA_ENTITIES_TO_DECODE_FIELDS => [
                     'System',
                     'ChangedEntityId'
                 ],
-                'SourceEntityClass' => $entity,
-                'System' => 'Trinity\Bundle\LoggerBundle\Entity\EntityActionLog',
-                'ChangedEntityId' => 'Trinity\Bundle\LoggerBundle\Entity\EntityActionLog',
+                ElasticEntityProcessor::METADATA_SOURCE_ENTITY_CLASS_FIELD => $entity,
+                'System' => EntityActionLog::class,
+                'ChangedEntityId' => EntityActionLog::class,
             ]
         ];
         $client->expects(static::any())
@@ -425,11 +435,12 @@ class ElasticReadLogServiceTest extends TestCase
                     'first' => [
                         '_source' => [
                             'ttl' => 76,
-                            'EntitiesToDecode' => [
+                            ElasticEntityProcessor::METADATA_DATETIME_FIELDS => [],
+                            ElasticEntityProcessor::METADATA_ENTITIES_TO_DECODE_FIELDS => [
                                 'ChangedEntityId'
                             ],
-                            'SourceEntityClass' => $entity,
-                            'ChangedEntityId' => 'Trinity\Bundle\LoggerBundle\Entity\EntityActionLog'
+                            ElasticEntityProcessor::METADATA_SOURCE_ENTITY_CLASS_FIELD => $entity,
+                            'ChangedEntityId' => EntityActionLog::class
                         ],
                         '_ttl' => 34,
                         '_id' => '',
@@ -445,11 +456,11 @@ class ElasticReadLogServiceTest extends TestCase
                     'first' => [
                         '_source' => [
                             'ttl' => 76,
-                            'EntitiesToDecode' => [
+                            ElasticEntityProcessor::METADATA_ENTITIES_TO_DECODE_FIELDS => [
                                 'ChangedEntityId'
                             ],
-                            'SourceEntityClass' => $entity,
-                            'ChangedEntityId' => 'Trinity\Bundle\LoggerBundle\Entity\EntityActionLog'
+                            ElasticEntityProcessor::METADATA_SOURCE_ENTITY_CLASS_FIELD => $entity,
+                            'ChangedEntityId' => EntityActionLog::class
                         ],
                         '_ttl' => 34,
                         '_id' => '',
@@ -496,7 +507,10 @@ class ElasticReadLogServiceTest extends TestCase
                 static::returnValue($client)
             );
 
+        $processor = $this->getMockBuilder(ElasticEntityProcessor::class)->getMock();
+
         $elasticReadLogService = new ElasticReadLogService(
+            $processor,
             '111.222.33.4:9200',
             $entityManager,
             'necktie',
@@ -512,6 +526,11 @@ class ElasticReadLogServiceTest extends TestCase
             'select1',
             'select2'
         ];
+
+        $processor
+            ->expects($this->exactly(1))
+            ->method('decodeArrayFormat')
+            ->willReturn(new EntityActionLog());
 
         static::assertInstanceOf(
             EntityActionLog::class,
@@ -549,13 +568,13 @@ class ElasticReadLogServiceTest extends TestCase
             '_ttl' => 50,
             '_source' => [
                 'ttl' => 76,
-                'EntitiesToDecode' => [
+                ElasticEntityProcessor::METADATA_ENTITIES_TO_DECODE_FIELDS => [
                     'System',
                     'ChangedEntityId'
                 ],
-                'SourceEntityClass' => $entity,
-                'System' => 'Trinity\Bundle\LoggerBundle\Entity\EntityActionLog',
-                'ChangedEntityId' => 'Trinity\Bundle\LoggerBundle\Entity\EntityActionLog',
+                ElasticEntityProcessor::METADATA_SOURCE_ENTITY_CLASS_FIELD => $entity,
+                'System' => EntityActionLog::class,
+                'ChangedEntityId' => EntityActionLog::class,
             ]
         ];
         $client->expects(static::any())
@@ -605,7 +624,10 @@ class ElasticReadLogServiceTest extends TestCase
                 static::returnValue($client)
             );
 
+        $processor = $this->getMockBuilder(ElasticEntityProcessor::class)->getMock();
+
         $elasticReadLogService = new ElasticReadLogService(
+            $processor,
             '111.222.33.4:9200',
             $entityManager,
             'necktie',
@@ -773,13 +795,13 @@ class ElasticReadLogServiceTest extends TestCase
             '_ttl' => 50,
             '_source' => [
                 'ttl' => 76,
-                'EntitiesToDecode' => [
+                ElasticEntityProcessor::METADATA_ENTITIES_TO_DECODE_FIELDS => [
                     'System',
                     'ChangedEntityId'
                 ],
-                'SourceEntityClass' => $entity,
-                'System' => 'Trinity\Bundle\LoggerBundle\Entity\EntityActionLog',
-                'ChangedEntityId' => 'Trinity\Bundle\LoggerBundle\Entity\EntityActionLog',
+                ElasticEntityProcessor::METADATA_SOURCE_ENTITY_CLASS_FIELD => $entity,
+                'System' => EntityActionLog::class,
+                'ChangedEntityId' => EntityActionLog::class,
             ]
         ];
 
@@ -806,13 +828,13 @@ class ElasticReadLogServiceTest extends TestCase
                     'first' => [
                         '_source' => [
                             'ttl' => 76,
-                            'EntitiesToDecode' => [
+                            ElasticEntityProcessor::METADATA_ENTITIES_TO_DECODE_FIELDS => [
                                 'System',
                                 'ChangedEntityId'
                             ],
-                            'SourceEntityClass' => $entity,
-                            'System' => 'Trinity\Bundle\LoggerBundle\Entity\EntityActionLog',
-                            'ChangedEntityId' => 'Trinity\Bundle\LoggerBundle\Entity\EntityActionLog',
+                            ElasticEntityProcessor::METADATA_SOURCE_ENTITY_CLASS_FIELD => $entity,
+                            'System' => EntityActionLog::class,
+                            'ChangedEntityId' => EntityActionLog::class,
                         ],
                         '_ttl' => 34,
                         '_score' => 34,
@@ -853,8 +875,10 @@ class ElasticReadLogServiceTest extends TestCase
                 static::returnValue($client)
             );
 
+        $processor = $this->getMockBuilder(ElasticEntityProcessor::class)->getMock();
 
         $elasticReadLogService = new ElasticReadLogService(
+            $processor,
             '111.222.33.4:9200',
             $entityManager,
             'necktie',
@@ -892,13 +916,13 @@ class ElasticReadLogServiceTest extends TestCase
             '_ttl' => 50,
             '_source' => [
                 'ttl' => 76,
-                'EntitiesToDecode' => [
+                ElasticEntityProcessor::METADATA_ENTITIES_TO_DECODE_FIELDS => [
                     'System',
                     'ChangedEntityId'
                 ],
-                'SourceEntityClass' => $entity,
-                'System' => 'Trinity\Bundle\LoggerBundle\Entity\EntityActionLog',
-                'ChangedEntityId' => 'Trinity\Bundle\LoggerBundle\Entity\EntityActionLog',
+                ElasticEntityProcessor::METADATA_SOURCE_ENTITY_CLASS_FIELD => $entity,
+                'System' => EntityActionLog::class,
+                'ChangedEntityId' => EntityActionLog::class,
             ]
         ];
 
@@ -921,14 +945,14 @@ class ElasticReadLogServiceTest extends TestCase
                         '_source' => [
                             'changeSet' => '{"info":1,"b":2,"c":3,"d":4,"e":5}',
                             'ttl' => 76,
-                            'EntitiesToDecode' => [
+                            ElasticEntityProcessor::METADATA_ENTITIES_TO_DECODE_FIELDS => [
                                 'System',
                                 'ChangedEntityId'
                             ],
-                            'SourceEntityClass' => $entity,
-                            'System' => 'Trinity\Bundle\LoggerBundle\Entity\EntityActionLog',
-                            'ChangedEntityId' => 'Trinity\Bundle\LoggerBundle\Entity\EntityActionLog',
-                            'user' => 'Trinity\Bundle\LoggerBundle\Tests\Entity\MockUser',
+                            ElasticEntityProcessor::METADATA_SOURCE_ENTITY_CLASS_FIELD => $entity,
+                            'System' => EntityActionLog::class,
+                            'ChangedEntityId' => EntityActionLog::class,
+                            'user' => MockUser::class,
                         ],
                         '_ttl' => 34,
                         '_id' => 'test',
@@ -945,14 +969,14 @@ class ElasticReadLogServiceTest extends TestCase
                         '_source' => [
                             'changeSet' => '{"info":1,"b":2,"c":3,"d":4,"e":5}',
                             'ttl' => 76,
-                            'EntitiesToDecode' => [
+                            ElasticEntityProcessor::METADATA_ENTITIES_TO_DECODE_FIELDS => [
                                 'System',
                                 'ChangedEntityId'
                             ],
-                            'SourceEntityClass' => $entity,
-                            'System' => 'Trinity\Bundle\LoggerBundle\Entity\EntityActionLog',
-                            'ChangedEntityId' => 'Trinity\Bundle\LoggerBundle\Entity\EntityActionLog',
-                            'user' => 'Trinity\Bundle\LoggerBundle\Tests\Entity\MockUser',
+                            ElasticEntityProcessor::METADATA_SOURCE_ENTITY_CLASS_FIELD => $entity,
+                            'System' => EntityActionLog::class,
+                            'ChangedEntityId' => EntityActionLog::class,
+                            'user' => MockUser::class,
                         ],
                         '_ttl' => 34,
                         '_id' => 'test',
@@ -1021,7 +1045,10 @@ class ElasticReadLogServiceTest extends TestCase
                 static::returnValue($client)
             );
 
+        $processor = $this->getMockBuilder(ElasticEntityProcessor::class)->getMock();
+
         $elasticReadLogService = new ElasticReadLogService(
+            $processor,
             '111.222.33.4:9200',
             $entityManager,
             'necktie',
@@ -1035,24 +1062,5 @@ class ElasticReadLogServiceTest extends TestCase
         static::assertEquals(76, $elasticReadLogService->getStatusByEntity($entity)[0]['ttl']);
 
         static::assertEmpty($elasticReadLogService->getStatusByEntity($entity));
-    }
-
-
-    /**
-     * Call protected/private method of a class.
-     *
-     * @param object &$object Instantiated object that we will run method on.
-     * @param string $methodName Method name to call
-     * @param array $parameters Array of parameters to pass into method.
-     *
-     * @return mixed Method return.
-     */
-    public function invokeMethod(&$object, $methodName, array $parameters = [])
-    {
-        $reflection = new \ReflectionClass(get_class($object));
-        $method = $reflection->getMethod($methodName);
-        $method->setAccessible(true);
-
-        return $method->invokeArgs($object, $parameters);
     }
 }

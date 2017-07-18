@@ -6,34 +6,26 @@ namespace Trinity\Bundle\LoggerBundle\Tests\Services;
 
 use Elasticsearch\Client;
 use Elasticsearch\ClientBuilder;
-use PHPUnit\Framework\TestCase;
 use PHPUnit_Framework_MockObject_MockObject as Mock;
 use Trinity\Bundle\LoggerBundle\Entity\EntityActionLog;
+use Trinity\Bundle\LoggerBundle\Services\ElasticEntityProcessor;
 use Trinity\Bundle\LoggerBundle\Services\ElasticLogService;
 use Elasticsearch\Namespaces\IndicesNamespace;
+use Trinity\Bundle\LoggerBundle\Tests\UnitTestBase;
 use Trinity\Component\Core\Interfaces\UserInterface;
 
 /**
  * Class ElasticLogServiceTest
  * @package Trinity\Bundle\LoggerBundle\Tests\Services
  */
-class ElasticLogServiceTest extends TestCase
+class ElasticLogServiceTest extends UnitTestBase
 {
-    /** @var string */
-    protected $logName = 'logName';
-    /** @var int */
-    protected $ttl = 0;
-    /** @var null */
-    protected $object = null;
-    public $handlerParams = [
-        'max_handles' => 50
-    ];
-
-
     public function testConstruct(): void
     {
         $types = ['green', 'red', 'yellow'];
         $values = ['avocado', 'apple', 'banana'];
+
+        $processor = $this->getMockBuilder(ElasticEntityProcessor::class)->getMock();
 
         /** @var ClientBuilder|Mock $clientBuilder */
         $clientBuilder = $this->getMockBuilder(ClientBuilder::class)
@@ -93,7 +85,7 @@ class ElasticLogServiceTest extends TestCase
                 static::returnValue($esclient)
             );
 
-        $els = new ElasticLogService('111.222.33.4:9200', 'necktie', true, 50, $clientBuilder);
+        $els = new ElasticLogService($processor, '111.222.33.4:9200', 'necktie', true, 50, $clientBuilder);
 
         /** @var UserInterface|Mock $userInterface */
         $userInterface = $this->getMockBuilder(UserInterface::class)->disableOriginalConstructor()->getMock();
@@ -109,35 +101,14 @@ class ElasticLogServiceTest extends TestCase
         $els->update('tesTypeName', '1', $types, $values, 4);
 
         static::assertInstanceOf(ElasticLogService::class, $els->setIndex('test'));
-
-        static::assertTrue(
-            \array_key_exists(
-                'system',
-                $this->invokeMethod($els, 'getElasticArray', [$entity])
-            )
-        );
-
-        $els = new ElasticLogService('111.222.33.4:9200', 'necktie', true);
-
-        static::assertInstanceOf(ElasticLogService::class, $els->setIndex('test'));
     }
 
-
-    /**
-     * Call protected/private method of a class.
-     *
-     * @param object &$object Instantiated object that we will run method on.
-     * @param string $methodName Method name to call
-     * @param array $parameters Array of parameters to pass into method.
-     *
-     * @return mixed Method return.
-     */
-    public function invokeMethod(&$object, $methodName, array $parameters = [])
+    public function testSetIndex()
     {
-        $reflection = new \ReflectionClass(get_class($object));
-        $method = $reflection->getMethod($methodName);
-        $method->setAccessible(true);
+        $processor = $this->getMockBuilder(ElasticEntityProcessor::class)->getMock();
 
-        return $method->invokeArgs($object, $parameters);
+        $els = new ElasticLogService($processor, '111.222.33.4:9200', 'necktie', true);
+
+        static::assertInstanceOf(ElasticLogService::class, $els->setIndex('test'));
     }
 }

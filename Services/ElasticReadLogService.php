@@ -54,6 +54,8 @@ class ElasticReadLogService
      */
     private $query;
 
+    /** @var ElasticEntityProcessor */
+    private $entityProcessor;
 
     /**
      * ElasticReadLogService constructor.
@@ -64,11 +66,13 @@ class ElasticReadLogService
      * @param ClientBuilder|null $clientBuilder
      */
     public function __construct(
+        ElasticEntityProcessor $entityProcessor,
         string $clientHost,
         ?EntityManager $em,
         ?string $index,
         ClientBuilder $clientBuilder = null
     ) {
+        $this->entityProcessor = $entityProcessor;
         $this->em = $em;
         $this->index = $index ?: 'necktie';
 
@@ -109,7 +113,7 @@ class ElasticReadLogService
         if (\array_key_exists('_ttl', $response)) {
             $response['_source']['ttl'] = \intdiv($response['_ttl'], 1000);
         }
-        return $this->decodeArrayFormat($response['_source'], $response['_id']);
+        return $this->entityProcessor->decodeArrayFormat($response['_source'], $response['_id']);
     }
 
 
@@ -191,8 +195,8 @@ class ElasticReadLogService
         $params['body']['sort'] = $order;
 
         if ($select) {
-            $select[] = 'EntitiesToDecode';
-            $select[] = 'SourceEntityClass';
+            $select[] = ElasticEntityProcessor::METADATA_ENTITIES_TO_DECODE_FIELDS;
+            $select[] = ElasticEntityProcessor::METADATA_SOURCE_ENTITY_CLASS_FIELD;
             $params['body']['_source'] = $select;
         }
 
@@ -212,7 +216,7 @@ class ElasticReadLogService
             if (\array_key_exists('_ttl', $arrayEntity)) {
                 $arrayEntity['_source']['ttl'] = \intdiv($arrayEntity['_ttl'], 1000);
             }
-            $entity = $this->decodeArrayFormat($arrayEntity['_source'], $arrayEntity['_id']);
+            $entity = $this->entityProcessor->decodeArrayFormat($arrayEntity['_source'], $arrayEntity['_id']);
             $entities[] = $entity;
         }
 
@@ -279,8 +283,8 @@ class ElasticReadLogService
         }
 
         if ($fields) {
-            $fields[] = 'EntitiesToDecode';
-            $fields[] = 'SourceEntityClass';
+            $fields[] = ElasticEntityProcessor::METADATA_ENTITIES_TO_DECODE_FIELDS;
+            $fields[] = ElasticEntityProcessor::METADATA_SOURCE_ENTITY_CLASS_FIELD;
             $params['body']['_source'] = $fields;
         }
 
@@ -352,7 +356,7 @@ class ElasticReadLogService
             if (\array_key_exists('_ttl', $arrayEntity)) {
                 $arrayEntity['_source']['ttl'] = \intdiv($arrayEntity['_ttl'], 1000);
             }
-            $entity = $this->decodeArrayFormat($arrayEntity['_source'], $arrayEntity['_id']);
+            $entity = $this->entityProcessor->decodeArrayFormat($arrayEntity['_source'], $arrayEntity['_id']);
             $entities[] = $entity;
             if ($totalScore) {
                 $score[] = $arrayEntity['_score'] / $totalScore;
@@ -451,7 +455,7 @@ class ElasticReadLogService
                     throw new \RuntimeException("Unexpected operator: {$condition->operator}");
             }
 
-            $value = $value ?? (\is_int($condition->value) ? $condition->value : $condition->value);
+            $value = $value ?? (\is_int($condition->value) ? (int)$condition->value : $condition->value);
             $this->query['bool'][$key][] = [$term => [$name => $value]];
         }
     }
@@ -485,8 +489,8 @@ class ElasticReadLogService
         $params['body']['sort']['createdAt']['order'] = 'desc';
 
         $class = \get_class($entity);
-        if (\strpos($class, $this->proxyFlag) === 0) {
-            $class = \substr($class, \strlen($this->proxyFlag));
+        if (\strpos($class, ElasticEntityProcessor::DOCTRINE_PROXY_NAMESPACE_PART) === 0) {
+            $class = \substr($class, \strlen(ElasticEntityProcessor::DOCTRINE_PROXY_NAMESPACE_PART));
         }
         $params['body']['query']['bool']['filter'][0]['term']['changedEntityClass.raw'] = $class;
 
@@ -506,7 +510,7 @@ class ElasticReadLogService
         foreach ($result['hits']['hits'] as $arrayEntity) {
             $source = $arrayEntity['_source'];
             $source['_id'] = $arrayEntity['_id'];
-            $source['user'] = $source['user'] ? $this->getEntity($source['user']) : null;
+            $source['user'] = $source['user'] ? $this->entityProcessor->getEntity($source['user']) : null;
             $changeSet = (array)\json_decode($source['changeSet'] ?? '');
             if (\array_key_exists('info', $changeSet)) {
                 $source['changeSet'] = $changeSet;
@@ -537,68 +541,5 @@ class ElasticReadLogService
         }
 
         return $types;
-    }
-
-
-    /**
-     * Transform document from ElasticSearch obtained as array into entity matching
-     * original entity. The relations 1:1 are recreated.     *
-     *
-     * @param array $responseArray
-     * @param string $id
-     *
-     * @return $entity
-     */
-    public function decodeArrayFormat($responseArray, $id = '')
-    {
-        $entity = null;
-        $relatedEntities = $responseArray['EntitiesToDecode'];
-        unset($responseArray['EntitiesToDecode']);
-        $entityClass = $responseArray['SourceEntityClass'];
-        unset($responseArray['SourceEntityClass']);
-
-        $entity = new $entityClass($id);
-
-        foreach ($responseArray as $key => $value) {
-            $setter = "set${key}";
-
-            if (\in_array($key, $relatedEntities, true)) {
-                $value = $this->getEntity($value);
-            }
-
-            if ($value) {
-                $entity->$setter($value);
-            }
-        }
-
-        return $entity;
-    }
-
-
-    /**
-     * Transform reference into doctrine entity
-     *
-     * @param string $identification
-     *
-     * @return mixed $value
-     */
-    private function getEntity(string $identification)
-    {
-        if (null === $this->em) {
-            return null;
-        }
-
-        $subEntity = \explode("\x00", $identification);
-        $value = null;
-
-        if (isset($subEntity[1])) {
-            $value = $this->em->getRepository($subEntity[0])->find($subEntity[1]);
-        }
-
-        if (!$value) {
-            $value = new $subEntity[0]();
-        }
-
-        return $value;
     }
 }

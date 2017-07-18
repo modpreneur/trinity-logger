@@ -19,11 +19,6 @@ use Trinity\Bundle\LoggerBundle\Entity\BaseElasticLog;
  */
 class ElasticLogService
 {
-    /*
-     * In Elastic search is table called type, id is called id and index is something that may be
-     * similar to database. There may be some miss writing as when i write table instead of type..
-     */
-
     /**
      * @var Client;
      */
@@ -32,31 +27,32 @@ class ElasticLogService
      * @var string index
      */
     private $index;
-    /**
-     * @var string
-     */
-    protected $proxyFlag = 'Proxies\\__CG__\\';
 
     /** @var bool */
     protected $useAsync;
 
+    /** @var ElasticEntityProcessor */
+    protected $entityProcessor;
+
     /**
      * ElasticLogService constructor.
      *
+     * @param ElasticEntityProcessor $entityProcessor
      * @param string $clientHost IP:port, default port is 9200
      * @param string $index name of DB
      * @param bool $useAsync
      * @param int $asyncQueLength
      * @param ClientBuilder $clientBuilder
-     * @throws \RuntimeException
      */
     public function __construct(
+        ElasticEntityProcessor $entityProcessor,
         string $clientHost,
         $index,
         bool $useAsync,
         $asyncQueLength = 50,
         ClientBuilder $clientBuilder = null
     ) {
+        $this->entityProcessor = $entityProcessor;
         $this->useAsync = $useAsync;
         $this->index = $index ?: 'necktie';
 
@@ -116,7 +112,7 @@ class ElasticLogService
         /*
          * Transform entity into array. Elastic can do it for you, but result is not in your hands.
          */
-        $entityArray = $this->getElasticArray($entity);
+        $entityArray = $this->entityProcessor->getElasticArray($entity);
         $params = [
             'index' => $this->index,
             'type' => $typeName,
@@ -156,8 +152,7 @@ class ElasticLogService
         /*
          * Transform entity into array. Elastic can do it for you, but result is not in your hands.
          */
-
-        $entityArray = $this->getElasticArray($entity);
+        $entityArray = $this->entityProcessor->getElasticArray($entity);
 
         $params = [
             'index' => $this->index,
@@ -179,73 +174,6 @@ class ElasticLogService
 
         return $response['_id'];
     }
-
-
-    /**
-     * Function transforms entity into array, the array stores type of entity
-     * for recreation when obtain from elastic search and type and id of related
-     * entities (FK) so they can be linked in decoding process.
-     *
-     * Gabi-TODO:Was not tested on M:N , N:1 or 1:N relations !!!
-     * Gabi-TODO-2: it is as simple as it could be. N part is usually mapped, on elastic site should not FK
-     *
-     * @param $entity
-     *
-     * @return array
-     */
-    private function getElasticArray($entity): array
-    {
-        $entityArray['EntitiesToDecode'] = [];
-        $entityArray['SourceEntityClass'] = get_class($entity);
-
-        foreach ((array)$entity as $key => $value) {
-            $keyParts = \explode("\x00", $key);
-            $key = \array_pop($keyParts);
-
-            //ttl is elastic thing, we only need place to store it in entity, not send it
-            if ($key === 'ttl') {
-                continue;
-            }
-
-            /*
-             * Elastic can manage just few objects when passed. Here we preprocess them
-             * so elastic doesn't have problems
-             */
-
-            if (\is_object($value)) {
-                //elastic can work with DateTime, not with ours entities
-                if (\get_class($value) === 'DateTime') {
-                    continue;
-                }
-                if (\get_class($value) === 'Symfony\Component\HttpFoundation\Request') {
-                    $entityArray[$key] = (string)$value;
-                }
-
-                if (\method_exists($value, 'getId')) {
-                    $class = \get_class($value);
-                    if (\strpos($class, $this->proxyFlag) === 0) {
-                        $class = \substr($class, \strlen($this->proxyFlag));
-                    }
-                    $id = $value->getId();
-                    if ($id) {
-                        $entityArray[$key] = "$class\x00$id";
-                        $entityArray['EntitiesToDecode'][] = $key;
-                    } else {
-                        unset($entityArray[$key]);
-                    }
-                }
-            } else {
-                $entityArray[$key] = $value;
-            }
-        }
-
-        if (\array_key_exists('id', $entityArray) && !$entityArray['id']) {
-            unset($entityArray['id']);
-        }
-
-        return $entityArray;
-    }
-
 
     /**
      * @param string $typeName
