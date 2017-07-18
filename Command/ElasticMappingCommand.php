@@ -136,7 +136,6 @@ class ElasticMappingCommand extends ContainerAwareCommand
     /**  */
     private function setStatus(): void
     {
-
         $params = self::$params;
         $params['body'] = ['init' => 'done'];
         $this->eSClient->index($params);

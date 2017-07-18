@@ -6,10 +6,11 @@ MAPPING='
                 "dynamic_templates": [
                     { "notanalyzed": {
                           "match":              "*",
-                          "match_mapping_type": "text",
+                          "match_mapping_type": "string",
                           "mapping": {
-                              "type":        "text",
-                              "fields":       {"raw" : {"type": "keyword", "index":"true"}}
+                              "type":        "keyword",
+                              "index":       "true",
+                              "fields":       {"analyzed" : {"type": "text"}}
                           }
                        }
                     }
