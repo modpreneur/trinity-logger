@@ -1,0 +1,20 @@
+MAPPING='
+        {
+          "template": "*",
+          "mappings": {
+            "_default_": {
+                "dynamic_templates": [
+                    { "notanalyzed": {
+                          "match":              "*",
+                          "match_mapping_type": "text",
+                          "mapping": {
+                              "type":        "text",
+                              "fields":       {"raw" : {"type": "keyword", "index":"true"}}
+                          }
+                       }
+                    }
+                  ]
+               }
+           }
+        }
+        '
