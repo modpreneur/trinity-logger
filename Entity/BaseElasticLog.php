@@ -22,10 +22,6 @@ abstract class BaseElasticLog
     /** @var int $createdAt*/
     protected $createdAt;
 
-    /** @var int|null $ttl*/
-    protected $ttl;
-
-
     /**
      * Return a human readable string containing only characters.
      * For example: ExceptionLog, IpnLog
@@ -90,23 +86,5 @@ abstract class BaseElasticLog
     public function setCreatedAt($createdAt): void
     {
         $this->createdAt = $createdAt;
-    }
-
-
-    /**
-     * @return int|null
-     */
-    public function getTtl(): ?int
-    {
-        return $this->ttl;
-    }
-
-
-    /**
-     * @param int $ttl
-     */
-    public function setTtl($ttl): void
-    {
-        $this->ttl = $ttl;
     }
 }

@@ -41,15 +41,14 @@ class ElasticEntityProcessor
             $keyParts = \explode("\x00", $key);
             $key = \array_pop($keyParts);
 
-            //ttl is elastic thing, we only need place to store it in entity, not send it
-            if ($key === 'ttl') {
-                continue;
-            }
-
             /*
              * Elastic can manage just few objects when passed. Here we preprocess them
              * so elastic doesn't have problems
              */
+
+            if ($key === 'ttl') {
+                continue; //do not seralize ttl as it is not supported since ES5
+            }
 
             if (\is_object($value)) {
                 //elastic can work with DateTime, not with ours entities
@@ -112,6 +111,10 @@ class ElasticEntityProcessor
 
         foreach ($responseArray as $key => $value) {
             $setter = "set${key}";
+
+            if ($key === 'ttl') {
+                continue; //do not decode ttl as it is not supported since ES5
+            }
 
             if (\in_array($key, $relatedEntities, true)) {
                 $value = $this->getEntity($value);
