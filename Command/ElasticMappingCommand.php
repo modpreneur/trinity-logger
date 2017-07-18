@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Necktie\AppBundle\Command;
+namespace Trinity\Bundle\LoggerBundle\Command;
 
 use Elasticsearch\Client as ESClient;
 use Elasticsearch\ClientBuilder;
