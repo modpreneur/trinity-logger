@@ -22,7 +22,7 @@
     "elasticsearch/elasticsearch": "~5.0",
     "trinity/search": "dev-master",
     "trinity/utils": "dev-master",
-    "trinity/core-interfaces": "dev-master"
+    "trinity/core-interfaces": "~1.0"
   },
 
   "require-dev": {
