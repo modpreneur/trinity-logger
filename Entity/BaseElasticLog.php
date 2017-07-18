@@ -14,11 +14,8 @@ namespace Trinity\Bundle\LoggerBundle\Entity;
  * Class BaseElasticLog
  * @package Trinity\LoggerBundle\Entity
  */
-class BaseElasticLog
+abstract class BaseElasticLog
 {
-    /** change when class name and log name are different */
-    const LOG_NAME = self::class;
-
     /** @var string $id*/
     protected $id;
 
@@ -28,6 +25,21 @@ class BaseElasticLog
     /** @var int|null $ttl*/
     protected $ttl;
 
+
+    /**
+     * Return a human readable string containing only characters.
+     * For example: ExceptionLog, IpnLog
+     *
+     * @return string
+     */
+    abstract public static function getLogName(): string;
+
+    /**
+     * Return a default tll in days.
+     *
+     * @return int
+     */
+    abstract public static function getDefaultTtl(): int;
 
     /**
      * BaseElasticLog constructor.

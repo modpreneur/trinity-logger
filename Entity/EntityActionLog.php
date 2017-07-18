@@ -12,6 +12,9 @@ use Trinity\Component\Core\Interfaces\UserInterface;
  */
 class EntityActionLog extends BaseElasticLog implements EntityInterface
 {
+    const LOG_NAME = 'EntityActionLog';
+    const DEFAULT_TTL = 30;
+
     /** @var UserInterface admin */
     private $user;
 
@@ -182,5 +185,26 @@ class EntityActionLog extends BaseElasticLog implements EntityInterface
     public function __toString(): string
     {
         return $this->id;
+    }
+
+    /**
+     * Return a human readable string containing only characters.
+     * For example: ExceptionLog, IpnLog
+     *
+     * @return string
+     */
+    public static function getLogName(): string
+    {
+        return self::LOG_NAME;
+    }
+
+    /**
+     * Return a default tll in days.
+     *
+     * @return int
+     */
+    public static function getDefaultTtl(): int
+    {
+        // TODO: Implement getDefaultTtl() method.
     }
 }

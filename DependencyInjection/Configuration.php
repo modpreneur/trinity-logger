@@ -30,12 +30,13 @@ class Configuration implements ConfigurationInterface
         $rootNode
             ->children()
             ->scalarNode('use_async')->defaultValue(true)->end()
-            ->arrayNode('elastic_logs')
-                    ->children()
-                        ->scalarNode('elastic_host')->isRequired()->cannotBeEmpty()->end()
-                        ->scalarNode('managed_index')->cannotBeEmpty()->end()
-                        ->scalarNode('entities_path')->cannotBeEmpty()->end()
-                        ->scalarNode('async_queue_length')->defaultValue(50)->end()
+            ->scalarNode('elastic_host')->isRequired()->cannotBeEmpty()->end()
+            ->scalarNode('managed_index')->cannotBeEmpty()->end()
+            ->scalarNode('entities_path')->cannotBeEmpty()->end()
+            ->scalarNode('async_queue_length')->defaultValue(50)->end()
+            ->arrayNode('log_classes')->isRequired()
+                ->prototype('scalar')
+            ->end()
         ;
 
         //reference to a service - starting with '@'

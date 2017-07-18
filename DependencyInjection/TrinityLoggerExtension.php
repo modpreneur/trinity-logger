@@ -31,36 +31,30 @@ class TrinityLoggerExtension extends Extension
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
-        if (\array_key_exists('elastic_logs', $config) && isset($config['elastic_logs'])) {
-            $container->setParameter('trinity.logger.elastic_logs', true);
-            $container->setParameter('trinity.logger.elastic_host', $config['elastic_logs']['elastic_host']);
+        $container->setParameter('trinity.logger.elastic_host', $config['elastic_host']);
+        $container->setParameter(
+            'trinity.logger.async_queue_length',
+            (int) $config['async_queue_length']
+        );
+
+        if (\array_key_exists('managed_index', $config) && isset($config['managed_index'])
+        ) {
             $container->setParameter(
-                'trinity.logger.async_queue_length',
-                (int) $config['elastic_logs']['async_queue_length']
+                'trinity.logger.elastic_managed_index',
+                $config['managed_index']
             );
-
-            if (\array_key_exists('managed_index', $config['elastic_logs'])
-                && isset($config['elastic_logs']['managed_index'])
-            ) {
-                $container->setParameter(
-                    'trinity.logger.elastic_managed_index',
-                    $config['elastic_logs']['managed_index']
-                );
-            } else {
-                $container->setParameter('trinity.logger.elastic_managed_index', null);
-            }
-
-            if (\array_key_exists('entities_path', $config['elastic_logs'])
-                && isset($config['elastic_logs']['entities_path'])
-            ) {
-                $container->setParameter('trinity.logger.base.entities.path', $config['elastic_logs']['entities_path']);
-            } else {
-                $container->setParameter('trinity.logger.base.entities.path', null);
-            }
         } else {
-            $container->setParameter('trinity.logger.elastic_logs', false);
-            $container->setParameter('trinity.logger.elastic_host', null);
+            $container->setParameter('trinity.logger.elastic_managed_index', null);
         }
+
+        if (\array_key_exists('entities_path', $config) && isset($config['entities_path'])
+        ) {
+            $container->setParameter('trinity.logger.base.entities.path', $config['entities_path']);
+        } else {
+            $container->setParameter('trinity.logger.base.entities.path', null);
+        }
+
+        $container->setParameter('trinity.logger.log_classes', $config['log_classes']);
 
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');

@@ -26,6 +26,7 @@ use Trinity\Bundle\LoggerBundle\Event\RemoveNotificationUserEvent;
 use Trinity\Bundle\LoggerBundle\Event\SetNotificationUserEvent;
 use Trinity\Bundle\LoggerBundle\EventListener\EntityActionListener;
 use Trinity\Bundle\LoggerBundle\Interfaces\UserProviderInterface;
+use Trinity\Bundle\LoggerBundle\Tests\Entity\DatetimeTestLog;
 use Trinity\Component\Core\Interfaces\UserInterface;
 
 /**
@@ -375,7 +376,7 @@ class EntityActionListenerTest extends TestCase
             'test'
         );
 
-        $baseElasticLog = new BaseElasticLog();
+        $baseElasticLog = new DatetimeTestLog();
 
         $changeSet = [
             0 => [
@@ -581,7 +582,7 @@ class EntityActionListenerTest extends TestCase
         $entity = new CustomEntity();
         $entity->setUpdatedBy('test');
 
-        $baseElasticLog = new BaseElasticLog();
+        $baseElasticLog = new DatetimeTestLog();
 
         $changeSet = [
             0 => [
@@ -651,7 +652,7 @@ class EntityActionListenerTest extends TestCase
         $entity = new CustomEntity();
         $entity->setUpdatedBy('test');
 
-        $baseElasticLog = new BaseElasticLog();
+        $baseElasticLog = new DatetimeTestLog();
 
         $changeSet = [
             0 => [
@@ -1082,7 +1083,7 @@ class EntityActionListenerTest extends TestCase
                     ->disableOriginalConstructor()
                     ->getMock();
 
-                $baseElasticLog = new BaseElasticLog();
+                $baseElasticLog = new DatetimeTestLog();
 
                 $entity = new CustomEntity();
                 $entity->setUpdatedBy('test');

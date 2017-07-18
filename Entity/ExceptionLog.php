@@ -16,12 +16,8 @@ use Trinity\Component\Core\Interfaces\UserInterface;
  */
 class ExceptionLog extends BaseElasticLog implements EntityInterface
 {
-    /**
-     * @deprecated use LOG_NAME instead. Will be removed soon.
-     */
-    const NAME = 'ExceptionLog';
-
     const LOG_NAME = 'ExceptionLog';
+    const DEFAULT_TTL = 30;
 
     /** @var string Analyzed by elasticSearch */
     private $log;
@@ -242,5 +238,26 @@ class ExceptionLog extends BaseElasticLog implements EntityInterface
     public function setSystem(string $system): void
     {
         $this->system = $system;
+    }
+
+    /**
+     * Return a human readable string containing only characters.
+     * For example: ExceptionLog, IpnLog
+     *
+     * @return string
+     */
+    public static function getLogName(): string
+    {
+        return self::LOG_NAME;
+    }
+
+    /**
+     * Return a default tll in days.
+     *
+     * @return int
+     */
+    public static function getDefaultTtl(): int
+    {
+        return self::DEFAULT_TTL;
     }
 }

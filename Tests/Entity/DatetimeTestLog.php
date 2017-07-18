@@ -9,6 +9,9 @@ use Trinity\Bundle\LoggerBundle\Entity\BaseElasticLog;
  */
 class DatetimeTestLog extends BaseElasticLog
 {
+    const LOG_NAME = 'DatetimeTestLog';
+    const DEFAULT_TTL = 5;
+
     /**
      * @var \DateTime
      */
@@ -49,6 +52,28 @@ class DatetimeTestLog extends BaseElasticLog
     public function setString(string $string)
     {
         $this->string = $string;
+    }
+
+
+    /**
+     * Return a human readable string containing only characters.
+     * For example: ExceptionLog, IpnLog
+     *
+     * @return string
+     */
+    public static function getLogName(): string
+    {
+        return self::LOG_NAME;
+    }
+
+    /**
+     * Return a default tll in days.
+     *
+     * @return int
+     */
+    public static function getDefaultTtl(): int
+    {
+        return self::DEFAULT_TTL;
     }
 }
 

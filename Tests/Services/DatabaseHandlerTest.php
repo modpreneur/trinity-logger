@@ -21,13 +21,14 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Trinity\Bundle\LoggerBundle\Entity\ExceptionLog;
 use Trinity\Bundle\LoggerBundle\Services\DatabaseHandler;
 use Trinity\Bundle\LoggerBundle\Services\ElasticLogServiceWithTtl;
+use Trinity\Bundle\LoggerBundle\Tests\UnitTestBase;
 use Trinity\Component\Core\Interfaces\UserInterface;
 
 /**
  * Class DatabaseHandlerTest
  * @package Trinity\Bundle\LoggerBundle\Tests\Services
  */
-class DatabaseHandlerTest extends TestCase
+class DatabaseHandlerTest extends UnitTestBase
 {
     public function testLogRecord(): void
     {
@@ -112,7 +113,7 @@ class DatabaseHandlerTest extends TestCase
         $esLogger->expects(static::once())
             ->method('writeInto')
             ->with(
-                ExceptionLog::NAME,
+                ExceptionLog::LOG_NAME,
                 static::callback(
                     function (ExceptionLog $log) use ($clientIp, $uri, $user) {
                         static::assertEquals('TestErrorMessage', $log->getReadable());
@@ -281,24 +282,5 @@ class DatabaseHandlerTest extends TestCase
         ];
 
         static::assertEquals('', $this->invokeMethod($databaseHandler, 'getReadable', [$e]));
-    }
-
-
-    /**
-     * Call protected/private method of a class.
-     *
-     * @param object &$object Instantiated object that we will run method on.
-     * @param string $methodName Method name to call
-     * @param array $parameters Array of parameters to pass into method.
-     *
-     * @return mixed Method return.
-     */
-    public function invokeMethod(&$object, $methodName, array $parameters = [])
-    {
-        $reflection = new \ReflectionClass(get_class($object));
-        $method = $reflection->getMethod($methodName);
-        $method->setAccessible(true);
-
-        return $method->invokeArgs($object, $parameters);
     }
 }

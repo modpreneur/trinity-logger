@@ -125,7 +125,7 @@ class DatabaseHandler extends AbstractProcessingHandler
                 }
             }
             $exception->setReadable($readable);
-            $this->esLogger->writeInto(ExceptionLog::NAME, $exception);
+            $this->esLogger->writeInto(ExceptionLog::LOG_NAME, $exception);
         }
     }
 

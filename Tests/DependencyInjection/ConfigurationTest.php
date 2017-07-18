@@ -7,6 +7,7 @@ namespace Trinity\Bundle\LoggerBundle\Tests\DependencyInjection;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Trinity\Bundle\LoggerBundle\DependencyInjection\TrinityLoggerExtension;
+use Trinity\Bundle\LoggerBundle\Tests\Entity\DatetimeTestLog;
 
 /**
  * Class ConfigurationTest
@@ -28,11 +29,9 @@ class ConfigurationTest extends TestCase
         $loader->load($configs, $container);
 
         if ($container->hasParameter('trinity.logger.elastic_host')) {
-            if (\array_key_exists('elastic_logs', $configs[0]) &&
-                \array_key_exists('elastic_host', $configs[0]['elastic_logs'])
-            ) {
+            if (\array_key_exists('elastic_host', $configs[0])) {
                 static::assertEquals(
-                    $configs[0]['elastic_logs']['elastic_host'],
+                    $configs[0]['elastic_host'],
                     $container->getParameter('trinity.logger.elastic_host')
                 );
             } else {
@@ -41,22 +40,28 @@ class ConfigurationTest extends TestCase
         }
 
         if ($container->hasParameter('trinity.logger.elastic_managed_index')) {
-            if (\array_key_exists('elastic_logs', $configs[0]) &&
-                \array_key_exists('managed_index', $configs[0]['elastic_logs'])
-            ) {
+            if (\array_key_exists('managed_index', $configs[0])) {
                 static::assertEquals(
-                    $configs[0]['elastic_logs']['managed_index'],
+                    $configs[0]['managed_index'],
                     $container->getParameter('trinity.logger.elastic_managed_index')
                 );
             }
         }
+
         if ($container->hasParameter('trinity.logger.base.entities.path')) {
-            if (\array_key_exists('elastic_logs', $configs[0]) &&
-                \array_key_exists('entities_path', $configs[0]['elastic_logs'])
-            ) {
+            if (\array_key_exists('entities_path', $configs[0])) {
                 static::assertEquals(
-                    $configs[0]['elastic_logs']['entities_path'],
+                    $configs[0]['entities_path'],
                     $container->getParameter('trinity.logger.base.entities.path')
+                );
+            }
+        }
+
+        if ($container->hasParameter('trinity.logger.log_classes')) {
+            if (\array_key_exists('log_classes', $configs[0])) {
+                static::assertEquals(
+                    $configs[0]['log_classes'],
+                    $container->getParameter('trinity.logger.log_classes')
                 );
             }
         }
@@ -74,14 +79,15 @@ class ConfigurationTest extends TestCase
             [
                 [
                     [
-                        'elastic_logs' => [
-                            'elastic_host' => '127.0.0.1:9200',
-                            'managed_index' => 'necktie',
-                            'entities_path' => 'Necktie\\AppBundle\\Entity',
-                        ],
+                        'elastic_host' => '127.0.0.1:9200',
+                        'managed_index' => 'necktie',
+                        'entities_path' => 'Necktie\\AppBundle\\Entity',
                         'logger_user_provider' => '@test1',
                         'logger_ttl_provider' => '@test2',
-                        'use_async' => false
+                        'use_async' => false,
+                        'log_classes' => [
+                            DatetimeTestLog::class
+                        ]
                     ]
                 ]
             ],
@@ -89,19 +95,25 @@ class ConfigurationTest extends TestCase
                 [
                     [
                         'logger_user_provider' => '@test3',
-                        'use_async' => false
+                        'use_async' => false,
+                        'elastic_host' => '127.0.0.1:9200',
+                        'log_classes' => [
+                            DatetimeTestLog::class
+                        ]
+
                     ]
                 ]
             ],
             [
                 [
                     [
-                        'elastic_logs' => [
-                            'elastic_host' => '127.0.0.1:9200',
-                        ],
+                        'elastic_host' => '127.0.0.1:9200',
                         'logger_user_provider' => '@test1',
                         'logger_ttl_provider' => '@test2',
-                        'use_async' => false
+                        'use_async' => false,
+                        'log_classes' => [
+                            DatetimeTestLog::class
+                        ]
                     ]
                 ]
             ]
