@@ -34,7 +34,7 @@ class Configuration implements ConfigurationInterface
             ->scalarNode('managed_index')->cannotBeEmpty()->end()
             ->scalarNode('entities_path')->cannotBeEmpty()->end()
             ->scalarNode('async_queue_length')->defaultValue(50)->end()
-            ->arrayNode('log_classes')->isRequired()
+            ->arrayNode('log_classes')->defaultValue([])
                 ->prototype('scalar')
             ->end()
         ;
