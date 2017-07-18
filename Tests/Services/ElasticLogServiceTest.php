@@ -25,6 +25,7 @@ class ElasticLogServiceTest extends UnitTestBase
         $types = ['green', 'red', 'yellow'];
         $values = ['avocado', 'apple', 'banana'];
 
+        /** @var ElasticEntityProcessor|Mock $processor */
         $processor = $this->getMockBuilder(ElasticEntityProcessor::class)->getMock();
 
         /** @var ClientBuilder|Mock $clientBuilder */
@@ -85,7 +86,14 @@ class ElasticLogServiceTest extends UnitTestBase
                 static::returnValue($esclient)
             );
 
-        $els = new ElasticLogService($processor, '111.222.33.4:9200', 'necktie', true, 50, $clientBuilder);
+        $els = new ElasticLogService(
+            $processor,
+            '111.222.33.4:9200',
+            true,
+            'test',
+            50,
+            $clientBuilder
+        );
 
         /** @var UserInterface|Mock $userInterface */
         $userInterface = $this->getMockBuilder(UserInterface::class)->disableOriginalConstructor()->getMock();
@@ -99,16 +107,5 @@ class ElasticLogServiceTest extends UnitTestBase
         static::assertEquals('3', $entity->getId());
 
         $els->update('tesTypeName', '1', $types, $values, 4);
-
-        static::assertInstanceOf(ElasticLogService::class, $els->setIndex('test'));
-    }
-
-    public function testSetIndex()
-    {
-        $processor = $this->getMockBuilder(ElasticEntityProcessor::class)->getMock();
-
-        $els = new ElasticLogService($processor, '111.222.33.4:9200', 'necktie', true);
-
-        static::assertInstanceOf(ElasticLogService::class, $els->setIndex('test'));
     }
 }

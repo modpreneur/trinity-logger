@@ -23,10 +23,9 @@ class ElasticLogService
      * @var Client;
      */
     private $ESClient;
-    /**
-     * @var string index
-     */
-    private $index;
+
+    /** @var  string */
+    private $environment;
 
     /** @var bool */
     protected $useAsync;
@@ -34,33 +33,36 @@ class ElasticLogService
     /** @var ElasticEntityProcessor */
     protected $entityProcessor;
 
+
     /**
      * ElasticLogService constructor.
      *
      * @param ElasticEntityProcessor $entityProcessor
      * @param string $clientHost IP:port, default port is 9200
-     * @param string $index name of DB
      * @param bool $useAsync
+     * @param string $environment
      * @param int $asyncQueLength
      * @param ClientBuilder $clientBuilder
+     *
+     * @throws \RuntimeException
      */
     public function __construct(
         ElasticEntityProcessor $entityProcessor,
         string $clientHost,
-        $index,
         bool $useAsync,
-        $asyncQueLength = 50,
+        string $environment,
+        int $asyncQueLength = 50,
         ClientBuilder $clientBuilder = null
     ) {
         $this->entityProcessor = $entityProcessor;
         $this->useAsync = $useAsync;
-        $this->index = $index ?: 'necktie';
+        $this->environment = $environment;
 
         $params = \explode(':', $clientHost);
         $port = $params[1] ?? 9200;
 
         $handlerParams = [
-            'max_handles' => (int)$asyncQueLength,
+            'max_handles' => $asyncQueLength,
         ];
 
         $defaultHandler = ClientBuilder::defaultHandler($handlerParams);
@@ -75,20 +77,6 @@ class ElasticLogService
             $this->ESClient = $this->createBuilder($params, $port, $defaultHandler);
         }
     }
-
-
-    /**
-     * @param string $index
-     *
-     * @return ElasticLogService
-     */
-    public function setIndex($index): ElasticLogService
-    {
-        $this->index = $index;
-
-        return $this;
-    }
-
 
     /**
      * If the ttl is not set default mapping in elastic is used (if exist).
@@ -114,7 +102,7 @@ class ElasticLogService
          */
         $entityArray = $this->entityProcessor->getElasticArray($entity);
         $params = [
-            'index' => $this->index,
+            'index' => $this->getIndex(),
             'type' => $typeName,
             'body' => $entityArray,
             'client' => ['future' => 'lazy'],
@@ -134,7 +122,8 @@ class ElasticLogService
      */
     public function flush(): void
     {
-        $this->ESClient->indices()->refresh(['index' => $this->index]);
+        //todo: rewrite to use future object
+//        $this->ESClient->indices()->refresh(['index' => $this->index]);
     }
 
     /**
@@ -155,7 +144,7 @@ class ElasticLogService
         $entityArray = $this->entityProcessor->getElasticArray($entity);
 
         $params = [
-            'index' => $this->index,
+            'index' => $this->getIndex(),
             'type' => $typeName,
             'body' => $entityArray,
         ];
@@ -166,7 +155,7 @@ class ElasticLogService
 
         $response = $this->ESClient->index($params);
 
-        $this->ESClient->indices()->refresh(['index' => $this->index]);
+        $this->ESClient->indices()->refresh(['index' => $this->getIndex()]);
 
         if ($entity instanceof BaseElasticLog) {
             $entity->setId($response['_id']);
@@ -186,7 +175,7 @@ class ElasticLogService
     {
         $body = \array_combine($types, $values);
         $params = [
-            'index' => $this->index,
+            'index' => $this->getIndex(),
             'type' => $typeName,
             'id' => $id,
             'body' => ['doc' => $body],
@@ -209,11 +198,26 @@ class ElasticLogService
      */
     private function createBuilder($params, $port, $defaultHandler): Client
     {
-        $client = ClientBuilder::create()// Instantiate a new ClientBuilder
+        return ClientBuilder::create()// Instantiate a new ClientBuilder
         ->setHosts(["${params[0]}:${port}"])// Set the hosts
         ->setHandler($defaultHandler)
             ->build();
+    }
 
-        return $client;
+
+    /**
+     * Return today's index name as formatted day (YYYY-DD-YY) with possible prefix ('test-')
+     *
+     * @return string
+     */
+    private function getIndex(): string
+    {
+        $time = new \DateTime();
+        $format = $time->format('YYYY-MM-DD');
+        if ($this->environment === 'test') {
+            return 'test-'. $format;
+        }
+
+        return $format;
     }
 }

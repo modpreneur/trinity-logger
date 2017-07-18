@@ -9,7 +9,7 @@ use Trinity\Bundle\LoggerBundle\Interfaces\LoggerTtlProviderInterface;
 use Trinity\Component\Core\Interfaces\EntityInterface;
 
 /**
- * @deprecated TTL does not work
+ * @deprecated TTL does not work, has to be removed and replaced
  * Class ElasticLogService.
  */
 class ElasticLogServiceWithTtl

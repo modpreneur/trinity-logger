@@ -1,4 +1,6 @@
-# trinity-logger
+# trinity-logger 
+
+#This bundle is reconstructed for new elasticsearch (v5) and the read me is not actualized yet. TODO
 
 [![Coverage Status](https://coveralls.io/repos/github/modpreneur/trinity-logger/badge.svg?branch=master)](https://coveralls.io/github/modpreneur/trinity-logger?branch=master)
 [![Build Status](https://travis-ci.org/modpreneur/trinity-logger.svg?branch=master)](https://travis-ci.org/modpreneur/trinity-settings)

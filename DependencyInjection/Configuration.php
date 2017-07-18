@@ -31,7 +31,6 @@ class Configuration implements ConfigurationInterface
             ->children()
             ->scalarNode('use_async')->defaultValue(true)->end()
             ->scalarNode('elastic_host')->isRequired()->cannotBeEmpty()->end()
-            ->scalarNode('managed_index')->cannotBeEmpty()->end()
             ->scalarNode('entities_path')->cannotBeEmpty()->end()
             ->scalarNode('async_queue_length')->defaultValue(50)->end()
             ->arrayNode('log_classes')->defaultValue([])

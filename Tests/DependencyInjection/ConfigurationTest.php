@@ -39,15 +39,6 @@ class ConfigurationTest extends TestCase
             }
         }
 
-        if ($container->hasParameter('trinity.logger.elastic_managed_index')) {
-            if (\array_key_exists('managed_index', $configs[0])) {
-                static::assertEquals(
-                    $configs[0]['managed_index'],
-                    $container->getParameter('trinity.logger.elastic_managed_index')
-                );
-            }
-        }
-
         if ($container->hasParameter('trinity.logger.base.entities.path')) {
             if (\array_key_exists('entities_path', $configs[0])) {
                 static::assertEquals(
@@ -80,7 +71,6 @@ class ConfigurationTest extends TestCase
                 [
                     [
                         'elastic_host' => '127.0.0.1:9200',
-                        'managed_index' => 'necktie',
                         'entities_path' => 'Necktie\\AppBundle\\Entity',
                         'logger_user_provider' => '@test1',
                         'logger_ttl_provider' => '@test2',

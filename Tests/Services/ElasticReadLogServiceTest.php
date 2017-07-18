@@ -223,6 +223,7 @@ class ElasticReadLogServiceTest extends UnitTestBase
                 static::returnValue($client)
             );
 
+        /** @var ElasticEntityProcessor|Mock $processor */
         $processor = $this->getMockBuilder(ElasticEntityProcessor::class)->getMock();
         $processor
             ->expects($this->exactly(5))
@@ -232,8 +233,8 @@ class ElasticReadLogServiceTest extends UnitTestBase
         $elasticReadLogService = new ElasticReadLogService(
             $processor,
             '111.222.33.4:9200',
+            'test',
             $entityManager,
-            'necktie',
             $clientBuilder
         );
 
@@ -319,13 +320,14 @@ class ElasticReadLogServiceTest extends UnitTestBase
                 static::returnValue($client)
             );
 
+        /** @var ElasticEntityProcessor|Mock $processor */
         $processor = $this->getMockBuilder(ElasticEntityProcessor::class)->getMock();
 
         $elasticReadLogServiceNoBuilder = new ElasticReadLogService(
             $processor,
             '111.222.33.4:9200',
-            $entityManager,
-            'necktie'
+            'test',
+            $entityManager
         );
 
         static::assertInstanceOf(ElasticReadLogService::class, $elasticReadLogServiceNoBuilder);
@@ -333,8 +335,8 @@ class ElasticReadLogServiceTest extends UnitTestBase
         $elasticReadLogService = new ElasticReadLogService(
             $processor,
             '111.222.33.4:9200',
+            'test',
             $entityManager,
-            'necktie',
             $clientBuilder
         );
 
@@ -365,13 +367,14 @@ class ElasticReadLogServiceTest extends UnitTestBase
             'key2' => 'value2'
         ];
 
+        /** @var ElasticEntityProcessor|Mock $processor */
         $processor = $this->getMockBuilder(ElasticEntityProcessor::class)->getMock();
 
         $elasticReadLogService = new ElasticReadLogService(
             $processor,
             '111.222.33.4:9200',
+            'test',
             $entityManager,
-            'necktie',
             $clientBuilder
         );
 
@@ -507,13 +510,14 @@ class ElasticReadLogServiceTest extends UnitTestBase
                 static::returnValue($client)
             );
 
+        /** @var ElasticEntityProcessor|Mock $processor */
         $processor = $this->getMockBuilder(ElasticEntityProcessor::class)->getMock();
 
         $elasticReadLogService = new ElasticReadLogService(
             $processor,
             '111.222.33.4:9200',
+            'test',
             $entityManager,
-            'necktie',
             $clientBuilder
         );
 
@@ -623,14 +627,14 @@ class ElasticReadLogServiceTest extends UnitTestBase
             ->will(
                 static::returnValue($client)
             );
-
+        /** @var ElasticEntityProcessor|Mock $processor */
         $processor = $this->getMockBuilder(ElasticEntityProcessor::class)->getMock();
 
         $elasticReadLogService = new ElasticReadLogService(
             $processor,
             '111.222.33.4:9200',
+            'test',
             $entityManager,
-            'necktie',
             $clientBuilder
         );
 
@@ -880,8 +884,8 @@ class ElasticReadLogServiceTest extends UnitTestBase
         $elasticReadLogService = new ElasticReadLogService(
             $processor,
             '111.222.33.4:9200',
+            'test',
             $entityManager,
-            'necktie',
             $clientBuilder
         );
 
@@ -1045,13 +1049,14 @@ class ElasticReadLogServiceTest extends UnitTestBase
                 static::returnValue($client)
             );
 
+        /** @var ElasticEntityProcessor|Mock $processor */
         $processor = $this->getMockBuilder(ElasticEntityProcessor::class)->getMock();
 
         $elasticReadLogService = new ElasticReadLogService(
             $processor,
             '111.222.33.4:9200',
+            'test',
             $entityManager,
-            'necktie',
             $clientBuilder
         );
 

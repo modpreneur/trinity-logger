@@ -2,6 +2,7 @@
 
 namespace Trinity\Bundle\LoggerBundle\Services;
 
+use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -17,6 +18,20 @@ class ElasticEntityProcessor
     const METADATA_ENTITIES_TO_DECODE_FIELDS = 'META_EntitiesToDecode';
     const METADATA_SOURCE_ENTITY_CLASS_FIELD = 'META_SourceEntityClass';
     const DOCTRINE_PROXY_NAMESPACE_PART = 'Proxies\\__CG__\\';
+
+    /** @var  EntityManager */
+    private $em;
+
+
+    /**
+     * ElasticEntityProcessor constructor.
+     *
+     * @param EntityManager $em
+     */
+    public function __construct(?EntityManager $em = null)
+    {
+        $this->em = $em;
+    }
 
 
     /**

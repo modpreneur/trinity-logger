@@ -419,7 +419,7 @@ class EntityActionListenerTest extends TestCase
             $this->reader,
             $this->logger,
             $this->userProviderInterface,
-            'dev'
+            'test'
         );
 
         $this->invokeMethod($entityActionListener, 'checkUser', [$this->entityActionLog, $this->objectManagerChild]);
@@ -437,7 +437,7 @@ class EntityActionListenerTest extends TestCase
             $this->reader,
             $this->logger,
             $this->userProviderInterface,
-            'dev'
+            'test'
         );
 
         $this->invokeMethod($entityActionListener, 'checkUser', [$this->entityActionLog, $this->objectManagerChild]);

@@ -37,16 +37,6 @@ class TrinityLoggerExtension extends Extension
             (int) $config['async_queue_length']
         );
 
-        if (\array_key_exists('managed_index', $config) && isset($config['managed_index'])
-        ) {
-            $container->setParameter(
-                'trinity.logger.elastic_managed_index',
-                $config['managed_index']
-            );
-        } else {
-            $container->setParameter('trinity.logger.elastic_managed_index', null);
-        }
-
         if (\array_key_exists('entities_path', $config) && isset($config['entities_path'])
         ) {
             $container->setParameter('trinity.logger.base.entities.path', $config['entities_path']);

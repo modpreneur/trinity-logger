@@ -57,24 +57,27 @@ class ElasticReadLogService
     /** @var ElasticEntityProcessor */
     private $entityProcessor;
 
+
     /**
      * ElasticReadLogService constructor.
      *
+     * @param ElasticEntityProcessor $entityProcessor
      * @param string $clientHost // IP:port, default port is 9200
+     * @param string $environment
      * @param EntityManager|null $em
-     * @param string|null $index
      * @param ClientBuilder|null $clientBuilder
      */
     public function __construct(
         ElasticEntityProcessor $entityProcessor,
         string $clientHost,
+        string $environment,
         ?EntityManager $em,
-        ?string $index,
         ClientBuilder $clientBuilder = null
     ) {
         $this->entityProcessor = $entityProcessor;
         $this->em = $em;
-        $this->index = $index ?: 'necktie';
+
+        $this->index = $environment === 'test' ? 'test*' : '_all,-test*';
 
         $params = \explode(':', $clientHost);
         $portNumber = \array_key_exists(1, $params) ? $params[1] : 9200;
@@ -455,7 +458,7 @@ class ElasticReadLogService
                     throw new \RuntimeException("Unexpected operator: {$condition->operator}");
             }
 
-            $value = $value ?? (\is_int($condition->value) ? (int)$condition->value : $condition->value);
+            $value = $value ?? $condition->value;
             $this->query['bool'][$key][] = [$term => [$name => $value]];
         }
     }

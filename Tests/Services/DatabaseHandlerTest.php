@@ -197,7 +197,7 @@ class DatabaseHandlerTest extends UnitTestBase
         $databaseHandler = new DatabaseHandler($session, $tokenStorage, $requestStack, $esLogger);
 
         $record = [
-            'level' => 900,
+            'level' => 100,
             'channel' => 'doctrine',
             'message' => 'testErrorMessage' . PHP_EOL,
             'context' => [],
