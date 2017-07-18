@@ -105,8 +105,8 @@ class ElasticMappingCommand extends ContainerAwareCommand
                 ]);
                 $output->writeln('Done');
                 $this->setStatus();
-                return 0;
             }
+            return 0;
         } catch (\Exception $ex) {
                 //Do not throw exceptions, just notify
             $output->write('ERROR');

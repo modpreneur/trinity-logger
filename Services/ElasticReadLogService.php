@@ -77,7 +77,7 @@ class ElasticReadLogService
         $this->entityProcessor = $entityProcessor;
         $this->em = $em;
 
-        $this->index = $environment === 'test' ? 'test*' : '_all,-test*';
+        $this->index = $environment === 'test' ? 'test*' : '*,-test*';
 
         $params = \explode(':', $clientHost);
         $portNumber = \array_key_exists(1, $params) ? $params[1] : 9200;

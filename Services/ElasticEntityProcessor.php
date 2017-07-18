@@ -50,7 +50,7 @@ class ElasticEntityProcessor
     {
         $entityArray[self::METADATA_ENTITIES_TO_DECODE_FIELDS] = [];
         $entityArray[self::METADATA_DATETIME_FIELDS] = [];
-        $entityArray[self::METADATA_SOURCE_ENTITY_CLASS_FIELD] = get_class($entity);
+        $entityArray[self::METADATA_SOURCE_ENTITY_CLASS_FIELD] = \get_class($entity);
 
         foreach ((array)$entity as $key => $value) {
             $keyParts = \explode("\x00", $key);
@@ -119,7 +119,7 @@ class ElasticEntityProcessor
         unset($responseArray[self::METADATA_ENTITIES_TO_DECODE_FIELDS]);
         $entityClass = $responseArray[self::METADATA_SOURCE_ENTITY_CLASS_FIELD];
         unset($responseArray[self::METADATA_SOURCE_ENTITY_CLASS_FIELD]);
-        $timestampFields = $responseArray[self::METADATA_DATETIME_FIELDS];
+        $timestampFields = $responseArray[self::METADATA_DATETIME_FIELDS] ?? [];
         unset($responseArray[self::METADATA_DATETIME_FIELDS]);
 
         $entity = new $entityClass($id);
