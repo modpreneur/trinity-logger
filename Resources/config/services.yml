@@ -67,4 +67,8 @@ services:
         arguments:
             - "@?doctrine.orm.default_entity_manager"
 
-
+    trinity.logger.elastic_expire_log_service:
+        class: Trinity\Bundle\LoggerBundle\Services\ElasticExpireLogService
+        argumnets:
+            - "%trinity.logger.log_classes%"
+            - "%trinity.logger.elastic_host%"

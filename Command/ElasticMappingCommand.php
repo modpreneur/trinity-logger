@@ -113,8 +113,6 @@ class ElasticMappingCommand extends ContainerAwareCommand
             $output->writeln($ex->getMessage());
             return 1;
         }
-        $output->writeln('Nothing to do.');
-        return 0;
     }
 
 
