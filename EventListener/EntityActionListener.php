@@ -280,7 +280,7 @@ class EntityActionListener
         }
 
         $log->setActionType($operationType);
-        $log->setCreatedAt(\time());
+        $log->setCreatedAt(new \DateTime());
 
         switch ($operationType) {
             case self::DELETE:

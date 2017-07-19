@@ -45,7 +45,7 @@ abstract class BaseElasticLog
     public function __construct($id = '')
     {
         $this->id = $id;
-        $this->createdAt = \time();
+        $this->createdAt = new \DateTime();
     }
 
     /**
@@ -72,18 +72,18 @@ abstract class BaseElasticLog
 
 
     /**
-     * @return int
+     * @return \DateTime
      */
-    public function getCreatedAt(): int
+    public function getCreatedAt(): \DateTime
     {
         return $this->createdAt;
     }
 
 
     /**
-     * @param int $createdAt
+     * @param \DateTime $createdAt
      */
-    public function setCreatedAt($createdAt): void
+    public function setCreatedAt(\DateTime $createdAt): void
     {
         $this->createdAt = $createdAt;
     }
