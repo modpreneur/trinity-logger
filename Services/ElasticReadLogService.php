@@ -116,9 +116,6 @@ class ElasticReadLogService
             throw new Exception404();
         }
 
-        if (\array_key_exists('_ttl', $response)) {
-            $response['_source']['ttl'] = \intdiv($response['_ttl'], 1000);
-        }
         return $this->entityProcessor->decodeArrayFormat(
             $response['_source'],
             $response['_id'].'#'.$response['_index']
@@ -207,6 +204,7 @@ class ElasticReadLogService
         if ($select) {
             $select[] = ElasticEntityProcessor::METADATA_ENTITIES_TO_DECODE_FIELDS;
             $select[] = ElasticEntityProcessor::METADATA_SOURCE_ENTITY_CLASS_FIELD;
+            $select[] = ElasticEntityProcessor::METADATA_DATETIME_FIELDS;
             $params['body']['_source'] = $select;
         }
 
@@ -295,6 +293,7 @@ class ElasticReadLogService
         if ($fields) {
             $fields[] = ElasticEntityProcessor::METADATA_ENTITIES_TO_DECODE_FIELDS;
             $fields[] = ElasticEntityProcessor::METADATA_SOURCE_ENTITY_CLASS_FIELD;
+            $fields[] = ElasticEntityProcessor::METADATA_DATETIME_FIELDS;
             $params['body']['_source'] = $fields;
         }
 

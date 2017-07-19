@@ -56,15 +56,6 @@ class ElasticEntityProcessor
             $keyParts = \explode("\x00", $key);
             $key = \array_pop($keyParts);
 
-            /*
-             * Elastic can manage just few objects when passed. Here we preprocess them
-             * so elastic doesn't have problems
-             */
-
-            if ($key === 'ttl') {
-                continue; //do not seralize ttl as it is not supported since ES5
-            }
-
             if (\is_object($value)) {
                 //elastic can work with DateTime, not with ours entities
                 if ($value instanceof \DateTimeInterface) {
