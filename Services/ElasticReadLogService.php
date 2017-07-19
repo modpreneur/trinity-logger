@@ -155,6 +155,7 @@ class ElasticReadLogService
 
 
     /**
+     * @deprecated Does not have UseCase anymore
      * @param string $index
      *
      * @return ElasticReadLogService

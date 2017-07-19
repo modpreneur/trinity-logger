@@ -240,7 +240,7 @@ class ElasticReadLogServiceTest extends UnitTestBase
 
         static::assertInstanceOf(
             EntityActionLog::class,
-            $elasticReadLogService->setIndex('test123')->getById('test', 'necktie')
+            $elasticReadLogService->setIndex('test123')->getById('test', 'identification#index')
         );
 
         $query = [
@@ -342,7 +342,7 @@ class ElasticReadLogServiceTest extends UnitTestBase
 
         static::assertInstanceOf(
             EntityActionLog::class,
-            $elasticReadLogService->setIndex('test123')->getById('test', 'necktie')
+            $elasticReadLogService->setIndex('test123')->getById('test', 'id#index')
         );
     }
 
