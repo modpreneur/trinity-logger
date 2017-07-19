@@ -19,7 +19,7 @@ abstract class BaseElasticLog
     /** @var string $id*/
     protected $id;
 
-    /** @var int $createdAt*/
+    /** @var \DateTime $createdAt*/
     protected $createdAt;
 
     /**
