@@ -115,7 +115,7 @@ class DatabaseHandler extends AbstractProcessingHandler
             $exception->setLog($record['message']);
             $exception->setLevel($record['level']);
             $exception->setServerData($serverData);
-            $exception->setCreatedAt(time());
+            $exception->setCreatedAt(new \DateTime);
             $exception->setUrl($url);
             $exception->setIp($ip);
             $exception->setSystem($this->system);
