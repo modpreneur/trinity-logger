@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Trinity\Bundle\LoggerBundle\Command;
 
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -34,7 +35,14 @@ class ExpireLogsCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->getContainer()->get('trinity.logger.elastic_expire_log_service');
+        $report = $this->getContainer()->get('trinity.logger.elastic_expire_log_service')->checkLogs();
+        $table = new Table($output);
+        $table->setHeaders(['Name', 'Deleted documents', 'Used TTL (in days)']);
+        foreach ($report as $logName => $logReport) {
+            $table->addRow([$logName, $logReport['deleted'], $logReport['ttl']]);
+        }
+
+        $table->render();
         return 0;
     }
 }

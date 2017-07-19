@@ -12,7 +12,6 @@ namespace Trinity\Bundle\LoggerBundle\Services;
 
 use Elasticsearch\Client;
 use Elasticsearch\ClientBuilder;
-use Symfony\Component\Validator\Constraints\Date;
 use Trinity\Bundle\LoggerBundle\Entity\BaseElasticLog;
 use Trinity\Bundle\LoggerBundle\Interfaces\LoggerTtlProviderInterface;
 
@@ -39,8 +38,9 @@ class ElasticExpireLogService
      * @param array $logClasses
      * @param string $clientHost
      */
-    public function __construct(array $logClasses, $clientHost)
+    public function __construct(array $logClasses, $clientHost, $ttlProvider)
     {
+        $this->ttlProvider = $ttlProvider;
         $this->logClasses = $logClasses;
         $params = \explode(':', $clientHost);
         $port = $params[1] ?? 9200;
@@ -51,44 +51,40 @@ class ElasticExpireLogService
             ->build();
     }
 
+
     /**
-     * @param $params
-     * @param $port
-     * @param $defaultHandler
+     * Checks all logs classes registered to trinity logger. For each log the oldest possible time of creation is
+     * determined and all olders logs are deleted.
      *
-     * @return Client
+     * returned report is in format of nested arrays:
+     *         $report[$logName] = ['ttl' => $ttl, 'deleted' => $deleted];
+     *
+     * @return array $report
      */
-    private function createBuilder($params, $port, $defaultHandler): Client
+    public function checkLogs(): array
     {
-        return ClientBuilder::create()// Instantiate a new ClientBuilder
-        ->setHosts(["${params[0]}:${port}"])// Set the hosts
-            ->build();
-    }
-
-
-    public function checkLogs()
-    {
+        $report = [];
         /** @var BaseElasticLog $logClass */
         foreach ($this->logClasses as $logClass) {
             $ttl = $this->ttlProvider->getTtlForType($logClass::getLogName());
             $oldest = new \DateTime();
-            $oldest->modify("+$ttl days");
-
-            $stamp = $oldest->getTimestamp() * 1000;
-
-            \var_dump($this->esClient->deleteByQuery([
+            $oldest->modify("-$ttl days");
+            $stamp = $oldest->getTimestamp();
+            $response = $this->esClient->deleteByQuery([
                 'index' => '*',
                 'type' => $logClass::getLogName(),
                 'body' => [
                     'query' => [
                         'range' => [
                             'createdAt' => [
-                                'gt' => $stamp,
+                                'lt' => $stamp,
                             ]
                         ]
                     ]
                 ]
-            ]));
+            ]);
+            $report[$logClass::getLogName()] = ['ttl' => $ttl, 'deleted' => $response['deleted']];
         }
+        return $report;
     }
 }

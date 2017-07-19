@@ -69,6 +69,8 @@ services:
 
     trinity.logger.elastic_expire_log_service:
         class: Trinity\Bundle\LoggerBundle\Services\ElasticExpireLogService
-        argumnets:
+        arguments:
             - "%trinity.logger.log_classes%"
             - "%trinity.logger.elastic_host%"
+            - "@trinity.logger.ttl_provider" #the service name is an alias, see TrinityLoggerExtension
+
