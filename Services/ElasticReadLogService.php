@@ -102,10 +102,13 @@ class ElasticReadLogService
      */
     public function getById(string $typeName, string $id)
     {
+        $parts = \explode('#', $id);
+        $realID = $parts[0];
+        $index = $parts[1];
         $params = [
-            'index' => $this->index,
+            'index' => $index,
             'type' => $typeName,
-            'id' => $id,
+            'id' => $realID,
         ];
         try {
             $response = $this->eSClient->get($params);
@@ -116,7 +119,10 @@ class ElasticReadLogService
         if (\array_key_exists('_ttl', $response)) {
             $response['_source']['ttl'] = \intdiv($response['_ttl'], 1000);
         }
-        return $this->entityProcessor->decodeArrayFormat($response['_source'], $response['_id']);
+        return $this->entityProcessor->decodeArrayFormat(
+            $response['_source'],
+            $response['_id'].'#'.$response['_index']
+        );
     }
 
 
@@ -359,7 +365,10 @@ class ElasticReadLogService
             if (\array_key_exists('_ttl', $arrayEntity)) {
                 $arrayEntity['_source']['ttl'] = \intdiv($arrayEntity['_ttl'], 1000);
             }
-            $entity = $this->entityProcessor->decodeArrayFormat($arrayEntity['_source'], $arrayEntity['_id']);
+            $entity = $this->entityProcessor->decodeArrayFormat(
+                $arrayEntity['_source'],
+                $arrayEntity['_id'].'#'.$arrayEntity['_index']
+            );
             $entities[] = $entity;
             if ($totalScore) {
                 $score[] = $arrayEntity['_score'] / $totalScore;
