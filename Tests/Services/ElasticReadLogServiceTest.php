@@ -340,6 +340,8 @@ class ElasticReadLogServiceTest extends UnitTestBase
             $clientBuilder
         );
 
+
+
         static::assertInstanceOf(
             EntityActionLog::class,
             $elasticReadLogService->setIndex('test123')->getById('test', 'id#index')
