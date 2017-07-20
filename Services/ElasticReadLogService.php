@@ -321,7 +321,7 @@ class ElasticReadLogService
                 return [[], 0, 0];
             }
 
-            $params['body']['filter'] = $this->query;
+            $params['body']['query']['bool']['filter'] = $this->query;
         }
         $fields = [];
         foreach ($nqLQuery->getOrderBy()->getColumns() as $column) {
@@ -376,9 +376,9 @@ class ElasticReadLogService
         $term = 'term';
 
         if (\is_array($types[$condition->key->getName()]) &&
-            \array_key_exists('entity', $types[$condition->key->getName()])
+            \array_key_exists('entity', $types[$condition->key->getName()]) &&
+            $condition->value !== '<NULL>'
         ) {
-            //@todo em is empty?
             $this->em->getConfiguration()->addCustomHydrationMode('COLUMN_HYDRATOR', ColumnHydrator::class);
             $values = $this->em->getRepository($types[$condition->key->getName()]['entity'])
                 ->createQueryBuilder('b')
@@ -407,7 +407,7 @@ class ElasticReadLogService
             switch ($condition->operator) {
                 case '=':
                     if ($condition->value === '<NULL>') {
-                        $key = 'should';
+                        $key = 'must';
                         $this->query['bool'][$key][] = [$term => [$name => '']];
                         // we don't want to continue and change value
                         return;

@@ -92,7 +92,7 @@ class ElasticLogService
     public function writeIntoAsync(string $typeName, $entity, int $ttl = 0): void
     {
         if (!$this->useAsync) {
-            $this->writeInto($typeName, $entity, $ttl);
+            $this->writeInto($typeName, $entity);
             return;
         }
 
@@ -112,15 +112,6 @@ class ElasticLogService
         //does not return anything to full use the lazy(async) feature
     }
 
-
-    /**
-     * Should flush the async queue.
-     */
-    public function flush(): void
-    {
-        //todo: rewrite to use future object
-//        $this->ESClient->indices()->refresh(['index' => $this->index]);
-    }
 
     /**
      * If the ttl is not set default mapping in elastic is used (if exist).
@@ -145,9 +136,6 @@ class ElasticLogService
             'body' => $entityArray,
         ];
 
-//        if ($ttl) {
-//            $params['ttl'] = "{$ttl}d";
-//        }
 
         $response = $this->ESClient->index($params);
 
