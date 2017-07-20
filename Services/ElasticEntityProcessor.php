@@ -118,10 +118,6 @@ class ElasticEntityProcessor
         foreach ($responseArray as $key => $value) {
             $setter = "set${key}";
 
-            if ($key === 'ttl') {
-                continue; //do not decode ttl as it is not supported since ES5
-            }
-
             if (\in_array($key, $relatedEntities, true)) {
                 $value = $this->getEntity($value);
             }
