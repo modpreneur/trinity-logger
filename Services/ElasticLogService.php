@@ -108,10 +108,6 @@ class ElasticLogService
             'client' => ['future' => 'lazy'],
         ];
 
-        if ($ttl) {
-            $params['ttl'] = "{$ttl}d";
-        }
-
         $this->ESClient->index($params);
         //does not return anything to full use the lazy(async) feature
     }
@@ -180,10 +176,6 @@ class ElasticLogService
             'id' => $id,
             'body' => ['doc' => $body],
         ];
-
-        if ($ttl) {
-            $params['ttl'] = "{$ttl}d";
-        }
 
         $this->ESClient->update($params);
     }

@@ -221,9 +221,6 @@ class ElasticReadLogService
 
         $entities = [];
         foreach ($result['hits']['hits'] as $arrayEntity) {
-            if (\array_key_exists('_ttl', $arrayEntity)) {
-                $arrayEntity['_source']['ttl'] = \intdiv($arrayEntity['_ttl'], 1000);
-            }
             $entity = $this->entityProcessor->decodeArrayFormat($arrayEntity['_source'], $arrayEntity['_id']);
             $entities[] = $entity;
         }
@@ -362,9 +359,6 @@ class ElasticReadLogService
         $totalScore = $result['hits']['max_score'];
         //Hits contains hits. It is not typ-o...
         foreach ($result['hits']['hits'] as $arrayEntity) {
-            if (\array_key_exists('_ttl', $arrayEntity)) {
-                $arrayEntity['_source']['ttl'] = \intdiv($arrayEntity['_ttl'], 1000);
-            }
             $entity = $this->entityProcessor->decodeArrayFormat(
                 $arrayEntity['_source'],
                 $arrayEntity['_id'].'#'.$arrayEntity['_index']
