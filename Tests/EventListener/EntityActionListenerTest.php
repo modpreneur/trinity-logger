@@ -512,9 +512,9 @@ class EntityActionListenerTest extends TestCase
 
     public function testSetUpdateLogChangedWithUpdatedBy(): void
     {
-        $this->mockProvider(5);
-
         $entity = new EntityActionLog();
+
+        $this->mockProvider(5, $entity);
 
         $entityActionListener = new EntityActionListener(
             $this->tokenStorage,
@@ -865,8 +865,9 @@ class EntityActionListenerTest extends TestCase
 
     /**
      * @param int|null $settings
+     * @param EntityActionLog|null $entityActionLog
      */
-    private function mockProvider(int $settings = null): void
+    private function mockProvider(int $settings = null, EntityActionLog $entityActionLog = null): void
     {
         $this->tokenStorage = $this->getMockBuilder(TokenStorageInterface::class)
             ->disableOriginalConstructor()
@@ -1028,7 +1029,7 @@ class EntityActionListenerTest extends TestCase
                     ->disableOriginalConstructor()
                     ->getMock();
 
-                $entity = new EntityActionLog();
+                $entity = $entityActionLog;
 
                 $this->unitOfWork->expects(static::any())->method('getEntityChangeSet')
                     ->with($entity)
