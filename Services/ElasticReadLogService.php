@@ -221,7 +221,10 @@ class ElasticReadLogService
 
         $entities = [];
         foreach ($result['hits']['hits'] as $arrayEntity) {
-            $entity = $this->entityProcessor->decodeArrayFormat($arrayEntity['_source'], $arrayEntity['_id']);
+            $entity = $this->entityProcessor->decodeArrayFormat(
+                $arrayEntity['_source'],
+                $arrayEntity['_id'] .'#'. $arrayEntity['_index']
+            );
             $entities[] = $entity;
         }
 
