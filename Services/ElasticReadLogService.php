@@ -137,17 +137,14 @@ class ElasticReadLogService
         $params = [
             'index' => $this->index,
             'type' => $typeName,
+            'client' => ['ignore' => 404],
         ];
 
         if ($query) {
             $params['body']['query'] = $query;
         }
 
-        try {
-            return $this->eSClient->count($params)['count'];
-        } catch (NFException $e) {
-            return 0;
-        }
+        return $this->eSClient->count($params)['count'];
     }
 
 
@@ -187,6 +184,7 @@ class ElasticReadLogService
         $params = [
             'index' => $this->index,
             'type' => $typeName,
+            'client' => ['ignore' => 404],
             'body' => [
             ]
         ];
@@ -206,12 +204,9 @@ class ElasticReadLogService
             $params['body']['_source'] = $select;
         }
 
-        try {
-            $this->eSClient->indices()->refresh(['index' => $this->index]);
-            $result = $this->eSClient->search($params);
-        } catch (NFException $e) {
-            return [];
-        }
+        $this->eSClient->indices()->refresh(['index' => $this->index]);
+        $result = $this->eSClient->search($params);
+
 
         if (\array_key_exists('aggregations', $result)) {
             return $result;
@@ -256,6 +251,7 @@ class ElasticReadLogService
         $params = [
             'index' => $this->index,
             'type' => $typeName,
+            'client' => ['ignore' => 404],
             'body' => [
             ]
         ];
@@ -347,13 +343,10 @@ class ElasticReadLogService
 
         $entities = [];
         $score = [];
-        try {
-            $this->eSClient->indices()->refresh(['index' => $this->index]);
+        $this->eSClient->indices()->refresh(['index' => $this->index]);
 
-            $result = $this->eSClient->search($params);
-        } catch (NFException $e) {
-            return [[], 0, 0];
-        }
+        $result = $this->eSClient->search($params);
+
 
         $totalScore = $result['hits']['max_score'];
         //Hits contains hits. It is not typ-o...
@@ -382,10 +375,6 @@ class ElasticReadLogService
     {
         $term = 'term';
 
-        if ($types[$condition->key->getName()] === 'string') {
-            $raw = '.raw';
-        }
-
         if (\is_array($types[$condition->key->getName()]) &&
             \array_key_exists('entity', $types[$condition->key->getName()])
         ) {
@@ -398,7 +387,7 @@ class ElasticReadLogService
                 ->setParameter('value', $condition->value)
                 ->getQuery()
                 ->getResult('COLUMN_HYDRATOR');
-            $name = $condition->key->getName() . '.raw';
+            $name = $condition->key->getName();
             $key = 'should';
 
             if (!$values) {
@@ -414,7 +403,7 @@ class ElasticReadLogService
                 }
             }
         } else {
-            $name = $condition->key->getName() . ($raw ?? '');
+            $name = $condition->key->getName();
             switch ($condition->operator) {
                 case '=':
                     if ($condition->value === '<NULL>') {
@@ -430,15 +419,12 @@ class ElasticReadLogService
                 case 'LIKE':
                     $value = $condition->value;
                     $term = 'wildcard';
-
                     if ($value[0] === '%') {
                         $value[0] = '*';
                     }
-
                     if ($value[\strlen($value) - 1] === '%') {
                         $value[\strlen($value) - 1] = '*';
                     }
-
                     break;
                 case '>':
                     $term = 'range';
@@ -481,6 +467,7 @@ class ElasticReadLogService
         $params = [
             'index' => $this->index,
             'type' => 'EntityActionLog',
+            'client' => ['ignore' => 404],
             'body' => []
         ];
 
@@ -497,19 +484,16 @@ class ElasticReadLogService
         if (\strpos($class, ElasticEntityProcessor::DOCTRINE_PROXY_NAMESPACE_PART) === 0) {
             $class = \substr($class, \strlen(ElasticEntityProcessor::DOCTRINE_PROXY_NAMESPACE_PART));
         }
-        $params['body']['query']['bool']['filter'][0]['term']['changedEntityClass.raw'] = $class;
+        $params['body']['query']['bool']['filter'][0]['term']['changedEntityClass'] = $class;
 
         if (\method_exists($entity, 'getId')) {
             $temp['term']['changedEntityId'] = $entity->getId();
             $params['body']['query']['bool']['filter'][] = $temp;
         }
 
-        try {
-            $this->eSClient->indices()->refresh(['index' => $this->index]);
-            $result = $this->eSClient->search($params);
-        } catch (NFException $e) {
-            return [];
-        }
+        $this->eSClient->indices()->refresh(['index' => $this->index]);
+        $result = $this->eSClient->search($params);
+
 
         $entities = [];
         foreach ($result['hits']['hits'] as $arrayEntity) {

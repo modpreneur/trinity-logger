@@ -351,40 +351,6 @@ class ElasticReadLogServiceTest extends UnitTestBase
     }
 
 
-    public function testGeyCountException(): void
-    {
-        /** @var EntityManager|Mock $entityManager */
-        $entityManager = $this->getMockBuilder(EntityManager::class)->disableOriginalConstructor()->getMock();
-
-        /** @var ClientBuilder|Mock $clientBuilder */
-        $clientBuilder = $this->getMockBuilder(ClientBuilder::class)->disableOriginalConstructor()->getMock();
-
-        /** @var Client|Mock $client */
-        $client = $this->getMockBuilder(Client::class)->disableOriginalConstructor()->getMock();
-        $client->expects(static::any())->method('count')->will($this->throwException(new NFException()));
-
-        $clientBuilder->expects(static::any())->method('setHosts')->will(static::returnValue($clientBuilder));
-        $clientBuilder->expects(static::any())->method('build')->will(static::returnValue($client));
-
-        $query = [
-            'key1' => 'value1',
-            'key2' => 'value2'
-        ];
-
-        /** @var ElasticEntityProcessor|Mock $processor */
-        $processor = $this->getMockBuilder(ElasticEntityProcessor::class)->getMock();
-
-        $elasticReadLogService = new ElasticReadLogService(
-            $processor,
-            '111.222.33.4:9200',
-            'test',
-            $entityManager,
-            $clientBuilder
-        );
-
-        static::assertEquals(0, $elasticReadLogService->getCount('test', $query));
-    }
-
 
     public function testGetMatchingEntities(): void
     {
@@ -557,110 +523,6 @@ class ElasticReadLogServiceTest extends UnitTestBase
             'test',
             $elasticReadLogService->getMatchingEntities('test', $searchParams, 4, $select)['aggregations']
         );
-    }
-
-
-    public function testGetMatchingEntitiesException(): void
-    {
-        /** @var EntityManager|Mock $entityManager */
-        $entityManager = $this->getMockBuilder(EntityManager::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        /** @var ClientBuilder|Mock $clientBuilder */
-        $clientBuilder = $this->getMockBuilder(ClientBuilder::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        /** @var Client|Mock $client */
-        $client = $this->getMockBuilder(Client::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $entity = new EntityActionLog();
-
-        $response = [
-            '_id' => 2,
-            '_ttl' => 50,
-            '_source' => [
-                'ttl' => 76,
-                ElasticEntityProcessor::METADATA_ENTITIES_TO_DECODE_FIELDS => [
-                    'System',
-                    'ChangedEntityId'
-                ],
-                ElasticEntityProcessor::METADATA_SOURCE_ENTITY_CLASS_FIELD => $entity,
-                'System' => EntityActionLog::class,
-                'ChangedEntityId' => EntityActionLog::class,
-            ]
-        ];
-        $client->expects(static::any())
-            ->method('get')
-            ->will(
-                static::returnValue($response)
-            );
-
-        $client->expects(static::any())
-            ->method('count')
-            ->will(
-                static::returnValue(['count' => 34])
-            );
-
-        /** @var IndicesNamespace|Mock $indicesNamespace */
-        $indicesNamespace = $this->getMockBuilder(IndicesNamespace::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $indicesNamespace->expects(static::any())
-            ->method('refresh')
-            ->will(
-                static::returnValue(true)
-            );
-
-        $client->expects(static::any())
-            ->method('indices')
-            ->will(
-                static::returnValue($indicesNamespace)
-            );
-
-        $client->expects(static::any())
-            ->method('search')
-            ->will(
-                static::throwException(new NFException())
-            );
-
-        $clientBuilder->expects(static::any())
-            ->method('setHosts')
-            ->will(
-                static::returnValue($clientBuilder)
-            );
-
-        $clientBuilder->expects(static::any())
-            ->method('build')
-            ->will(
-                static::returnValue($client)
-            );
-        /** @var ElasticEntityProcessor|Mock $processor */
-        $processor = $this->getMockBuilder(ElasticEntityProcessor::class)->getMock();
-
-        $elasticReadLogService = new ElasticReadLogService(
-            $processor,
-            '111.222.33.4:9200',
-            'test',
-            $entityManager,
-            $clientBuilder
-        );
-
-        $searchParams = [
-            'test1',
-            'test2'
-        ];
-
-        $select = [
-            'select1',
-            'select2'
-        ];
-
-        static::assertEmpty($elasticReadLogService->getMatchingEntities('test', $searchParams, 4, $select));
     }
 
 
@@ -1012,6 +874,12 @@ class ElasticReadLogServiceTest extends UnitTestBase
             ]
         ];
 
+        $emptyResult = [
+            'hits' => [
+                'hits' => []
+            ]
+        ];
+
         /** @var IndicesNamespace|Mock $indicesNamespace */
         $indicesNamespace = $this->getMockBuilder(IndicesNamespace::class)
             ->disableOriginalConstructor()
@@ -1056,7 +924,7 @@ class ElasticReadLogServiceTest extends UnitTestBase
         $client->expects(static::at(5))
             ->method('search')
             ->will(
-                static::throwException(new NFException())
+                static::returnValue($emptyResult)
             );
 
         $clientBuilder->expects(static::any())
