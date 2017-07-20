@@ -242,7 +242,7 @@ class ElasticReadLogServiceTest extends UnitTestBase
 
         static::assertInstanceOf(
             EntityActionLog::class,
-            $elasticReadLogService->setIndex('test123')->getById('test', 'identification#index')
+            $elasticReadLogService->getById('test', 'identification#index')
         );
 
         $query = [
@@ -410,13 +410,15 @@ class ElasticReadLogServiceTest extends UnitTestBase
             '_ttl' => 50,
             '_source' => [
                 'ttl' => 76,
-                ElasticEntityProcessor::METADATA_ENTITIES_TO_DECODE_FIELDS => [
-                    'System',
-                    'ChangedEntityId'
+                ElasticEntityProcessor::METADATA_FIELD => [
+                    ElasticEntityProcessor::METADATA_ENTITIES_TO_DECODE_FIELDS => [
+                        'System',
+                        'ChangedEntityId'
+                    ],
+                    ElasticEntityProcessor::METADATA_SOURCE_ENTITY_CLASS_FIELD => $entity,
+                    'System' => EntityActionLog::class,
+                    'ChangedEntityId' => EntityActionLog::class,
                 ],
-                ElasticEntityProcessor::METADATA_SOURCE_ENTITY_CLASS_FIELD => $entity,
-                'System' => EntityActionLog::class,
-                'ChangedEntityId' => EntityActionLog::class,
             ]
         ];
         $client->expects(static::any())
@@ -442,12 +444,14 @@ class ElasticReadLogServiceTest extends UnitTestBase
                     'first' => [
                         '_source' => [
                             'ttl' => 76,
-                            ElasticEntityProcessor::METADATA_DATETIME_FIELDS => [],
-                            ElasticEntityProcessor::METADATA_ENTITIES_TO_DECODE_FIELDS => [
-                                'ChangedEntityId'
+                            ElasticEntityProcessor::METADATA_FIELD => [
+                                ElasticEntityProcessor::METADATA_DATETIME_FIELDS => [],
+                                ElasticEntityProcessor::METADATA_ENTITIES_TO_DECODE_FIELDS => [
+                                    'ChangedEntityId'
+                                ],
+                                ElasticEntityProcessor::METADATA_SOURCE_ENTITY_CLASS_FIELD => $entity,
+                                'ChangedEntityId' => EntityActionLog::class
                             ],
-                            ElasticEntityProcessor::METADATA_SOURCE_ENTITY_CLASS_FIELD => $entity,
-                            'ChangedEntityId' => EntityActionLog::class
                         ],
                         '_ttl' => 34,
                         '_id' => '',
@@ -464,10 +468,12 @@ class ElasticReadLogServiceTest extends UnitTestBase
                     'first' => [
                         '_source' => [
                             'ttl' => 76,
-                            ElasticEntityProcessor::METADATA_ENTITIES_TO_DECODE_FIELDS => [
-                                'ChangedEntityId'
+                            ElasticEntityProcessor::METADATA_FIELD => [
+                                ElasticEntityProcessor::METADATA_ENTITIES_TO_DECODE_FIELDS => [
+                                    'ChangedEntityId'
+                                ],
+                                ElasticEntityProcessor::METADATA_SOURCE_ENTITY_CLASS_FIELD => $entity,
                             ],
-                            ElasticEntityProcessor::METADATA_SOURCE_ENTITY_CLASS_FIELD => $entity,
                             'ChangedEntityId' => EntityActionLog::class
                         ],
                         '_ttl' => 34,
@@ -805,11 +811,13 @@ class ElasticReadLogServiceTest extends UnitTestBase
             '_ttl' => 50,
             '_source' => [
                 'ttl' => 76,
-                ElasticEntityProcessor::METADATA_ENTITIES_TO_DECODE_FIELDS => [
-                    'System',
-                    'ChangedEntityId'
+                ElasticEntityProcessor::METADATA_FIELD => [
+                    ElasticEntityProcessor::METADATA_ENTITIES_TO_DECODE_FIELDS => [
+                        'System',
+                        'ChangedEntityId'
+                    ],
+                    ElasticEntityProcessor::METADATA_SOURCE_ENTITY_CLASS_FIELD => $entity,
                 ],
-                ElasticEntityProcessor::METADATA_SOURCE_ENTITY_CLASS_FIELD => $entity,
                 'System' => EntityActionLog::class,
                 'ChangedEntityId' => EntityActionLog::class,
             ]
@@ -838,11 +846,13 @@ class ElasticReadLogServiceTest extends UnitTestBase
                     'first' => [
                         '_source' => [
                             'ttl' => 76,
-                            ElasticEntityProcessor::METADATA_ENTITIES_TO_DECODE_FIELDS => [
-                                'System',
-                                'ChangedEntityId'
+                            ElasticEntityProcessor::METADATA_FIELD => [
+                                ElasticEntityProcessor::METADATA_ENTITIES_TO_DECODE_FIELDS => [
+                                    'System',
+                                    'ChangedEntityId'
+                                ],
+                                ElasticEntityProcessor::METADATA_SOURCE_ENTITY_CLASS_FIELD => $entity,
                             ],
-                            ElasticEntityProcessor::METADATA_SOURCE_ENTITY_CLASS_FIELD => $entity,
                             'System' => EntityActionLog::class,
                             'ChangedEntityId' => EntityActionLog::class,
                         ],
@@ -926,11 +936,13 @@ class ElasticReadLogServiceTest extends UnitTestBase
             '_ttl' => 50,
             '_source' => [
                 'ttl' => 76,
-                ElasticEntityProcessor::METADATA_ENTITIES_TO_DECODE_FIELDS => [
-                    'System',
-                    'ChangedEntityId'
+                ElasticEntityProcessor::METADATA_FIELD => [
+                    ElasticEntityProcessor::METADATA_ENTITIES_TO_DECODE_FIELDS => [
+                        'System',
+                        'ChangedEntityId'
+                    ],
+                    ElasticEntityProcessor::METADATA_SOURCE_ENTITY_CLASS_FIELD => $entity,
                 ],
-                ElasticEntityProcessor::METADATA_SOURCE_ENTITY_CLASS_FIELD => $entity,
                 'System' => EntityActionLog::class,
                 'ChangedEntityId' => EntityActionLog::class,
             ]
@@ -955,11 +967,13 @@ class ElasticReadLogServiceTest extends UnitTestBase
                         '_source' => [
                             'changeSet' => '{"info":1,"b":2,"c":3,"d":4,"e":5}',
                             'ttl' => 76,
-                            ElasticEntityProcessor::METADATA_ENTITIES_TO_DECODE_FIELDS => [
-                                'System',
-                                'ChangedEntityId'
+                            ElasticEntityProcessor::METADATA_FIELD => [
+                                ElasticEntityProcessor::METADATA_ENTITIES_TO_DECODE_FIELDS => [
+                                    'System',
+                                    'ChangedEntityId'
+                                ],
+                                ElasticEntityProcessor::METADATA_SOURCE_ENTITY_CLASS_FIELD => $entity,
                             ],
-                            ElasticEntityProcessor::METADATA_SOURCE_ENTITY_CLASS_FIELD => $entity,
                             'System' => EntityActionLog::class,
                             'ChangedEntityId' => EntityActionLog::class,
                             'user' => MockUser::class,
@@ -979,11 +993,13 @@ class ElasticReadLogServiceTest extends UnitTestBase
                         '_source' => [
                             'changeSet' => '{"info":1,"b":2,"c":3,"d":4,"e":5}',
                             'ttl' => 76,
-                            ElasticEntityProcessor::METADATA_ENTITIES_TO_DECODE_FIELDS => [
-                                'System',
-                                'ChangedEntityId'
+                            ElasticEntityProcessor::METADATA_FIELD => [
+                                ElasticEntityProcessor::METADATA_ENTITIES_TO_DECODE_FIELDS => [
+                                    'System',
+                                    'ChangedEntityId'
+                                ],
+                                ElasticEntityProcessor::METADATA_SOURCE_ENTITY_CLASS_FIELD => $entity,
                             ],
-                            ElasticEntityProcessor::METADATA_SOURCE_ENTITY_CLASS_FIELD => $entity,
                             'System' => EntityActionLog::class,
                             'ChangedEntityId' => EntityActionLog::class,
                             'user' => MockUser::class,

@@ -1,11 +1,10 @@
 <?php
 
-namespace Trinity\Bundle\LoggerBundle\Services;
+namespace Trinity\Bundle\LoggerBundle\Tests\Services;
 
-use Trinity\Bundle\LoggerBundle\Entity\EntityActionLog;
+use Trinity\Bundle\LoggerBundle\Services\ElasticEntityProcessor;
 use Trinity\Bundle\LoggerBundle\Tests\Entity\DatetimeTestLog;
 use Trinity\Bundle\LoggerBundle\Tests\UnitTestBase;
-use Trinity\Component\Core\Interfaces\UserInterface;
 
 /**
  * Class ElasticEntityProcessorTest
@@ -24,20 +23,23 @@ class ElasticEntityProcessorTest extends UnitTestBase
 
         $returned = $this->invokeMethod($processor, 'getElasticArray', [$log]);
 
-        static::assertArrayHasKey('EntitiesToDecode', $returned);
-        static::assertEquals($returned['EntitiesToDecode'], []);
-
-        static::assertArrayHasKey(ElasticEntityProcessor::METADATA_DATETIME_FIELDS, $returned);
-        static::assertEquals($returned[ElasticEntityProcessor::METADATA_DATETIME_FIELDS], ['date']);
-
-        static::assertArrayHasKey('SourceEntityClass', $returned);
-        static::assertEquals($returned['SourceEntityClass'], get_class($log));
-
         static::assertArrayHasKey('date', $returned);
         static::assertEquals($returned['date'], $log->getDate()->getTimestamp()*1000);
 
         static::assertArrayHasKey('string', $returned);
         static::assertEquals($returned['string'], $log->getString());
+
+        static::assertArrayHasKey(ElasticEntityProcessor::METADATA_FIELD, $returned);
+        $metadata = $returned[ElasticEntityProcessor::METADATA_FIELD];
+
+        static::assertArrayHasKey('EntitiesToDecode', $metadata);
+        static::assertEquals($metadata['EntitiesToDecode'], []);
+
+        static::assertArrayHasKey(ElasticEntityProcessor::METADATA_DATETIME_FIELDS, $metadata);
+        static::assertEquals($metadata[ElasticEntityProcessor::METADATA_DATETIME_FIELDS], ['date', 'createdAt']);
+
+        static::assertArrayHasKey('SourceEntityClass', $metadata);
+        static::assertEquals($metadata['SourceEntityClass'], get_class($log));
     }
 
 

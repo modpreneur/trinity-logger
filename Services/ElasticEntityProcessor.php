@@ -14,9 +14,10 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class ElasticEntityProcessor
 {
-    const METADATA_DATETIME_FIELDS = 'META_DatetimeFields';
-    const METADATA_ENTITIES_TO_DECODE_FIELDS = 'META_EntitiesToDecode';
-    const METADATA_SOURCE_ENTITY_CLASS_FIELD = 'META_SourceEntityClass';
+    const METADATA_DATETIME_FIELDS = 'DatetimeFields';
+    const METADATA_ENTITIES_TO_DECODE_FIELDS = 'EntitiesToDecode';
+    const METADATA_SOURCE_ENTITY_CLASS_FIELD = 'SourceEntityClass';
+    const METADATA_FIELD = 'META_DATA';
     const DOCTRINE_PROXY_NAMESPACE_PART = 'Proxies\\__CG__\\';
 
     /** @var  EntityManager */
@@ -48,9 +49,15 @@ class ElasticEntityProcessor
      */
     public function getElasticArray($entity): array
     {
-        $entityArray[self::METADATA_ENTITIES_TO_DECODE_FIELDS] = [];
-        $entityArray[self::METADATA_DATETIME_FIELDS] = [];
-        $entityArray[self::METADATA_SOURCE_ENTITY_CLASS_FIELD] = \get_class($entity);
+        $entityArray = [];
+        $entityArray[self::METADATA_FIELD] = [];
+
+        //just a shorthand
+        $entityMetadata = &$entityArray[self::METADATA_FIELD];
+
+        $entityMetadata[self::METADATA_ENTITIES_TO_DECODE_FIELDS] = [];
+        $entityMetadata[self::METADATA_DATETIME_FIELDS] = [];
+        $entityMetadata[self::METADATA_SOURCE_ENTITY_CLASS_FIELD] = \get_class($entity);
 
         foreach ((array)$entity as $key => $value) {
             $keyParts = \explode("\x00", $key);
@@ -59,7 +66,8 @@ class ElasticEntityProcessor
             if (\is_object($value)) {
                 //elastic can work with DateTime, not with ours entities
                 if ($value instanceof \DateTimeInterface) {
-                    $entityArray[self::METADATA_DATETIME_FIELDS][] = $key;
+
+                    $entityMetadata[self::METADATA_DATETIME_FIELDS][] = $key;
                     $entityArray[$key] = $value->getTimestamp() * 1000; //convert seconds to milliseconds
 
                     continue; //the conversion is done, continue with the next property
@@ -77,7 +85,7 @@ class ElasticEntityProcessor
                     $id = $value->getId();
                     if ($id) {
                         $entityArray[$key] = "$class\x00$id";
-                        $entityArray[self::METADATA_ENTITIES_TO_DECODE_FIELDS][] = $key;
+                        $entityMetadata[self::METADATA_ENTITIES_TO_DECODE_FIELDS][] = $key;
                     } else {
                         unset($entityArray[$key]);
                     }
@@ -105,13 +113,18 @@ class ElasticEntityProcessor
      */
     public function decodeArrayFormat($responseArray, $id = '')
     {
+        //just a shorthand
+        $entityMetadata = &$responseArray[self::METADATA_FIELD];
+
         $entity = null;
-        $relatedEntities = $responseArray[self::METADATA_ENTITIES_TO_DECODE_FIELDS];
-        unset($responseArray[self::METADATA_ENTITIES_TO_DECODE_FIELDS]);
-        $entityClass = $responseArray[self::METADATA_SOURCE_ENTITY_CLASS_FIELD];
-        unset($responseArray[self::METADATA_SOURCE_ENTITY_CLASS_FIELD]);
-        $timestampFields = $responseArray[self::METADATA_DATETIME_FIELDS] ?? [];
-        unset($responseArray[self::METADATA_DATETIME_FIELDS]);
+
+        $relatedEntities = $entityMetadata[self::METADATA_ENTITIES_TO_DECODE_FIELDS];
+        $entityClass = $entityMetadata[self::METADATA_SOURCE_ENTITY_CLASS_FIELD];
+        $timestampFields = $entityMetadata[self::METADATA_DATETIME_FIELDS] ?? [];
+
+        unset($entityMetadata[self::METADATA_ENTITIES_TO_DECODE_FIELDS]);
+        unset($entityMetadata[self::METADATA_SOURCE_ENTITY_CLASS_FIELD]);
+        unset($entityMetadata[self::METADATA_DATETIME_FIELDS]);
 
         $entity = new $entityClass($id);
 

@@ -202,9 +202,7 @@ class ElasticReadLogService
         $params['body']['sort'] = $order;
 
         if ($select) {
-            $select[] = ElasticEntityProcessor::METADATA_ENTITIES_TO_DECODE_FIELDS;
-            $select[] = ElasticEntityProcessor::METADATA_SOURCE_ENTITY_CLASS_FIELD;
-            $select[] = ElasticEntityProcessor::METADATA_DATETIME_FIELDS;
+            $select[] = ElasticEntityProcessor::METADATA_FIELD;
             $params['body']['_source'] = $select;
         }
 
@@ -291,9 +289,7 @@ class ElasticReadLogService
         }
 
         if ($fields) {
-            $fields[] = ElasticEntityProcessor::METADATA_ENTITIES_TO_DECODE_FIELDS;
-            $fields[] = ElasticEntityProcessor::METADATA_SOURCE_ENTITY_CLASS_FIELD;
-            $fields[] = ElasticEntityProcessor::METADATA_DATETIME_FIELDS;
+            $fields[] = ElasticEntityProcessor::METADATA_FIELD;
             $params['body']['_source'] = $fields;
         }
 
