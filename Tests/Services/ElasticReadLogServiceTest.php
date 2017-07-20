@@ -137,6 +137,7 @@ class ElasticReadLogServiceTest extends UnitTestBase
         $response = [
             '_id' => 2,
             '_ttl' => 50,
+            '_index' => 2,
             '_source' => [
                 'ttl' => 76,
                 ElasticEntityProcessor::METADATA_DATETIME_FIELDS => [],
