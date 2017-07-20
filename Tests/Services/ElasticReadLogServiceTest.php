@@ -186,6 +186,7 @@ class ElasticReadLogServiceTest extends UnitTestBase
                         '_ttl' => 34,
                         '_id' => 'test',
                         '_score' => 34,
+                        '_index' => 2,
                     ]
                 ],
                 'max_score' => 43,
@@ -226,7 +227,7 @@ class ElasticReadLogServiceTest extends UnitTestBase
         /** @var ElasticEntityProcessor|Mock $processor */
         $processor = $this->getMockBuilder(ElasticEntityProcessor::class)->getMock();
         $processor
-            ->expects($this->exactly(4))
+            ->expects($this->exactly(5))
             ->method('decodeArrayFormat')
             ->willReturn(new EntityActionLog());
 
@@ -236,6 +237,11 @@ class ElasticReadLogServiceTest extends UnitTestBase
             'test',
             $entityManager,
             $clientBuilder
+        );
+
+        static::assertInstanceOf(
+            EntityActionLog::class,
+            $elasticReadLogService->setIndex('test123')->getById('test', 'identification#index')
         );
 
         $query = [
@@ -445,6 +451,7 @@ class ElasticReadLogServiceTest extends UnitTestBase
                         '_ttl' => 34,
                         '_id' => '',
                         '_score' => 34,
+                        '_index' => 2,
                     ]
                 ]
             ]
@@ -465,6 +472,7 @@ class ElasticReadLogServiceTest extends UnitTestBase
                         '_ttl' => 34,
                         '_id' => '',
                         '_score' => 34,
+                        '_index' => 2,
                     ]
                 ]
             ],
@@ -536,6 +544,11 @@ class ElasticReadLogServiceTest extends UnitTestBase
         static::assertInstanceOf(
             EntityActionLog::class,
             $elasticReadLogService->getMatchingEntities('test', $searchParams, 4, $select)[0]
+        );
+
+        static::assertEquals(
+            'test',
+            $elasticReadLogService->getMatchingEntities('test', $searchParams, 4, $select)['aggregations']
         );
     }
 
