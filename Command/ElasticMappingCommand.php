@@ -76,13 +76,15 @@ class ElasticMappingCommand extends ContainerAwareCommand
 
             $client = new Client();
 
-            if ($input->getOption('clean-all')) {
+            $status = $this->getStatus();
+
+            if (!$status || $input->getOption('clean-all')) {
                 $output->write('Delete in process....');
                 $client->request('DELETE', 'http://' . $this->elasticHost . "/$index");
                 $output->writeln('Deleted');
             }
 
-            if (!$this->getStatus()) {
+            if (!$status) {
                 $output->writeln('ElasticSearch not initialized');
                 $fileContent = \file_get_contents(self::PATH);
                 if (!$fileContent) {

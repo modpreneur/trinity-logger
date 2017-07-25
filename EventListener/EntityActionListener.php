@@ -337,7 +337,7 @@ class EntityActionListener
                 }
 
                 $exception = new \UnexpectedValueException(
-                    'Could not identify user making this entity action on ' . $log->getChangedEntityClass() . '.'
+                    'Could not identify user making this entity '. $log->getActionType() .' action on ' . $log->getChangedEntityClass() . '.'
                 );
                 $this->moLogger->addError($exception);
             }
