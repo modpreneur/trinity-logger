@@ -27,11 +27,16 @@ class ElasticMappingCommand extends ContainerAwareCommand
 
     const PATH = __DIR__.'/../Resources/MappingData/base';
 
+    /** @var string */
     protected $elasticHost;
 
-    /** @var  ESClient */
+    /** @var ESClient */
     protected $eSClient;
 
+    /**
+     * {@inheritDoc}
+     * @throws \Symfony\Component\Console\Exception\InvalidArgumentException
+     */
     protected function configure(): void
     {
         $this->setName('trinity:logger:initialize-elastic')
@@ -64,7 +69,7 @@ class ElasticMappingCommand extends ContainerAwareCommand
      * @throws \UnexpectedValueException
      *
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): ?int
     {
         try {
             $this->createClient();
@@ -132,8 +137,9 @@ class ElasticMappingCommand extends ContainerAwareCommand
         $this->eSClient = ClientBuilder::create()->setHosts([$this->elasticHost])->build();
     }
 
-
-    /**  */
+    /**
+     *
+     */
     private function setStatus(): void
     {
         $params = self::$params;
