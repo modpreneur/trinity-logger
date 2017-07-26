@@ -78,6 +78,7 @@ class ElasticLogService
         }
     }
 
+    // TODO @GabrielBordovsky remove $ttl?
     /**
      * If the ttl is not set default mapping in elastic is used (if exist).
      * The type(log) has to have enabled ttl in its mapping.
@@ -113,6 +114,7 @@ class ElasticLogService
     }
 
 
+    // TODO @GabrielBordovsky remove $ttl?
     /**
      * If the ttl is not set default mapping in elastic is used (if exist).
      * The type(log) has to have enabled ttl in its mapping.
@@ -148,6 +150,7 @@ class ElasticLogService
         return $response['_id'];
     }
 
+    // TODO @GabrielBordovsky remove $ttl?
     /**
      * @param string $typeName
      * @param string $id

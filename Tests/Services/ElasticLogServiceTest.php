@@ -51,30 +51,30 @@ class ElasticLogServiceTest extends UnitTestBase
             ->disableOriginalConstructor()
             ->getMock();
 
-        /** @var Client|Mock $esclient */
-        $esclient = $this->getMockBuilder(Client::class)
+        /** @var Client|Mock $esClient */
+        $esClient = $this->getMockBuilder(Client::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $esclient->expects(static::at(0))
+        $esClient->expects(static::at(0))
             ->method('index')
             ->will(
                 static::returnValue(['_id' => 2])
             );
 
-        $esclient->expects(static::at(1))
+        $esClient->expects(static::at(1))
             ->method('index')
             ->will(
                 static::returnValue(['_id' => '3'])
             );
 
-        $esclient->expects(static::any())
+        $esClient->expects(static::any())
             ->method('indices')
             ->will(
                 static::returnValue($indicesNamespaces)
             );
 
-        $esclient->expects(static::once())
+        $esClient->expects(static::once())
             ->method('update')
             ->will(
                 static::returnValue(true)
@@ -83,7 +83,7 @@ class ElasticLogServiceTest extends UnitTestBase
         $clientBuilder->expects(static::once())
             ->method('build')
             ->will(
-                static::returnValue($esclient)
+                static::returnValue($esClient)
             );
 
         $els = new ElasticLogService(

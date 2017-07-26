@@ -375,9 +375,9 @@ class ElasticReadLogService
     {
         $term = 'term';
 
-        if (\is_array($types[$condition->key->getName()]) &&
-            \array_key_exists('entity', $types[$condition->key->getName()]) &&
-            $condition->value !== '<NULL>'
+        if ($condition->value !== '<NULL>' &&
+            \is_array($types[$condition->key->getName()]) &&
+            \array_key_exists('entity', $types[$condition->key->getName()])
         ) {
             $this->em->getConfiguration()->addCustomHydrationMode('COLUMN_HYDRATOR', ColumnHydrator::class);
             $values = $this->em->getRepository($types[$condition->key->getName()]['entity'])

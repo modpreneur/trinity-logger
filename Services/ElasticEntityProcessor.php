@@ -101,6 +101,7 @@ class ElasticEntityProcessor
         return $entityArray;
     }
 
+
     /**
      * Transform document from ElasticSearch obtained as array into entity matching
      * original entity. The relations 1:1 are recreated.     *
@@ -147,6 +148,7 @@ class ElasticEntityProcessor
 
         return $entity;
     }
+
 
     /**
      * Transform reference into doctrine entity
