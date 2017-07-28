@@ -85,7 +85,7 @@ class ElasticMappingCommand extends ContainerAwareCommand
 
             if (!$status || $input->getOption('clean-all')) {
                 $output->write('Delete in process....');
-                $client->request('DELETE', 'http://' . $this->elasticHost . "/$index");
+                $client->request('DELETE', $this->elasticHost . "/$index");
                 $output->writeln('Deleted');
             }
 
@@ -106,7 +106,7 @@ class ElasticMappingCommand extends ContainerAwareCommand
 
                 $data = \substr($fileContent, $equalPos, $quotePos-$equalPos);
                 $output->write('Putting template......');
-                $client->request('PUT', 'http://' . $this->elasticHost . '/_template/trinity-logger', [
+                $client->request('PUT', $this->elasticHost . '/_template/trinity-logger', [
                     'headers' => ['Content-Type' => 'application/json'],
                     'body' => $data
                 ]);
@@ -130,8 +130,14 @@ class ElasticMappingCommand extends ContainerAwareCommand
     private function createClient(): void
     {
         $this->elasticHost = $this->getContainer()->getParameter('elasticsearch_host');
-        if (\substr_count($this->elasticHost, ':') + 1 === 1) {
-            $this->elasticHost .= ':9200';
+        $params = \parse_url($this->elasticHost);
+
+        if (!\array_key_exists('port', $params)) {
+            if (\array_key_exists('scheme', $params) && $params['scheme'] === 'https') {
+                $this->elasticHost .= ':443';
+            } else {
+                $this->elasticHost .= ':9200';
+            }
         }
 
         $this->eSClient = ClientBuilder::create()->setHosts([$this->elasticHost])->build();

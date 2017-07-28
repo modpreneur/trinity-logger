@@ -81,6 +81,15 @@ class ElasticLogService
             ->build();
     }
 
+
+    /**
+     * @deprecated DELETE IT
+     */
+    public function flush()
+    {
+        \var_dump('Delete this use.');
+    }
+
     /**
      * @param string $typeName //log name
      * @param $entity //entity
