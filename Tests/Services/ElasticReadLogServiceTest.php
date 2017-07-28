@@ -24,6 +24,7 @@ use Trinity\Bundle\SearchBundle\NQL\Select;
 use Trinity\Bundle\SearchBundle\NQL\Table;
 use Trinity\Bundle\SearchBundle\NQL\Where;
 use Trinity\Bundle\SearchBundle\NQL\WherePart;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Class ElasticLogServiceTest
@@ -31,6 +32,9 @@ use Trinity\Bundle\SearchBundle\NQL\WherePart;
  */
 class ElasticReadLogServiceTest extends UnitTestBase
 {
+    const CLIENT_HOST = '111.222.33.4:9200';
+
+
     public function testGetById(): void
     {
         /** @var Table|Mock $table */
@@ -234,7 +238,7 @@ class ElasticReadLogServiceTest extends UnitTestBase
 
         $elasticReadLogService = new ElasticReadLogService(
             $processor,
-            '111.222.33.4:9200',
+            self::CLIENT_HOST,
             'test',
             $entityManager,
             $clientBuilder
@@ -285,7 +289,7 @@ class ElasticReadLogServiceTest extends UnitTestBase
 
 
     /**
-     * @expectedException Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     * @expectedException NotFoundHttpException
      */
     public function testGeyByIdException(): void
     {
@@ -327,7 +331,7 @@ class ElasticReadLogServiceTest extends UnitTestBase
 
         $elasticReadLogServiceNoBuilder = new ElasticReadLogService(
             $processor,
-            '111.222.33.4:9200',
+            self::CLIENT_HOST,
             'test',
             $entityManager
         );
@@ -336,7 +340,7 @@ class ElasticReadLogServiceTest extends UnitTestBase
 
         $elasticReadLogService = new ElasticReadLogService(
             $processor,
-            '111.222.33.4:9200',
+            self::CLIENT_HOST,
             'test',
             $entityManager,
             $clientBuilder
@@ -493,7 +497,7 @@ class ElasticReadLogServiceTest extends UnitTestBase
 
         $elasticReadLogService = new ElasticReadLogService(
             $processor,
-            '111.222.33.4:9200',
+            self::CLIENT_HOST,
             'test',
             $entityManager,
             $clientBuilder
@@ -761,7 +765,7 @@ class ElasticReadLogServiceTest extends UnitTestBase
 
         $elasticReadLogService = new ElasticReadLogService(
             $processor,
-            '111.222.33.4:9200',
+            self::CLIENT_HOST,
             'test',
             $entityManager,
             $clientBuilder
@@ -944,7 +948,7 @@ class ElasticReadLogServiceTest extends UnitTestBase
 
         $elasticReadLogService = new ElasticReadLogService(
             $processor,
-            '111.222.33.4:9200',
+            self::CLIENT_HOST,
             'test',
             $entityManager,
             $clientBuilder

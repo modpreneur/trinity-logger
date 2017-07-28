@@ -19,9 +19,7 @@ use Trinity\Bundle\LoggerBundle\Entity\BaseElasticLog;
  */
 class ElasticLogService
 {
-    /**
-     * @var Client;
-     */
+    /** @var Client; */
     private $ESClient;
 
     /** @var  string */
@@ -182,7 +180,7 @@ class ElasticLogService
     private function createBuilder($params, $port, $defaultHandler): Client
     {
         return ClientBuilder::create()// Instantiate a new ClientBuilder
-        ->setHosts(["${params[0]}:${port}"])// Set the hosts
+        ->setHosts(["{$params[0]}:{$port}"])// Set the hosts
         ->setHandler($defaultHandler)
             ->build();
     }

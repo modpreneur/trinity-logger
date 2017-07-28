@@ -30,6 +30,7 @@ class ElasticReadLogService
      * similar to database. There may be some miss writing as when i write table instead of type..
      */
     protected $proxyFlag = 'Proxies\\__CG__\\';
+
     /**
      * @var array entity to table translation
      */
@@ -37,18 +38,22 @@ class ElasticReadLogService
         'Ipn' => 'IpnLog',
         'Notification' => 'NotificationLog'
     ];
+
     /**
      * @var Client;
      */
     private $eSClient;
+
     /**
      * @var string index
      */
     private $index;
+
     /**
      * @var EntityManager entity manager
      */
     private $em;
+
     /**
      * @var array for extended search
      */
