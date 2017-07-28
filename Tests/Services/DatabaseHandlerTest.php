@@ -11,7 +11,6 @@ declare(strict_types=1);
 namespace Trinity\Bundle\LoggerBundle\Tests\Services;
 
 use Monolog\Logger;
-use PHPUnit\Framework\TestCase;
 use PHPUnit_Framework_MockObject_MockObject as Mock;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -20,7 +19,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Trinity\Bundle\LoggerBundle\Entity\ExceptionLog;
 use Trinity\Bundle\LoggerBundle\Services\DatabaseHandler;
-use Trinity\Bundle\LoggerBundle\Services\ElasticLogServiceWithTtl;
+use Trinity\Bundle\LoggerBundle\Services\ElasticLogService;
 use Trinity\Bundle\LoggerBundle\Tests\UnitTestBase;
 use Trinity\Component\Core\Interfaces\UserInterface;
 
@@ -50,8 +49,8 @@ class DatabaseHandlerTest extends UnitTestBase
             ->disableOriginalConstructor()
             ->getMock();
 
-        /** @var ElasticLogServiceWithTtl|Mock $esLogger */
-        $esLogger = $this->getMockBuilder(ElasticLogServiceWithTtl::class)
+        /** @var ElasticLogService|Mock $esLogger */
+        $esLogger = $this->getMockBuilder(ElasticLogService::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -167,8 +166,8 @@ class DatabaseHandlerTest extends UnitTestBase
             ->disableOriginalConstructor()
             ->getMock();
 
-        /** @var ElasticLogServiceWithTtl|Mock $esLogger */
-        $esLogger = $this->getMockBuilder(ElasticLogServiceWithTtl::class)
+        /** @var ElasticLogService|Mock $esLogger */
+        $esLogger = $this->getMockBuilder(ElasticLogService::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -254,8 +253,8 @@ class DatabaseHandlerTest extends UnitTestBase
             ->disableOriginalConstructor()
             ->getMock();
 
-        /** @var ElasticLogServiceWithTtl|Mock $esLogger */
-        $esLogger = $this->getMockBuilder(ElasticLogServiceWithTtl::class)
+        /** @var ElasticLogService|Mock $esLogger */
+        $esLogger = $this->getMockBuilder(ElasticLogService::class)
             ->disableOriginalConstructor()
             ->getMock();
 

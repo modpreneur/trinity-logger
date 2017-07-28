@@ -101,11 +101,11 @@ class ElasticLogServiceTest extends UnitTestBase
         $entity = new EntityActionLog();
         $entity->setUser($userInterface);
 
-        $els->writeIntoAsync('testTypeName', $entity, 4);
+        $els->writeIntoAsync('testTypeName', $entity);
 
-        $els->writeInto('testTypeName', $entity, 4);
+        $els->writeInto('testTypeName', $entity);
         static::assertEquals('3', $entity->getId());
 
-        $els->update('tesTypeName', '1', $types, $values, 4);
+        $els->update('tesTypeName', '1', $types, $values);
     }
 }

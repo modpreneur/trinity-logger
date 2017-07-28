@@ -84,17 +84,22 @@ class ElasticReadLogService
 
         $this->index = $environment === 'test' ? 'test*' : '*,-test*';
 
-        $params = \explode(':', $clientHost);
-        $portNumber = \array_key_exists(1, $params) ? $params[1] : 9200;
+        $params = \parse_url($clientHost);
 
-        if ($clientBuilder) {
-            $this->eSClient = $clientBuilder->setHosts([$params[0] . ':' . $portNumber])// Set the hosts
-            ->build();
-        } else {
-            $this->eSClient = ClientBuilder::create()// Instantiate a new ClientBuilder
-            ->setHosts([$params[0] . ':' . $portNumber])// Set the hosts
-            ->build();
+        if (!\array_key_exists('port', $params)) {
+            if (\array_key_exists('scheme', $params) && $params['scheme'] === 'https') {
+                $clientHost .= ':443';
+            } else {
+                $clientHost .= ':9200';
+            }
         }
+
+        if (!$clientBuilder) {
+            $clientBuilder = ClientBuilder::create();   // Instantiate a new ClientBuilder
+        }
+        $this->eSClient = $clientBuilder
+            ->setHosts([$clientHost])// Set the hosts
+            ->build();
     }
 
 

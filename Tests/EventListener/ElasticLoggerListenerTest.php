@@ -9,7 +9,7 @@ use PHPUnit_Framework_MockObject_MockObject as MockObject;
 use Trinity\Bundle\LoggerBundle\Entity\EntityActionLog;
 use Trinity\Bundle\LoggerBundle\Event\ElasticLoggerEvent;
 use Trinity\Bundle\LoggerBundle\EventListener\ElasticLoggerListener;
-use Trinity\Bundle\LoggerBundle\Services\ElasticLogServiceWithTtl;
+use Trinity\Bundle\LoggerBundle\Services\ElasticLogService;
 
 /**
  * Class ElasticLoggerListenerTest
@@ -19,8 +19,8 @@ class ElasticLoggerListenerTest extends TestCase
 {
     public function testConstructGetsAndSets(): void
     {
-        /** @var ElasticLogServiceWithTtl|MockObject $elasticLogServiceWithTtl */
-        $elasticLogServiceWithTtl = $this->getMockBuilder(ElasticLogServiceWithTtl::class)
+        /** @var ElasticLogService|MockObject $elasticLogServiceWithTtl */
+        $elasticLogService = $this->getMockBuilder(ElasticLogService::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -37,7 +37,7 @@ class ElasticLoggerListenerTest extends TestCase
         $elasticLoggerEvent->expects(static::once())->method('getEntity')->willReturn($entity);
 
         /** @var ElasticLoggerListener $elasticLoggerListener */
-        $elasticLoggerListener = new ElasticLoggerListener($elasticLogServiceWithTtl);
+        $elasticLoggerListener = new ElasticLoggerListener($elasticLogService);
 
         $elasticLoggerListener->onLog($elasticLoggerEvent);
     }

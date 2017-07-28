@@ -28,7 +28,7 @@ class DatabaseHandler extends AbstractProcessingHandler
     protected $session;
     /** @var RequestStack */
     private $requestStack;
-    /** @var  ElasticLogServiceWithTtl */
+    /** @var  ElasticLogService */
     private $esLogger;
     /** @var string */
     private $system;
@@ -38,7 +38,7 @@ class DatabaseHandler extends AbstractProcessingHandler
      * @param Session $session
      * @param TokenStorageInterface $tokenStorage
      * @param RequestStack $requestStack
-     * @param ElasticLogServiceWithTtl $esLogger
+     * @param ElasticLogService $esLogger
      * @param int $level = Logger::DEBUG
      * @param bool $bubble Whether the messages that are handled can bubble up the stack or not
      * @param string $system
@@ -47,7 +47,7 @@ class DatabaseHandler extends AbstractProcessingHandler
         Session $session,
         TokenStorageInterface $tokenStorage,
         RequestStack $requestStack,
-        ElasticLogServiceWithTtl $esLogger,
+        ElasticLogService $esLogger,
         $level = Logger::DEBUG,
         $bubble = true,
         $system = 'unknown source'
@@ -71,14 +71,14 @@ class DatabaseHandler extends AbstractProcessingHandler
         if ('doctrine' === $record['channel']) {
             if ((int)$record['level'] >= Logger::WARNING) {
                 /* not forgotten debug statement */
-                error_log($record['message']);
+                \error_log($record['message']);
             }
 
             return;
         }
         if ((int)$record['level'] >= Logger::ERROR) {
             //exception is logged twice, get rid of 'Uncaught...' version
-            if (strpos($record['message'], 'Uncaught') === 0) {
+            if (\strpos($record['message'], 'Uncaught') === 0) {
                 return;
             }
             $exception = new ExceptionLog();
@@ -90,11 +90,11 @@ class DatabaseHandler extends AbstractProcessingHandler
                 $url = $request->getUri();
                 $ip = $request->getClientIp();
             } else {
-                $requestedUrl = strpos($record['extra']['serverData'], 'REQUEST_URI:');
+                $requestedUrl = \strpos($record['extra']['serverData'], 'REQUEST_URI:');
                 if ($requestedUrl !== false) {
-                    $requestedUrl += strlen('REQUEST_URI: ');
-                    $endLine = strpos($record['extra']['serverData'], PHP_EOL, $requestedUrl);
-                    $url = substr($record['extra']['serverData'], $requestedUrl, $endLine - $requestedUrl);
+                    $requestedUrl += \strlen('REQUEST_URI: ');
+                    $endLine = \strpos($record['extra']['serverData'], \PHP_EOL, $requestedUrl);
+                    $url = \substr($record['extra']['serverData'], $requestedUrl, $endLine - $requestedUrl);
                 }
                 /*
                  * todo: get ip from extra too (which one?)
@@ -119,7 +119,8 @@ class DatabaseHandler extends AbstractProcessingHandler
             $exception->setUrl($url);
             $exception->setIp($ip);
             $exception->setSystem($this->system);
-            if ($token && $token->getUser() && !is_string($token->getUser())) {
+
+            if ($token && $token->getUser() && !\is_string($token->getUser())) {
                 if ($token->getUser() instanceof UserInterface) {
                     $exception->setUser($token->getUser());
                 }
@@ -143,7 +144,7 @@ class DatabaseHandler extends AbstractProcessingHandler
          */
         $sqlTag = 'PDOException';
 
-        if (0 === strncmp($e['message'], $sqlTag, strlen($sqlTag))) {
+        if (0 === \strncmp($e['message'], $sqlTag, \strlen($sqlTag))) {
             return $this->processPDO($e['message']);
         }
         //When readable format is not supported yet
@@ -158,9 +159,9 @@ class DatabaseHandler extends AbstractProcessingHandler
      */
     private function processPDO(string $errorMessage): string
     {
-        $line = strstr($errorMessage, PHP_EOL, true);
-        $short = substr($line, strpos($line, 'R: ') + 4);
-        $readable = ucfirst($short);
+        $line = \strstr($errorMessage, \PHP_EOL, true);
+        $short = \substr($line, \strpos($line, 'R: ') + 4);
+        $readable = \ucfirst($short);
         if ($readable && $this->session->isStarted()) {
             $this->session->set('readable', $readable);
         }

@@ -56,8 +56,15 @@ class ElasticLogService
         $this->useAsync = $useAsync;
         $this->environment = $environment;
 
-        $params = \explode(':', $clientHost);
-        $port = $params[1] ?? 9200;
+        $params = \parse_url($clientHost);
+
+        if (!\array_key_exists('port', $params)) {
+            if (\array_key_exists('scheme', $params) && $params['scheme'] === 'https') {
+                $clientHost .= ':443';
+            } else {
+                $clientHost .= ':9200';
+            }
+        }
 
         $handlerParams = [
             'max_handles' => $asyncQueLength,
@@ -65,30 +72,22 @@ class ElasticLogService
 
         $defaultHandler = ClientBuilder::defaultHandler($handlerParams);
 
-        if ($clientBuilder) {
-            $this->ESClient = $clientBuilder
-                ->setHosts(["${params[0]}:${port}"])// Set the hosts
-
-                ->setHandler($defaultHandler)
-                ->build();
-        } else {
-            $this->ESClient = $this->createBuilder($params, $port, $defaultHandler);
+        if (!$clientBuilder) {
+            $clientBuilder = ClientBuilder::create();   // Instantiate a new ClientBuilder
         }
+        $this->ESClient = $clientBuilder
+            ->setHosts([$clientHost])// Set the hosts
+            ->setHandler($defaultHandler)
+            ->build();
     }
 
-    // TODO @GabrielBordovsky remove $ttl?
     /**
-     * If the ttl is not set default mapping in elastic is used (if exist).
-     * The type(log) has to have enabled ttl in its mapping.
-     *
-     *
      * @param string $typeName //log name
      * @param $entity //entity
-     * @param int $ttl
      *
      * @return void
      */
-    public function writeIntoAsync(string $typeName, $entity, int $ttl = 0): void
+    public function writeIntoAsync(string $typeName, $entity): void
     {
         if (!$this->useAsync) {
             $this->writeInto($typeName, $entity);
@@ -112,18 +111,13 @@ class ElasticLogService
     }
 
 
-    // TODO @GabrielBordovsky remove $ttl?
     /**
-     * If the ttl is not set default mapping in elastic is used (if exist).
-     * The type(log) has to have enabled ttl in its mapping.
-     *
      * @param string $typeName //log name
      * @param $entity //entity
-     * @param int $ttl // in days
      *
      * @return string //ID of the logged
      */
-    public function writeInto(string $typeName, $entity, int $ttl = 0): string
+    public function writeInto(string $typeName, $entity): string
     {
         /*
          * Transform entity into array. Elastic can do it for you, but result is not in your hands.
@@ -148,15 +142,13 @@ class ElasticLogService
         return $response['_id'];
     }
 
-    // TODO @GabrielBordovsky remove $ttl?
     /**
      * @param string $typeName
      * @param string $id
      * @param array $types
      * @param array $values
-     * @param int $ttl
      */
-    public function update(string $typeName, string $id, array $types, array $values, int $ttl = 0): void
+    public function update(string $typeName, string $id, array $types, array $values): void
     {
         $body = \array_combine($types, $values);
         $params = [
@@ -167,22 +159,6 @@ class ElasticLogService
         ];
 
         $this->ESClient->update($params);
-    }
-
-
-    /**
-     * @param $params
-     * @param $port
-     * @param $defaultHandler
-     *
-     * @return Client
-     */
-    private function createBuilder($params, $port, $defaultHandler): Client
-    {
-        return ClientBuilder::create()// Instantiate a new ClientBuilder
-        ->setHosts(["{$params[0]}:{$port}"])// Set the hosts
-        ->setHandler($defaultHandler)
-            ->build();
     }
 
 

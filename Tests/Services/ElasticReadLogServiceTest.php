@@ -7,6 +7,7 @@ namespace Trinity\Bundle\LoggerBundle\Tests\Services;
 use Doctrine\ORM\EntityManager;
 use Elasticsearch\Client;
 use Elasticsearch\ClientBuilder;
+use Elasticsearch\Common\Exceptions\Missing404Exception;
 use Elasticsearch\Namespaces\IndicesNamespace;
 use PHPUnit_Framework_MockObject_MockObject as Mock;
 use Trinity\Bundle\LoggerBundle\Entity\EntityActionLog;
@@ -24,7 +25,6 @@ use Trinity\Bundle\SearchBundle\NQL\Select;
 use Trinity\Bundle\SearchBundle\NQL\Table;
 use Trinity\Bundle\SearchBundle\NQL\Where;
 use Trinity\Bundle\SearchBundle\NQL\WherePart;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Class ElasticLogServiceTest
@@ -140,10 +140,8 @@ class ElasticReadLogServiceTest extends UnitTestBase
 
         $response = [
             '_id' => 2,
-            '_ttl' => 50,
             '_index' => 2,
             '_source' => [
-                'ttl' => 76,
                 ElasticEntityProcessor::METADATA_DATETIME_FIELDS => [],
                 ElasticEntityProcessor::METADATA_ENTITIES_TO_DECODE_FIELDS => [
                   //  'System',
@@ -177,7 +175,6 @@ class ElasticReadLogServiceTest extends UnitTestBase
                 'hits' => [
                     'first' => [
                         '_source' => [
-                            'ttl' => 76,
                             ElasticEntityProcessor::METADATA_DATETIME_FIELDS => [],
                             ElasticEntityProcessor::METADATA_ENTITIES_TO_DECODE_FIELDS => [
                                 //'System',
@@ -188,7 +185,6 @@ class ElasticReadLogServiceTest extends UnitTestBase
                             'ChangedEntityId' => EntityActionLog::class,
 
                         ],
-                        '_ttl' => 34,
                         '_id' => 'test',
                         '_score' => 34,
                         '_index' => 2,
@@ -257,7 +253,6 @@ class ElasticReadLogServiceTest extends UnitTestBase
         static::assertEquals(34, $elasticReadLogService->getCount('test', $query));
 
         $searchParams = [
-            'ttl',
             'test2',
         ];
 
@@ -289,9 +284,9 @@ class ElasticReadLogServiceTest extends UnitTestBase
 
 
     /**
-     * @expectedException NotFoundHttpException
+     * @expectedException Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      */
-    public function testGeyByIdException(): void
+    public function testGetByIdException(): void
     {
         /** @var EntityManager|Mock $entityManager */
         $entityManager = $this->getMockBuilder(EntityManager::class)
@@ -347,10 +342,9 @@ class ElasticReadLogServiceTest extends UnitTestBase
         );
 
 
-
         static::assertInstanceOf(
             EntityActionLog::class,
-            $elasticReadLogService->setIndex('test123')->getById('test', 'id#index')
+            $elasticReadLogService->getById('test', 'id#index')
         );
     }
 
@@ -377,9 +371,7 @@ class ElasticReadLogServiceTest extends UnitTestBase
 
         $response = [
             '_id' => 2,
-            '_ttl' => 50,
             '_source' => [
-                'ttl' => 76,
                 ElasticEntityProcessor::METADATA_FIELD => [
                     ElasticEntityProcessor::METADATA_ENTITIES_TO_DECODE_FIELDS => [
                         'System',
@@ -413,7 +405,6 @@ class ElasticReadLogServiceTest extends UnitTestBase
                 'hits' => [
                     'first' => [
                         '_source' => [
-                            'ttl' => 76,
                             ElasticEntityProcessor::METADATA_FIELD => [
                                 ElasticEntityProcessor::METADATA_DATETIME_FIELDS => [],
                                 ElasticEntityProcessor::METADATA_ENTITIES_TO_DECODE_FIELDS => [
@@ -423,7 +414,6 @@ class ElasticReadLogServiceTest extends UnitTestBase
                                 'ChangedEntityId' => EntityActionLog::class
                             ],
                         ],
-                        '_ttl' => 34,
                         '_id' => '',
                         '_score' => 34,
                         '_index' => 2,
@@ -437,7 +427,6 @@ class ElasticReadLogServiceTest extends UnitTestBase
                 'hits' => [
                     'first' => [
                         '_source' => [
-                            'ttl' => 76,
                             ElasticEntityProcessor::METADATA_FIELD => [
                                 ElasticEntityProcessor::METADATA_ENTITIES_TO_DECODE_FIELDS => [
                                     'ChangedEntityId'
@@ -446,7 +435,6 @@ class ElasticReadLogServiceTest extends UnitTestBase
                             ],
                             'ChangedEntityId' => EntityActionLog::class
                         ],
-                        '_ttl' => 34,
                         '_id' => '',
                         '_score' => 34,
                         '_index' => 2,
@@ -674,9 +662,7 @@ class ElasticReadLogServiceTest extends UnitTestBase
 
         $response = [
             '_id' => 2,
-            '_ttl' => 50,
             '_source' => [
-                'ttl' => 76,
                 ElasticEntityProcessor::METADATA_FIELD => [
                     ElasticEntityProcessor::METADATA_ENTITIES_TO_DECODE_FIELDS => [
                         'System',
@@ -711,7 +697,6 @@ class ElasticReadLogServiceTest extends UnitTestBase
                 'hits' => [
                     'first' => [
                         '_source' => [
-                            'ttl' => 76,
                             ElasticEntityProcessor::METADATA_FIELD => [
                                 ElasticEntityProcessor::METADATA_ENTITIES_TO_DECODE_FIELDS => [
                                     'System',
@@ -722,7 +707,6 @@ class ElasticReadLogServiceTest extends UnitTestBase
                             'System' => EntityActionLog::class,
                             'ChangedEntityId' => EntityActionLog::class,
                         ],
-                        '_ttl' => 34,
                         '_score' => 34,
                     ]
                 ],
@@ -799,9 +783,7 @@ class ElasticReadLogServiceTest extends UnitTestBase
 
         $response = [
             '_id' => 2,
-            '_ttl' => 50,
             '_source' => [
-                'ttl' => 76,
                 ElasticEntityProcessor::METADATA_FIELD => [
                     ElasticEntityProcessor::METADATA_ENTITIES_TO_DECODE_FIELDS => [
                         'System',
@@ -832,7 +814,6 @@ class ElasticReadLogServiceTest extends UnitTestBase
                     'first' => [
                         '_source' => [
                             'changeSet' => '{"info":1,"b":2,"c":3,"d":4,"e":5}',
-                            'ttl' => 76,
                             ElasticEntityProcessor::METADATA_FIELD => [
                                 ElasticEntityProcessor::METADATA_ENTITIES_TO_DECODE_FIELDS => [
                                     'System',
@@ -844,7 +825,6 @@ class ElasticReadLogServiceTest extends UnitTestBase
                             'ChangedEntityId' => EntityActionLog::class,
                             'user' => MockUser::class,
                         ],
-                        '_ttl' => 34,
                         '_id' => 'test',
                         '_score' => 34,
                     ]
@@ -857,8 +837,7 @@ class ElasticReadLogServiceTest extends UnitTestBase
                 'hits' => [
                     'first' => [
                         '_source' => [
-                            'changeSet' => '{"info":1,"b":2,"c":3,"d":4,"e":5}',
-                            'ttl' => 76,
+                            'changeSet' => '{"info":2,"b":2,"c":3,"d":4,"e":5}',
                             ElasticEntityProcessor::METADATA_FIELD => [
                                 ElasticEntityProcessor::METADATA_ENTITIES_TO_DECODE_FIELDS => [
                                     'System',
@@ -870,7 +849,6 @@ class ElasticReadLogServiceTest extends UnitTestBase
                             'ChangedEntityId' => EntityActionLog::class,
                             'user' => MockUser::class,
                         ],
-                        '_ttl' => 34,
                         '_id' => 'test',
                         '_score' => 34,
                     ]
@@ -904,30 +882,6 @@ class ElasticReadLogServiceTest extends UnitTestBase
         $client->expects(static::at(1))
             ->method('search')
             ->will(
-                static::returnValue($result1)
-            );
-
-        $client->expects(static::at(2))
-            ->method('search')
-            ->will(
-                static::returnValue($result2)
-            );
-
-        $client->expects(static::at(3))
-            ->method('search')
-            ->will(
-                static::returnValue($result2)
-            );
-
-        $client->expects(static::at(4))
-            ->method('search')
-            ->will(
-                static::returnValue($result2)
-            );
-
-        $client->expects(static::at(5))
-            ->method('search')
-            ->will(
                 static::returnValue($emptyResult)
             );
 
@@ -955,11 +909,6 @@ class ElasticReadLogServiceTest extends UnitTestBase
         );
 
         $entity = new EntityActionLog();
-
-        static::assertEquals(76, $elasticReadLogService->getStatusByEntity($entity)[0]['ttl']);
-
-        static::assertEquals(76, $elasticReadLogService->getStatusByEntity($entity)[0]['ttl']);
-
         static::assertEmpty($elasticReadLogService->getStatusByEntity($entity));
     }
 }
