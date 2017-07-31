@@ -12,7 +12,9 @@ use Monolog\Logger;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\Security\Core\Authentication\Token\RememberMeToken;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Trinity\Bundle\LoggerBundle\Entity\ExceptionLog;
 use Trinity\Component\Core\Interfaces\UserInterface;
 
@@ -100,7 +102,6 @@ class DatabaseHandler extends AbstractProcessingHandler
                  * todo: get ip from extra too (which one?)
                  */
             }
-            $token = $this->tokenStorage->getToken();
             $readable = $this->getReadable($record);
             $serverData = '';
 
@@ -119,11 +120,12 @@ class DatabaseHandler extends AbstractProcessingHandler
             $exception->setUrl($url);
             $exception->setIp($ip);
             $exception->setSystem($this->system);
-            if ($token && $token->getUser() && !is_string($token->getUser())) {
-                if ($token->getUser() instanceof UserInterface) {
-                    $exception->setUser($token->getUser());
-                }
+
+            $user = $this->getUser();
+            if ($user !== null) {
+                $exception->setUser($user);
             }
+
             $exception->setReadable($readable);
             $this->esLogger->writeInto(ExceptionLog::LOG_NAME, $exception);
         }
@@ -165,5 +167,57 @@ class DatabaseHandler extends AbstractProcessingHandler
             $this->session->set('readable', $readable);
         }
         return $readable;
+    }
+
+    /**
+     * Get user either from the token storage or from the session if the storage is empty.
+     *
+     * @return null|UserInterface
+     */
+    private function getUser(): ?UserInterface
+    {
+        $token = $this->tokenStorage->getToken();
+
+        if ($token && $token->getUser() && !is_string($token->getUser())) {
+            if ($token->getUser() instanceof UserInterface) {
+                return $token->getUser();
+            }
+        }
+
+        return $this->getUserFromSession();
+    }
+
+    /**
+     * Tries to get the user from the session.
+     *
+     * The session must have at least one key starting with the '_security_' string.
+     * The key should contain an serialized instance of TokenInterface
+     *
+     *
+     * @return UserInterface|null
+     */
+    private function getUserFromSession(): ?UserInterface
+    {
+        $sessionData = $this->session->all();
+
+        foreach ($sessionData as $key => $value) {
+            if (0 === \strpos($key, '_security_')) { // see Symfony\Component\Security\Http\Firewall\ContextListener
+                //the key starts with the _security_, so it should contain the token
+
+                $value = \unserialize($value, [TokenInterface::class]); //unserialize only instances of TokenInterface
+
+                if (false === $value) { //unsuccessful unserialization
+                    break;
+                }
+
+                if ($value->getUser() instanceof UserInterface) {
+                    return $value->getUser();
+                }
+
+                break; //the security key was already found, so there is no need to traverse the whole array
+            }
+        }
+
+        return null;
     }
 }
