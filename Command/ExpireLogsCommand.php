@@ -35,6 +35,7 @@ class ExpireLogsCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        /** @var array $report */
         $report = $this->getContainer()->get('trinity.logger.elastic_expire_log_service')->checkLogs();
         $table = new Table($output);
         $table->setHeaders(['Name', 'Deleted documents', 'Used TTL (in days)']);

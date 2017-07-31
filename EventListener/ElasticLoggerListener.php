@@ -5,23 +5,23 @@ declare(strict_types=1);
 namespace Trinity\Bundle\LoggerBundle\EventListener;
 
 use Trinity\Bundle\LoggerBundle\Event\ElasticLoggerEvent;
-use Trinity\Bundle\LoggerBundle\Services\ElasticLogServiceWithTtl;
+use Trinity\Bundle\LoggerBundle\Services\ElasticLogService;
 
 /**
  * Class ElasticLoggerListener.
  */
 class ElasticLoggerListener
 {
-    /** @var ElasticLogServiceWithTtl */
+    /** @var ElasticLogService */
     protected $logger;
 
 
     /**
      * ElasticLoggerListener constructor.
      *
-     * @param ElasticLogServiceWithTtl $logger
+     * @param ElasticLogService $logger
      */
-    public function __construct(ElasticLogServiceWithTtl $logger)
+    public function __construct(ElasticLogService $logger)
     {
         $this->logger = $logger;
     }

@@ -17,6 +17,7 @@
     "symfony/config": "~2.8|~3.0",
     "symfony/monolog-bundle": "~2.8 | ~3.0",
     "symfony/security-core": "~2.8|~3.0",
+    "symfony/expression-language": "~2.8|~3.0",
     "guzzlehttp/guzzle": "~6.3",
     "doctrine/orm": "~2.5",
     "elasticsearch/elasticsearch": "~5.0",

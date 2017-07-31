@@ -11,6 +11,10 @@ use Trinity\Bundle\LoggerBundle\Tests\UnitTestBase;
  */
 class ElasticEntityProcessorTest extends UnitTestBase
 {
+    const TIMEZONE_NY = 'America/New_York';
+    const TIMEZONE_TO = 'Asia/Tokyo';
+
+
     public function testToArrayDateTime(): void
     {
         $processor = new ElasticEntityProcessor();
@@ -18,7 +22,7 @@ class ElasticEntityProcessorTest extends UnitTestBase
         $log = new DatetimeTestLog();
 
         //create the -4 time zone
-        $log->setDate(new \DateTime('now', new \DateTimeZone('America/New_York')));
+        $log->setDate(new \DateTime('now', new \DateTimeZone(self::TIMEZONE_NY)));
         $log->setString('string');
 
         $returned = $this->invokeMethod($processor, 'getElasticArray', [$log]);
@@ -50,7 +54,7 @@ class ElasticEntityProcessorTest extends UnitTestBase
         $log = new DatetimeTestLog();
 
         //create the -4 time zone
-        $log->setDate(new \DateTime('now', new \DateTimeZone('America/New_York')));
+        $log->setDate(new \DateTime('now', new \DateTimeZone(self::TIMEZONE_NY)));
         $log->setString('string');
 
         //convert to an array
@@ -73,14 +77,14 @@ class ElasticEntityProcessorTest extends UnitTestBase
         //create current UTC time
         $utc = new \DateTime('now', new \DateTimeZone('UTC'));
         //create the -4 time zone
-        $newYork = new \DateTime('now', new \DateTimeZone('America/New_York'));
+        $newYork = new \DateTime('now', new \DateTimeZone(self::TIMEZONE_NY));
         //create the +9 time zone
-        $tokyo = new \DateTime('now', new \DateTimeZone('Asia/Tokyo'));
+        $tokyo = new \DateTime('now', new \DateTimeZone(self::TIMEZONE_TO));
 
         //check if the timezone names are correct
         static::assertEquals('UTC', $utc->getTimezone()->getName());
-        static::assertEquals('America/New_York', $newYork->getTimezone()->getName());
-        static::assertEquals('Asia/Tokyo', $tokyo->getTimezone()->getName());
+        static::assertEquals(self::TIMEZONE_NY, $newYork->getTimezone()->getName());
+        static::assertEquals(self::TIMEZONE_TO, $tokyo->getTimezone()->getName());
 
         //check the timestamps
         static::assertEquals($utc->getTimestamp(), $newYork->getTimestamp());
@@ -98,14 +102,14 @@ class ElasticEntityProcessorTest extends UnitTestBase
         //create current UTC time
         $utc = new \DateTime($time, new \DateTimeZone('UTC'));
         //create the -4 time zone
-        $newYork = new \DateTime($time, new \DateTimeZone('America/New_York'));
+        $newYork = new \DateTime($time, new \DateTimeZone(self::TIMEZONE_NY));
         //create the +9 time zone
-        $tokyo = new \DateTime($time, new \DateTimeZone('Asia/Tokyo'));
+        $tokyo = new \DateTime($time, new \DateTimeZone(self::TIMEZONE_TO));
 
         //check if the timezone names are correct
         static::assertEquals('UTC', $utc->getTimezone()->getName());
-        static::assertEquals('America/New_York', $newYork->getTimezone()->getName());
-        static::assertEquals('Asia/Tokyo', $tokyo->getTimezone()->getName());
+        static::assertEquals(self::TIMEZONE_NY, $newYork->getTimezone()->getName());
+        static::assertEquals(self::TIMEZONE_TO, $tokyo->getTimezone()->getName());
 
         //check the timestamps - the timestamps are correct
         // because the same date in different timezone has different timestamp

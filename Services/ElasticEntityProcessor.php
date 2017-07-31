@@ -66,7 +66,6 @@ class ElasticEntityProcessor
             if (\is_object($value)) {
                 //elastic can work with DateTime, not with ours entities
                 if ($value instanceof \DateTimeInterface) {
-
                     $entityMetadata[self::METADATA_DATETIME_FIELDS][] = $key;
                     $entityArray[$key] = $value->getTimestamp() * 1000; //convert seconds to milliseconds
 
@@ -91,7 +90,7 @@ class ElasticEntityProcessor
                     }
                 }
             } else {
-                $entityArray[$key] = $value;
+                $entityArray[$key] = $value ?? '';
             }
         }
 
@@ -101,6 +100,7 @@ class ElasticEntityProcessor
 
         return $entityArray;
     }
+
 
     /**
      * Transform document from ElasticSearch obtained as array into entity matching
@@ -148,6 +148,7 @@ class ElasticEntityProcessor
 
         return $entity;
     }
+
 
     /**
      * Transform reference into doctrine entity

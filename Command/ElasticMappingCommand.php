@@ -27,11 +27,16 @@ class ElasticMappingCommand extends ContainerAwareCommand
 
     const PATH = __DIR__.'/../Resources/MappingData/base';
 
+    /** @var string */
     protected $elasticHost;
 
-    /** @var  ESClient */
+    /** @var ESClient */
     protected $eSClient;
 
+    /**
+     * {@inheritDoc}
+     * @throws \Symfony\Component\Console\Exception\InvalidArgumentException
+     */
     protected function configure(): void
     {
         $this->setName('trinity:logger:initialize-elastic')
@@ -64,7 +69,7 @@ class ElasticMappingCommand extends ContainerAwareCommand
      * @throws \UnexpectedValueException
      *
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): ?int
     {
         try {
             $this->createClient();
@@ -76,13 +81,15 @@ class ElasticMappingCommand extends ContainerAwareCommand
 
             $client = new Client();
 
-            if ($input->getOption('clean-all')) {
+            $status = $this->getStatus();
+
+            if (!$status || $input->getOption('clean-all')) {
                 $output->write('Delete in process....');
-                $client->request('DELETE', 'http://' . $this->elasticHost . "/$index");
+                $client->request('DELETE', $this->elasticHost . "/$index");
                 $output->writeln('Deleted');
             }
 
-            if (!$this->getStatus()) {
+            if (!$status) {
                 $output->writeln('ElasticSearch not initialized');
                 $fileContent = \file_get_contents(self::PATH);
                 if (!$fileContent) {
@@ -99,7 +106,7 @@ class ElasticMappingCommand extends ContainerAwareCommand
 
                 $data = \substr($fileContent, $equalPos, $quotePos-$equalPos);
                 $output->write('Putting template......');
-                $client->request('PUT', 'http://' . $this->elasticHost . '/_template/trinity-logger', [
+                $client->request('PUT', $this->elasticHost . '/_template/trinity-logger', [
                     'headers' => ['Content-Type' => 'application/json'],
                     'body' => $data
                 ]);
@@ -123,15 +130,22 @@ class ElasticMappingCommand extends ContainerAwareCommand
     private function createClient(): void
     {
         $this->elasticHost = $this->getContainer()->getParameter('elasticsearch_host');
-        if (\substr_count($this->elasticHost, ':') + 1 === 1) {
-            $this->elasticHost .= ':9200';
+        $params = \parse_url($this->elasticHost);
+
+        if (!\array_key_exists('port', $params)) {
+            if (\array_key_exists('scheme', $params) && $params['scheme'] === 'https') {
+                $this->elasticHost .= ':443';
+            } else {
+                $this->elasticHost .= ':9200';
+            }
         }
 
         $this->eSClient = ClientBuilder::create()->setHosts([$this->elasticHost])->build();
     }
 
-
-    /**  */
+    /**
+     *
+     */
     private function setStatus(): void
     {
         $params = self::$params;

@@ -33,10 +33,9 @@ class EntityActionListener
 {
     const NEW_VALUE = 1;
     const OLD_VALUE = 0;
-    //@TODO @GabrielBordovsky remove admin prefixes
-    const UPDATE = 'admin_update';
-    const DELETE = 'admin_delete';
-    const CREATE = 'admin_create';
+    const UPDATE = 'update';
+    const DELETE = 'delete';
+    const CREATE = 'create';
     const PROXY_FLAG = 'Proxies\\__CG__\\';
     const NECKTIE_SYSTEM_NAME = 'Necktie';
     /** @var int */
@@ -155,8 +154,6 @@ class EntityActionListener
         } catch (\InvalidArgumentException $e) {
             if ($this->kernelEnvironment !== 'dev') {
                 $this->moLogger->addError($e);
-
-                return;
             } else {
                 throw $e;
             }
@@ -182,8 +179,6 @@ class EntityActionListener
         } catch (\Exception $e) {
             if ($this->kernelEnvironment !== 'dev') {
                 $this->moLogger->addError($e);
-
-                return;
             } else {
                 throw $e;
             }
@@ -203,8 +198,6 @@ class EntityActionListener
         } catch (\Exception $e) {
             if ($this->kernelEnvironment !== 'dev') {
                 $this->moLogger->addError($e);
-
-                return;
             } else {
                 throw $e;
             }
@@ -234,8 +227,6 @@ class EntityActionListener
         } catch (\Exception $e) {
             if ($this->kernelEnvironment !== 'dev') {
                 $this->moLogger->addError($e);
-
-                return;
             } else {
                 throw $e;
             }
@@ -250,6 +241,7 @@ class EntityActionListener
      * @throws Exception
      * @throws \RuntimeException
      * @throws \UnexpectedValueException
+     * @throws \ReflectionException
      */
     private function process(LifecycleEventArgs $args, $operationType): void
     {
@@ -295,6 +287,8 @@ class EntityActionListener
                     return;
                 }
                 break;
+            default:
+                break;
         }
 
         $this->checkUser($log, $args->getObjectManager());
@@ -337,7 +331,8 @@ class EntityActionListener
                 }
 
                 $exception = new \UnexpectedValueException(
-                    'Could not identify user making this entity action on ' . $log->getChangedEntityClass() . '.'
+                    'Could not identify user making this entity '. $log->getActionType() .
+                    ' action on ' . $log->getChangedEntityClass() . '.'
                 );
                 $this->moLogger->addError($exception);
             }
