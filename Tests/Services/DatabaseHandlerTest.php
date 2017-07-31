@@ -193,6 +193,10 @@ class DatabaseHandlerTest extends UnitTestBase
                 static::returnValue($user)
             );
 
+        $session->expects(static::any())
+            ->method('all')
+            ->willReturn([]);
+
         $databaseHandler = new DatabaseHandler($session, $tokenStorage, $requestStack, $esLogger);
 
         $record = [
