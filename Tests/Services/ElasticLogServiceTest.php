@@ -106,6 +106,6 @@ class ElasticLogServiceTest extends UnitTestBase
         $els->writeInto('testTypeName', $entity);
         static::assertEquals('3', $entity->getId());
 
-        $els->update('tesTypeName', '1', $types, $values);
+        $els->update('tesTypeName', '1#2', $types, $values);
     }
 }
