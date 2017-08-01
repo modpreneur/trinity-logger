@@ -38,45 +38,44 @@ class EntityActionListener
     const CREATE = 'create';
     const PROXY_FLAG = 'Proxies\\__CG__\\';
     const NECKTIE_SYSTEM_NAME = 'Necktie';
+
     /** @var int */
     private $deletedId = 0;
+
     /** @var mixed */
     private $deleteEntity = 0;
-    /**
-     * @var TokenStorageInterface
-     */
+
+    /** @var TokenStorageInterface */
     protected $tokenStorage;
-    /**
-     * @var ElasticLogService
-     */
+
+    /** @var ElasticLogService */
     protected $esLogger;
-    /**
-     * @var EventDispatcherInterface
-     */
+
+    /** @var EventDispatcherInterface */
     protected $eventDispatcher;
-    /**
-     * @var JMS
-     */
+
+    /** @var JMS */
     protected $serializer;
-    /**
-     * @var Reader
-     */
+
+    /** @var Reader */
     protected $reader;
-    /**
-     * @var string
-     */
+
+    /** @var string */
     protected $kernelEnvironment;
-    /**
-     * @var Logger
-     */
+
+    /** @var Logger */
     protected $moLogger;
-    /** @var  bool */
+
+    /** @var bool */
     protected $notificationsInProgress = false;
-    /** @var  int */
+
+    /** @var int */
     protected $notificationUser;
+
     /** @var int|string */
     protected $notificationClient = '';
-    /** @var  UserProviderInterface */
+
+    /** @var UserProviderInterface */
     protected $userProvider;
 
 

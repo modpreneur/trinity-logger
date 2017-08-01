@@ -25,12 +25,16 @@ class DatabaseHandler extends AbstractProcessingHandler
 {
     /** @var  TokenStorageInterface */
     private $tokenStorage;
+
     /** @var  Session */
     protected $session;
+
     /** @var RequestStack */
     private $requestStack;
+
     /** @var  ElasticLogService */
     private $esLogger;
+
     /** @var string */
     private $system;
 
@@ -177,10 +181,11 @@ class DatabaseHandler extends AbstractProcessingHandler
     {
         $token = $this->tokenStorage->getToken();
 
-        if ($token && $token->getUser() && !is_string($token->getUser())) {
-            if ($token->getUser() instanceof UserInterface) {
-                return $token->getUser();
-            }
+        if ($token && $token->getUser() &&
+            !is_string($token->getUser()) &&
+            $token->getUser() instanceof UserInterface
+        ) {
+            return $token->getUser();
         }
 
         return $this->getUserFromSession();
