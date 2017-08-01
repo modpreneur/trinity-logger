@@ -1,29 +1,31 @@
 # trinity-logger 
 
-#This bundle is reconstructed for new elasticsearch (v5) and the read me is not actualized yet. TODO
+# This bundle is reconstructed for new elasticsearch (v5) and the read me is not actualized yet. TODO
 
 [![Coverage Status](https://coveralls.io/repos/github/modpreneur/trinity-logger/badge.svg?branch=master)](https://coveralls.io/github/modpreneur/trinity-logger?branch=master)
 [![Build Status](https://travis-ci.org/modpreneur/trinity-logger.svg?branch=master)](https://travis-ci.org/modpreneur/trinity-settings)
 
-Bundle for storing and loading logs.
-Originaly this should be for Amazon's DynamoDB and basic work with it.
-But dynamo come with more headache then we could accept.
-
-Now we are developing for elasticSearch. No bundles for work with elasticSearch was stable enough to work with.
-Currently base for this bundle is official elasticSearch-php.
-
-This bundle is in early development phase, use on own risk!
+Bundle for storing and loading logs in ElasticSearch database.
 
 Write issue if you found something that doesn't work as it should.
 
-Logger works with one index of elasticSearch database. This index is specified in bundle configuration
+Logger creates new index each day in format YYYY-MM-DD. It works with environment and as for now two types are used. Development and Production logs are written into same index.
+The test environment adds prefix 'test-' before the index.
+
+Thanks to this the logs may be viewed directly by using URL:
+
+    http:\\elastic_host:port\YYYY-MM-DD\LogName\LogId
+
+for example:
+
+    
 
     trinity_logger:
       elastic_logs:
         elastic_host: '127.0.0.1:9200'
         managed_index: 'necktie'
 
-Configurated index can be changed when method is called.
+Configured index can be changed when method is called.
 
   Classic call:
 

@@ -84,11 +84,19 @@ class DatabaseHandler extends AbstractProcessingHandler
             $exception = new ExceptionLog();
             /** @var Request $request */
             $request = $this->requestStack->getCurrentRequest();
+
+            $serverData = '';
+
             $url = null;
             $ip = null;
+
+            if (isset($record['extra']['serverData'])) {
+                $serverData = $record['extra']['serverData'];
+                $ip = $serverData['HTTP_X_FORWARDED_FOR'] ?? null;
+            }
             if ($request) {
                 $url = $request->getUri();
-                $ip = $request->getClientIp();
+                $ip = $ip ?? $request->getClientIp();
             } else {
                 $requestedUrl = \strpos($record['extra']['serverData'], 'REQUEST_URI:');
                 if ($requestedUrl !== false) {
@@ -96,17 +104,11 @@ class DatabaseHandler extends AbstractProcessingHandler
                     $endLine = \strpos($record['extra']['serverData'], \PHP_EOL, $requestedUrl);
                     $url = \substr($record['extra']['serverData'], $requestedUrl, $endLine - $requestedUrl);
                 }
-                /*
-                 * todo: get ip from extra too (which one?)
-                 */
             }
+
             $token = $this->tokenStorage->getToken();
             $readable = $this->getReadable($record);
-            $serverData = '';
 
-            if (isset($record['extra']['serverData'])) {
-                $serverData = $record['extra']['serverData'];
-            }
 
             /*
              * Elastic part

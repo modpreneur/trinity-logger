@@ -145,6 +145,11 @@ class EntityActionLog extends BaseElasticLog implements EntityInterface
     public function setActionType($actionType): void
     {
         $this->actionType = $actionType;
+
+        /* Backward compatibility with old logger */
+        if (\strpos($actionType, 'admin_') === 0) {
+            $this->actionType = \explode('_', $actionType)[1];
+        }
     }
 
 

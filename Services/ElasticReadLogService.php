@@ -508,7 +508,7 @@ class ElasticReadLogService
         $entities = [];
         foreach ($result['hits']['hits'] as $arrayEntity) {
             $source = $arrayEntity['_source'];
-            $source['_id'] = $arrayEntity['_id'];
+            $source['_id'] = $arrayEntity['_id'].'#'.$arrayEntity['_index'];
             $source['user'] = $source['user'] ? $this->entityProcessor->getEntity($source['user']) : null;
             $changeSet = (array)\json_decode($source['changeSet'] ?? '');
             if (\array_key_exists('info', $changeSet)) {
