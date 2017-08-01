@@ -108,7 +108,6 @@ class DatabaseHandler extends AbstractProcessingHandler
             }
             $readable = $this->getReadable($record);
 
-
             /*
              * Elastic part
              */

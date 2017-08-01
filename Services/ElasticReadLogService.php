@@ -112,9 +112,8 @@ class ElasticReadLogService
      */
     public function getById(string $typeName, string $id)
     {
-        $parts = \explode('#', $id);
-        $realID = $parts[0];
-        $index = $parts[1];
+        [$realID, $index] = \explode('#', $id);
+
         $params = [
             'index' => $index,
             'type' => $typeName,
@@ -516,11 +515,9 @@ class ElasticReadLogService
             } else {
                 $source['changeSet'] = \array_keys($changeSet);
             }
-            $entities[] = $source;//[$entity['createdAt'], $entity['changeSet'], $entity['actionType'], ];
+            $entities[] = $source;
         }
         return $entities;
-
-//        return $result['hits']['hits'];
     }
 
 

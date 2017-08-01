@@ -159,11 +159,13 @@ class ElasticLogService
      */
     public function update(string $typeName, string $id, array $types, array $values): void
     {
+        [$realID, $index] = \explode('#', $id);
+
         $body = \array_combine($types, $values);
         $params = [
-            'index' => $this->getIndex(),
+            'index' => $index,
             'type' => $typeName,
-            'id' => $id,
+            'id' => $realID,
             'body' => ['doc' => $body],
         ];
 
