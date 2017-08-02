@@ -101,7 +101,7 @@ class DatabaseHandler extends AbstractProcessingHandler
             }
             if ($request) {
                 $url = $request->getUri();
-                $ip = $ip ?? $request->getClientIp();
+                $ip = $ip ?: $request->getClientIp();
             } else {
                 $url = $this->getFromServerData('REQUEST_URI', $serverData);
             }
