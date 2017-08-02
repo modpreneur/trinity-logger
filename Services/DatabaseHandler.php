@@ -197,6 +197,15 @@ class DatabaseHandler extends AbstractProcessingHandler
      */
     private function getUserFromSession(): ?UserInterface
     {
+        //when the session is not started(due to an exception or other reasons)
+        //the session tries to start and that causes issues
+        //for example when building cache form the console:
+        //[RuntimeException]
+        //Failed to start the session because headers have already been sent by "/var/app/bin/console" at line 2.
+        if (!$this->session->isStarted()) {
+            return null;
+        }
+
         $sessionData = $this->session->all();
 
         foreach ($sessionData as $key => $value) {
