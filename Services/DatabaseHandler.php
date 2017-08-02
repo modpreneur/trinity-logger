@@ -93,18 +93,13 @@ class DatabaseHandler extends AbstractProcessingHandler
 
             if (isset($record['extra']['serverData'])) {
                 $serverData = $record['extra']['serverData'];
-                $ip = $serverData['HTTP_X_FORWARDED_FOR'] ?? null;
+                $ip = $this->getFromServerData('HTTP_X_FORWARDED_FOR', $serverData);
             }
             if ($request) {
                 $url = $request->getUri();
                 $ip = $ip ?? $request->getClientIp();
             } else {
-                $requestedUrl = \strpos($record['extra']['serverData'], 'REQUEST_URI:');
-                if ($requestedUrl !== false) {
-                    $requestedUrl += \strlen('REQUEST_URI: ');
-                    $endLine = \strpos($record['extra']['serverData'], \PHP_EOL, $requestedUrl);
-                    $url = \substr($record['extra']['serverData'], $requestedUrl, $endLine - $requestedUrl);
-                }
+                $url = $this->getFromServerData('REQUEST_URI', $serverData);
             }
             $readable = $this->getReadable($record);
 
@@ -218,5 +213,23 @@ class DatabaseHandler extends AbstractProcessingHandler
         }
 
         return null;
+    }
+
+
+    /**
+     * @param string $valueName
+     * @param string $serverData
+     *
+     * @return string
+     */
+    private function getFromServerData(string $valueName, string $serverData) :string
+    {
+        $beginOfLine = \strpos($serverData, $valueName);
+        if ($beginOfLine !== false) {
+            $beginOfValue = $beginOfLine + \strlen($valueName) + 2; //after name is colon and space = two characters.
+            $endLine = \strpos($serverData, \PHP_EOL, $beginOfValue);   //end of line after each pair
+            return \substr($serverData, $beginOfValue, $endLine - $beginOfValue) ?: '';
+        }
+        return '';
     }
 }
