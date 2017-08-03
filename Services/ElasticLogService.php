@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace Trinity\Bundle\LoggerBundle\Services;
 
+use Doctrine\ORM\Query\Expr\Base;
 use Elasticsearch\Client;
 use Elasticsearch\ClientBuilder;
 use Trinity\Bundle\LoggerBundle\Entity\BaseElasticLog;
@@ -90,6 +91,15 @@ class ElasticLogService
         \var_dump('Delete this use.');
     }
 
+
+    /**
+     * @param BaseElasticLog $elasticLog
+     */
+    public function writeAsync(BaseElasticLog $elasticLog) :void
+    {
+        $this->writeIntoAsync($elasticLog::getLogName(), $elasticLog);
+    }
+
     /**
      * @param string $typeName //log name
      * @param $entity //entity
@@ -121,6 +131,16 @@ class ElasticLogService
 
 
     /**
+     * @param BaseElasticLog $elasticLog
+     *
+     * @return string
+     */
+    public function write(BaseElasticLog $elasticLog): string
+    {
+        return $this->writeInto($elasticLog::getLogName(), $elasticLog);
+    }
+
+    /**
      * @param string $typeName //log name
      * @param $entity //entity
      *
@@ -138,7 +158,6 @@ class ElasticLogService
             'type' => $typeName,
             'body' => $entityArray,
         ];
-
 
         $response = $this->ESClient->index($params);
 
@@ -172,6 +191,21 @@ class ElasticLogService
         $this->ESClient->update($params);
     }
 
+
+    /**
+     * @param BaseElasticLog $entity
+     */
+    public function updateEntity(BaseElasticLog $entity): void
+    {
+        [$realID, $index] = \explode('#', $entity->getId());
+        $params = [
+            'index' => $index,
+            'type' => $entity::getLogName(),
+            'id' => $realID,
+            'body' => ['doc' => $this->entityProcessor->getElasticArray($entity)],
+        ];
+        $this->ESClient->update($params);
+    }
 
     /**
      * Return today's index name as formatted day (YYYY-DD-YY) with possible prefix ('test-')
