@@ -480,9 +480,6 @@ class ElasticReadLogService
     }
 
 
-    /*
-     * @TODO: @GabrielBordovsky move to Necktie !!
-     */
     /**
      * Takes entity and try to search EntityActionLog for matching nodes.
      *
@@ -534,6 +531,7 @@ class ElasticReadLogService
             } else {
                 $source['changeSet'] = \array_keys($changeSet);
             }
+            $source['createdAt'] =  new \DateTime('@' . ($source['createdAt'] / 1000));
             $entities[] = $source;
         }
         return $entities;
