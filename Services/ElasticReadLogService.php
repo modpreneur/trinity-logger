@@ -233,6 +233,25 @@ class ElasticReadLogService
         return $entities;
     }
 
+    /**
+     * Get the entities by the same query syntax as it is for doctrine repositories.
+     *
+     * @param string $typeName Name of the elastic type
+     * @param array $parameters e.g. ['name' => 'jack', 'age' => 25]
+     *
+     * @return array
+     */
+    public function getMatchingEntitiesSimple(string $typeName, array $parameters): array
+    {
+        $outArray['query']['bool']['must'] = [];
+
+        foreach ($parameters as $key => $val) {
+            $outArray['query']['bool']['must'][] = ['match' => [$key => $val]];
+        }
+
+        return $this->getMatchingEntities($typeName, $outArray);
+    }
+
 
     /**
      * Take $nqlQuery and turns it into elasticSearch parameters,
