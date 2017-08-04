@@ -247,7 +247,7 @@ class EntityActionListener
         $log = new EntityActionLog();
         $log->setSystem(self::NECKTIE_SYSTEM_NAME);
 
-        $entity = $args->getObject();
+        $entity = clone $args->getObject();
 
         $reflect = new \ReflectionClass($entity);
         $className = \get_class($entity);
