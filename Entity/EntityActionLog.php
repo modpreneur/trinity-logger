@@ -113,16 +113,18 @@ class EntityActionLog extends BaseElasticLog implements EntityInterface
 
 
     /**
-     * @return int|null
+     * @return int|string|null
+     *
+     * Don't insert the data type after the method. Int is for SQL entities and String for NoSQL entities.
      */
-    public function getChangedEntityId(): ?int
+    public function getChangedEntityId()
     {
         return $this->changedEntityId;
     }
 
 
     /**
-     * @param int $changedEntityId
+     * @param int|string $changedEntityId
      */
     public function setChangedEntityId($changedEntityId): void
     {
