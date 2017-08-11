@@ -128,7 +128,7 @@ class EntityActionLog extends BaseElasticLog implements EntityInterface
      */
     public function setChangedEntityId($changedEntityId): void
     {
-        $this->changedEntityId = $changedEntityId;
+        $this->changedEntityId = (string) $changedEntityId;
     }
 
 
