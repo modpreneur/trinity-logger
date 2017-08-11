@@ -247,7 +247,7 @@ class EntityActionListener
         $log = new EntityActionLog();
         $log->setSystem(self::NECKTIE_SYSTEM_NAME);
 
-        $entity = clone $args->getObject();
+        $entity = $args->getObject();
 
         $reflect = new \ReflectionClass($entity);
         $className = \get_class($entity);
@@ -498,6 +498,7 @@ class EntityActionListener
      */
     private function setDeleteLog(EntityActionLog $log, $entity): void
     {
+        $entity = clone $entity;
         if (\method_exists($entity, 'getDeletedBy') && $entity->getDeletedBy()) {
             $log->setUser($entity->getDeletedBy());
         }
@@ -517,6 +518,7 @@ class EntityActionListener
      */
     private function setCreateLog(EntityActionLog $log, $entity): void
     {
+        $entity = clone $entity;
         if (\method_exists($entity, 'getCreatedBy') && $entity->getCreatedBy()) {
             $log->setUser($entity->getCreatedBy());
         }

@@ -10,7 +10,6 @@ declare(strict_types=1);
 
 namespace Trinity\Bundle\LoggerBundle\Services;
 
-use Doctrine\ORM\Query\Expr\Base;
 use Elasticsearch\Client;
 use Elasticsearch\ClientBuilder;
 use Trinity\Bundle\LoggerBundle\Entity\BaseElasticLog;
