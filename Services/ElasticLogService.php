@@ -165,8 +165,7 @@ class ElasticLogService
         if ($entity instanceof BaseElasticLog) {
             $entity->setId($response['_id']);
         }
-
-        return $response['_id'];
+        return $response['_id'].'#'.$response['_index'];
     }
 
     /**
