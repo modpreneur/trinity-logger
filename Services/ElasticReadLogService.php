@@ -418,8 +418,14 @@ class ElasticReadLogService
             $name = $condition->key->getName();
             $key = 'should';
 
+            if($condition->operator === '!=') {
+                $key = 'must_not';
+            }
+
             if (!$values) {
-                if ($condition->value !== '') {
+                if($condition->operator === '!='){
+                    $this->query['bool'][$key][]= [$term => [$name => $condition->value]];
+                } elseif ($condition->value !== '') {
                     $this->query = ['error' => 'No matching values.'];
                 } else {
                     $this->query['bool'][$key][] = [$term => [$name => '']];
