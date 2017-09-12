@@ -123,9 +123,12 @@ class ElasticLogService
             'body' => $entityArray,
             'client' => ['future' => 'lazy'],
         ];
-
-        $this->ESClient->index($params);
-        //does not return anything to full use the lazy(async) feature
+        try {
+            $this->ESClient->index($params);
+            //does not return anything to full use the lazy(async) feature
+        } catch (\Exception $e) {
+            // @todo repair EntityActionLog serializer
+        }
     }
 
 
@@ -157,11 +160,12 @@ class ElasticLogService
             'type' => $typeName,
             'body' => $entityArray,
         ];
-
-        $response = $this->ESClient->index($params);
-
-        $this->ESClient->indices()->refresh(['index' => $this->getIndex()]);
-
+        try {
+            $response = $this->ESClient->index($params);
+            $this->ESClient->indices()->refresh(['index' => $this->getIndex()]);
+        } catch (\Exception $e) {
+            // @todo repair EntityActionLog serializer
+        }
         if ($entity instanceof BaseElasticLog) {
             $entity->setId($response['_id']);
         }
