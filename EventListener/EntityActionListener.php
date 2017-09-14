@@ -277,9 +277,8 @@ class EntityActionListener
             case self::DELETE:
                 $this->setDeleteLog($log, $entity);
                 break;
+            // function setCreateLog is no more used, serializer was not easily configurable and provided too big logs.
             case self::CREATE:
-                $this->setCreateLog($log, $entity);
-                break;
             case self::UPDATE:
                 $this->setUpdateLog($log, $annotation, $args->getObjectManager(), $entity);
                 if (!$log->getChangeSet()) {
@@ -382,6 +381,14 @@ class EntityActionListener
 
         if (!$changeSet) {
             return;
+        }
+
+        if ($log->getActionType() === 'create') {
+            $newChangeset = [];
+            foreach ($changeSet as $item => $value) {
+                $newChangeset[$item] = $value[1];
+            }
+            $changeSet = $newChangeset;
         }
 
         $this->setClass($log, $entity);
