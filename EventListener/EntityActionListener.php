@@ -281,7 +281,7 @@ class EntityActionListener
             case self::CREATE:
             case self::UPDATE:
                 $this->setUpdateLog($log, $annotation, $args->getObjectManager(), $entity);
-                if (!$log->getChangeSet()) {
+                if (!$log->getChangeSet() && !$log->getChangedEntity()) {
                     return;
                 }
                 break;
@@ -383,20 +383,21 @@ class EntityActionListener
             return;
         }
 
+        $this->setClass($log, $entity);
+
         if ($log->getActionType() === 'create') {
-            $newChangeset = [];
+            $createChangeSet = [];
             foreach ($changeSet as $item => $value) {
                 if ($this->isAssociativeArray($value)) {
-                    $newChangeset[$item] = $value;
+                    $createChangeSet[$item] = $value;
                 } else {
-                    $newChangeset[$item] = $value[1];
+                    $createChangeSet[$item] = $value[1];
                 }
             }
-            $changeSet = $newChangeset;
+            $log->setChangedEntity(\json_encode($createChangeSet));
+        } else {
+            $log->setChangeSet($changeSet, 'write');
         }
-
-        $this->setClass($log, $entity);
-        $log->setChangeSet($changeSet, 'write');
     }
 
 
