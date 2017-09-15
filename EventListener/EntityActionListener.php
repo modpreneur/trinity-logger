@@ -386,7 +386,11 @@ class EntityActionListener
         if ($log->getActionType() === 'create') {
             $newChangeset = [];
             foreach ($changeSet as $item => $value) {
-                $newChangeset[$item] = $value[1];
+                if ($this->isAssociativeArray($value)) {
+                    $newChangeset[$item] = $value;
+                } else {
+                    $newChangeset[$item] = $value[1];
+                }
             }
             $changeSet = $newChangeset;
         }
@@ -395,6 +399,21 @@ class EntityActionListener
         $log->setChangeSet($changeSet, 'write');
     }
 
+
+    /**
+     * @param array $array
+     *
+     * @return bool
+     */
+    private function isAssociativeArray(array $array): bool
+    {
+        foreach (array_keys($array) as $key) {
+            if (!is_int($key)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     /**
      * @param array $changeSet
