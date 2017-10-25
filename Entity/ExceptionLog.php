@@ -10,9 +10,13 @@ namespace Trinity\Bundle\LoggerBundle\Entity;
 
 use Trinity\Component\Core\Interfaces\EntityInterface;
 use Trinity\Component\Core\Interfaces\UserInterface;
+use Trinity\Bundle\LoggerBundle\Annotation\EntityMapper;
 
 /**
  * Class ExceptionLog.
+ *  * @EntityMapper(
+ *     disabled={"log"}
+ * )
  */
 class ExceptionLog extends BaseElasticLog implements EntityInterface
 {

@@ -19,7 +19,7 @@ use Trinity\Bundle\LoggerBundle\Entity\BaseElasticLog;
  */
 class ElasticLogService
 {
-    /** @var Client; */
+    /** @var Client; */ // ja to tak nepojmenoval.
     private $ESClient;
 
     /** @var  string */
@@ -94,10 +94,11 @@ class ElasticLogService
     /**
      * @param BaseElasticLog $elasticLog
      */
-    public function writeAsync(BaseElasticLog $elasticLog) :void
+    public function writeAsync(BaseElasticLog $elasticLog): void
     {
         $this->writeIntoAsync($elasticLog::getLogName(), $elasticLog);
     }
+
 
     /**
      * @param string $typeName //log name
@@ -123,8 +124,8 @@ class ElasticLogService
             'body' => $entityArray,
             'client' => ['future' => 'lazy'],
         ];
-            $this->ESClient->index($params);
-            //does not return anything to full use the lazy(async) feature
+        $this->ESClient->index($params);
+        //does not return anything to full use the lazy(async) feature
     }
 
 
@@ -137,6 +138,7 @@ class ElasticLogService
     {
         return $this->writeInto($elasticLog::getLogName(), $elasticLog);
     }
+
 
     /**
      * @param string $typeName //log name
@@ -156,14 +158,15 @@ class ElasticLogService
             'type' => $typeName,
             'body' => $entityArray,
         ];
-            $response = $this->ESClient->index($params);
-            $this->ESClient->indices()->refresh(['index' => $this->getIndex()]);
+        $response = $this->ESClient->index($params);
+        $this->ESClient->indices()->refresh(['index' => $this->getIndex()]);
 
         if ($entity instanceof BaseElasticLog) {
             $entity->setId($response['_id']);
         }
-        return $response['_id'].'#'.$response['_index'];
+        return $response['_id'] . '#' . $response['_index'];
     }
+
 
     /**
      * @param string $typeName
@@ -202,6 +205,7 @@ class ElasticLogService
         $this->ESClient->update($params);
     }
 
+
     /**
      * Return today's index name as formatted day (YYYY-DD-YY) with possible prefix ('test-')
      *
@@ -212,9 +216,44 @@ class ElasticLogService
         $time = new \DateTime();
         $format = $time->format('Y-m-d');
         if ($this->environment === 'test') {
-            return 'test-'. $format;
+            $format = 'test-'. $format;
         }
 
         return $format;
+    }
+
+
+    /**
+     * @param string $entityName
+     * @param array $disabledProperties
+     */
+    public function putMapping(string $entityName, array $disabledProperties): void
+    {
+        $client = $this->ESClient;
+        $index  = $this->getIndex();
+
+        $properties = [];
+
+        foreach ($disabledProperties as $disabledProperty) {
+            $properties[$disabledProperty] = [
+                'enabled' => false
+            ];
+        }
+
+        $client->indices()->create([
+            'index' => $index
+        ]);
+
+        $client->indices()->putMapping(
+            [
+                'index' => $index,
+                'type' => $entityName,
+                'body' => [
+                    $entityName => [
+                        'properties' => $properties
+                    ]
+                ]
+            ]
+        );
     }
 }

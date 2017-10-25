@@ -3,6 +3,9 @@ MAPPING='
           "template": "*",
           "mappings": {
             "_default_": {
+                "_all": {
+                   "enabled": false
+                },
                 "dynamic_templates": [
                     { "notanalyzed": {
                           "match":              "*",
@@ -10,6 +13,7 @@ MAPPING='
                           "mapping": {
                               "type":        "keyword",
                               "index":       "true",
+                              "ignore_above": 10922,
                               "fields":       {"analyzed" : {"type": "text"}}
                           }
                        }
@@ -18,4 +22,4 @@ MAPPING='
                }
            }
         }
-        '
+'
