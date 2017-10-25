@@ -74,11 +74,13 @@ class ElasticLogServiceTest extends UnitTestBase
                 static::returnValue($indicesNamespaces)
             );
 
+        /*
         $esClient->expects(static::once())
             ->method('update')
             ->will(
                 static::returnValue(true)
             );
+        */
 
         $clientBuilder->expects(static::once())
             ->method('build')
