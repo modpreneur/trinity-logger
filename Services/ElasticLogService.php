@@ -19,7 +19,7 @@ use Trinity\Bundle\LoggerBundle\Entity\BaseElasticLog;
  */
 class ElasticLogService
 {
-    /** @var Client; */ // ja to tak nepojmenoval.
+    /** @var Client */
     private $ESClient;
 
     /** @var  string */

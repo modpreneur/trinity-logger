@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 namespace Trinity\Bundle\LoggerBundle\Annotation;
+
 use Doctrine\Common\Annotations\Annotation;
 
 /**
@@ -20,7 +21,7 @@ class EntityMapper
     /**
      * @return array
      */
-    public function getDisabled()
+    public function getDisabled(): array
     {
         return $this->disabled;
     }

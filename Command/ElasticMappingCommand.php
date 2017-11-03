@@ -187,7 +187,6 @@ class ElasticMappingCommand extends ContainerAwareCommand
         $logService = $this->getContainer()
             ->get('trinity.logger.elastic_log_service');
 
-
         $annotationReader = $this
             ->getContainer()
             ->get('annotation_reader');
@@ -196,10 +195,8 @@ class ElasticMappingCommand extends ContainerAwareCommand
             ->getContainer()
             ->getParameter('kernel.project_dir');
 
-
         $finder = new Finder();
         $finder->files()->in($path . '/vendor')->name('*.php');
-
 
         $ref = new \ReflectionClass(EntityMapper::class);
         $entityMapperName = $ref->getShortName();
@@ -209,7 +206,7 @@ class ElasticMappingCommand extends ContainerAwareCommand
             $classes = $this
                 ->fileGetPhpClassesWithEntityMapperAnnotation($file->getPathname(), $entityMapperName);
 
-
+            /** @var array $classNames */
             foreach ($classes as $namespace => $classNames) {
                 foreach ($classNames as $className) {
                     $class = $namespace . '\\' . $className;
@@ -250,8 +247,11 @@ class ElasticMappingCommand extends ContainerAwareCommand
 
         $hasAnnotation = false;
         for ($i = 2; $i < $count; $i++) {
-            if ((isset($tokens[$i - 2][1]) && ($tokens[$i - 2][1] === 'phpnamespace' || $tokens[$i - 2][1] === 'namespace')) ||
-                ($dlm && $tokens[$i - 1][0] === \T_NS_SEPARATOR && $tokens[$i][0] === \T_STRING)
+            if (($dlm && $tokens[$i - 1][0] === \T_NS_SEPARATOR && $tokens[$i][0] === \T_STRING)
+                || (
+                    isset($tokens[$i - 2][1])
+                    && ($tokens[$i - 2][1] === 'phpnamespace' || $tokens[$i - 2][1] === 'namespace')
+                )
             ) {
                 if (!$dlm) {
                     $namespace = 0;
@@ -265,8 +265,9 @@ class ElasticMappingCommand extends ContainerAwareCommand
                 $dlm = false;
             }
 
-            if (($tokens[$i - 2][0] === \T_CLASS || (isset($tokens[$i - 2][1]) && $tokens[$i - 2][1] === 'phpclass'))
-                && $tokens[$i - 1][0] === \T_WHITESPACE && $tokens[$i][0] === \T_STRING
+            if ($tokens[$i - 1][0] === \T_WHITESPACE
+                && $tokens[$i][0] === \T_STRING
+                && ($tokens[$i - 2][0] === \T_CLASS || (isset($tokens[$i - 2][1]) && $tokens[$i - 2][1] === 'phpclass'))
             ) {
                 $className = $tokens[$i][1];
 
@@ -277,7 +278,7 @@ class ElasticMappingCommand extends ContainerAwareCommand
                 $classes[$namespace][] = $className;
             }
 
-            if ((isset($tokens[$i - 2][1]) && ($tokens[$i - 2][1] === $entityMapperName))) {
+            if (isset($tokens[$i - 2][1]) && ($tokens[$i - 2][1] === $entityMapperName)) {
                 $hasAnnotation = true;
             }
         }
