@@ -28,7 +28,7 @@ class ElasticMappingCommand extends ContainerAwareCommand
         'type' => 'migration_status',
     ];
 
-    const PATH = __DIR__ . '/../Resources/MappingData/base';
+    private const PATH = __DIR__ . '/../Resources/MappingData/base';
 
     /** @var string */
     protected $elasticHost;
@@ -73,12 +73,15 @@ class ElasticMappingCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output): ?int
     {
+        $test = false;
+
         try {
             $this->createClient();
 
             $index = '_all';
-            if ($input->getOption('test-only')) {
+            if ($input->getOption('test-only') || $input->getOption('env') === 'test') {
                 $index = 'test*';
+                $test = true;
             }
 
             $client = new Client();
@@ -90,7 +93,7 @@ class ElasticMappingCommand extends ContainerAwareCommand
                 $client->request('DELETE', $this->elasticHost . "/$index");
                 $output->writeln('Deleted');
 
-                $this->processMapper($input, $output);
+                $this->processMapper($input, $output, $test);
             }
 
             if (!$status) {
@@ -171,18 +174,19 @@ class ElasticMappingCommand extends ContainerAwareCommand
         return $esResponse;
     }
 
-
     /**
      * @param InputInterface $input
      * @param OutputInterface $output
-     * @throws \InvalidArgumentException
+     * @param bool $test
+     *
      * @throws \ReflectionException
+     * @throws \InvalidArgumentException
      * @throws \Symfony\Component\DependencyInjection\Exception\InvalidArgumentException
      * @throws \LogicException
      * @throws \Symfony\Component\DependencyInjection\Exception\ServiceCircularReferenceException
      * @throws \Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException
      */
-    private function processMapper(InputInterface $input, OutputInterface $output): void
+    private function processMapper(InputInterface $input, OutputInterface $output, bool $test = false): void
     {
         $logService = $this->getContainer()
             ->get('trinity.logger.elastic_log_service');
@@ -220,7 +224,7 @@ class ElasticMappingCommand extends ContainerAwareCommand
                         continue;
                     }
 
-                    $logService->putMapping($className, $annotation->getDisabled());
+                    $logService->putMapping($className, $annotation->getDisabled(), $test);
                 }
             }
         }

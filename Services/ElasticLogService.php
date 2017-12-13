@@ -210,13 +210,15 @@ class ElasticLogService
     /**
      * Return today's index name as formatted day (YYYY-DD-YY) with possible prefix ('test-')
      *
+     * @param bool $test
+     *
      * @return string
      */
-    private function getIndex(): string
+    private function getIndex(bool $test = false): string
     {
         $time = new \DateTime();
         $format = $time->format('Y-m-d');
-        if ($this->environment === 'test') {
+        if ($this->environment === 'test' || $test === true) {
             $format = 'test-'. $format;
         }
 
@@ -227,11 +229,12 @@ class ElasticLogService
     /**
      * @param string $entityName
      * @param array $disabledProperties
+     * @param bool $test
      */
-    public function putMapping(string $entityName, array $disabledProperties): void
+    public function putMapping(string $entityName, array $disabledProperties, bool $test = false): void
     {
         $client = $this->ESClient;
-        $index  = $this->getIndex();
+        $index  = $this->getIndex($test);
 
         $properties = [];
 
